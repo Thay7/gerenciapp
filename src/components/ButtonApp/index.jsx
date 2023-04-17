@@ -4,14 +4,18 @@ export const ButtonApp = ({
     title,
     onPress,
     marginTop,
+    marginBottom,
     backgroundColor,
-    color
+    color,
+    width
 }) => {
 
     const buttonStyles = {
         ...styles.button,
         marginTop: marginTop,
-        backgroundColor: backgroundColor
+        marginBottom: marginBottom,
+        backgroundColor: backgroundColor,
+        width: width
     }
 
     const textStyles = {
@@ -47,7 +51,7 @@ const styles = StyleSheet.create({
     button: {
         borderRadius: 8,
         padding: 10,
-        width: 300
+        // width: 300
 
     }
 })

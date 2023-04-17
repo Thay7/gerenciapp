@@ -7,7 +7,10 @@ export const InputApp = ({
     onChangeText,
     onPress,
     secureTextEntry,
-    width }) => {
+    width,
+    keyboardType,
+    editable
+ }) => {
 
     !secureTextEntry ? false : true
 
@@ -30,6 +33,8 @@ export const InputApp = ({
                 onChangeText={onChangeText}
                 onPress={onPress}
                 secureTextEntry={secureTextEntry}
+                keyboardType={keyboardType}
+                editable={editable}
             />
         </View>
 

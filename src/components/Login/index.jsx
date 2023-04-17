@@ -3,7 +3,13 @@ import { View, Text, StyleSheet } from 'react-native'
 import { InputApp } from '../InputApp'
 import { ButtonApp } from '../ButtonApp'
 
-const Login = ({ onPress }) => {
+const Login = ({
+    login,
+    setLogin,
+    password,
+    setPassword,
+    onPress
+}) => {
     return (
         <View style={styles.container}>
             <Text style={styles.loginText}>
@@ -12,11 +18,15 @@ const Login = ({ onPress }) => {
             <InputApp
                 title="Usuário"
                 placeholder="Informe seu usuário"
+                value={login}
+                onChangeText={setLogin}
             />
             <InputApp
                 title="Senha"
                 placeholder="Informe sua senha"
                 secureTextEntry={true}
+                value={password}
+                onChangeText={setPassword}
             />
             <ButtonApp
                 title="Entrar"
@@ -24,6 +34,7 @@ const Login = ({ onPress }) => {
                 color="#FFF"
                 marginTop={5}
                 onPress={onPress}
+                width={300}
             />
         </View>
     )
