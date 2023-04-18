@@ -5,8 +5,6 @@ import { ButtonApp } from '../ButtonApp'
 import ic_editar_perfil from '../../icons/Perfil/ic_editar_perfil.png'
 import { Image } from 'react-native'
 
-
-
 export const Perfil = () => {
     const [userInformation, setUserInformations] = useState({
         name: 'Maria Ozanilda Rodrigues Martins',

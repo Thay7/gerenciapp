@@ -1,11 +1,18 @@
 import React from 'react'
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { useNavigation } from '@react-navigation/native';
 import ic_estoque from '../../icons/Home/ic_estoque.png';
 import ic_cadastro_de_produto from '../../icons/Home/ic_cadastro_de_produto.png';
 import ic_pedido_de_compra from '../../icons/Home/ic_pedido_de_compra.png';
 import ic_dashboard from '../../icons/Home/ic_dashboard.png';
 
 export const HomeItem = () => {
+    const navigation = useNavigation()
+
+    const handleEstoque = () => {
+        navigation.navigate('Estoque')
+    }
+
     return (
         <View style={styles.container}>
             <Text
@@ -16,7 +23,10 @@ export const HomeItem = () => {
             <View
                 style={{ flexDirection: 'row' }}
             >
-                <TouchableOpacity style={styles.box}>
+                <TouchableOpacity
+                    style={styles.box}
+                    onPress={handleEstoque}
+                >
                     <Image
                         source={ic_estoque}
                         style={styles.icon}
