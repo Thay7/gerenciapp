@@ -2,13 +2,18 @@ import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { LoginScreen } from './src/container/Login';
-import { HomeScreen } from './src/container/Home';
-import { Perfil } from './src/components/Home/Perfil';
 import { Image } from 'react-native';
+import { Login } from './src/container/Login';
+import { Home } from './src/container/Home';
+import { Estoque } from './src/container/Estoque';
+import { Perfil } from './src/container/Perfil';
+import { Produtos } from './src/container/Produtos'
+import { CadastroDeProdutos } from './src/container/Produtos/CadastroDeProdutos';
+import { DetalhesProduto } from './src/container/Produtos/DetalhesProduto';
+import { PedidoDeCompra } from './src/container/PedidoDeCompra'
+import { Dashboard } from './src/container/Dashboard'
 import ic_inicio from './src/icons/Home/ic_inicio.png'
 import ic_perfil from './src/icons/Home/ic_perfil.png'
-import EstoqueScreen from './src/container/Estoque';
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -19,12 +24,37 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen
           name="Login"
-          component={LoginScreen}
+          component={Login}
           options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Estoque"
-          component={EstoqueScreen}
+          component={Estoque}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Produtos"
+          component={Produtos}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DetalhesProduto"
+          component={DetalhesProduto}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="CadastroDeProdutos"
+          component={CadastroDeProdutos}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="PedidoDeCompra"
+          component={PedidoDeCompra}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Dashboard"
+          component={Dashboard}
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -34,7 +64,7 @@ export default function App() {
             <Tab.Navigator>
               <Tab.Screen
                 name="Início"
-                component={HomeScreen}
+                component={Home}
                 options={{
                   headerShown: false, tabBarIcon: () => (
                     <Image

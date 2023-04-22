@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
-import { InputApp } from '../InputApp'
-import { ButtonApp } from '../ButtonApp'
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native'
+import { InputApp } from '../../components/InputApp'
+import { ButtonApp } from '../../components/Buttons/ButtonApp'
 import ic_editar_perfil from '../../icons/Perfil/ic_editar_perfil.png'
-import { Image } from 'react-native'
 
 export const Perfil = () => {
     const [userInformation, setUserInformations] = useState({

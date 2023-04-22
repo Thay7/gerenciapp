@@ -13,7 +13,7 @@ export const InputApp = ({
  }) => {
 
     !secureTextEntry ? false : true
-
+    
     const inputStyles = {
         ...styles.input,
     }

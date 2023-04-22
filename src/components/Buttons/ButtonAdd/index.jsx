@@ -1,7 +1,7 @@
 import { StyleSheet, TouchableOpacity, Image } from 'react-native'
 import ic_add from '../../../icons/Estoque/ic_add.png'
 
-const ButtonAdd = ({ onPress }) => {
+export const ButtonAdd = ({ onPress }) => {
     return (
         <TouchableOpacity
             style={styles.containerIcon}
@@ -30,5 +30,3 @@ const styles = StyleSheet.create({
         height: 20,
     },
 })
-
-export default ButtonAdd;
