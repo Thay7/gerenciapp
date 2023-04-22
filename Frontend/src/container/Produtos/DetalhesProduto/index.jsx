@@ -1,8 +1,12 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useRoute } from '@react-navigation/native';
 
-export const DetalhesProduto = ({ item }) => {
+export const DetalhesProduto = () => {
+    const route = useRoute()
+    const { item } = route.params
+
     return (
         <ScrollView style={styles.container}>
             <View>
@@ -12,11 +16,14 @@ export const DetalhesProduto = ({ item }) => {
                 <View
                     style={styles.itemContainer}
                 >
-                    <Text style={styles.itemNome}>{}</Text>
-                    {item.desc &&
-                        <Text style={styles.itemSub}>{item.desc}</Text>
-                    }
-                    <Text style={styles.itemSub}>Valor: {item.valor}</Text>
+                    <View>
+                        <View style={styles.row}>
+                            <Text style={styles.itemNome}>Nome:</Text>
+                            <Text style={styles.itemSub}>{item.nome}</Text>
+                        </View>
+
+                        <Text style={styles.itemSub}>Valor: {item.valor}</Text>
+                    </View>
                 </View>
             </View>
         </ScrollView>
@@ -54,6 +61,11 @@ const styles = StyleSheet.create({
     itemSub: {
         fontSize: 16,
         color: '#666',
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
     }
 });
 
