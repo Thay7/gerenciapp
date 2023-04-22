@@ -1,43 +1,49 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { ButtonAdd } from '../../components/Buttons/ButtonAdd';
 import { useNavigation } from '@react-navigation/native';
-
-const getIProdutos = () => {
-    return [
-        { id: 1, nome: 'Pneu De Moto', desc: 'Honda CG', quantidade: 10, valor: '70,00' },
-        { id: 2, nome: 'Parafuso', quantidade: 5, valor: '05,00' },
-        { id: 3, nome: 'Vela De Moto', quantidade: 2, valor: '30,00' },
-        { id: 4, nome: 'Oléo', quantidade: 2, valor: '10,00' },
-        { id: 5, nome: 'Aro', quantidade: 2, valor: '20,00' },
-        { id: 6, nome: 'Capa de Banco', quantidade: 6, valor: '70,00' },
-        { id: 7, nome: 'Coroa de Moto', quantidade: 5, valor: '30,00' },
-        { id: 8, nome: 'Pneu de Carro', quantidade: 10, valor: '100,00' },
-        { id: 9, nome: 'Corrente de Moto', quantidade: 15, valor: '30,00' },
-    ];
-};
+import { useApi } from '../../Api/useApi';
 
 export const Produtos = () => {
     const navigation = useNavigation()
-    const produtos = getIProdutos();
+    const [produtos, setProdutos] = useState({
+        peca_descricao: '',
+        peca_modelo: '',
+        peca_valorRevenda: 0,
+        peca_valorCompra: 0,
+        peca_marca: '',
+        estoque_criadoEm: '',
+        estoque_atualizadoEm: '',
+    })
+
+    useEffect(() => {
+        buscarProdutos()
+    }, [])
+
+    const buscarProdutos = async () => {
+        let json = await useApi.produtos()
+        setProdutos(json)
+    }
+
+    const formatter = new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+    });
 
     const renderItem = ({ item }) => (
         <TouchableOpacity
             style={styles.itemContainer}
-            onPress={(item) => handleProduct(item)}
+            onPress={() => navigation.navigate('DetalhesProduto', { item })}
         >
-            <Text style={styles.itemNome}>{item.nome}</Text>
+            <Text style={styles.itemNome}>{item.peca_descricao}</Text>
             {item.desc &&
-                <Text style={styles.itemSub}>{item.desc}</Text>
+                <Text style={styles.itemSub}>desc</Text>
             }
-            <Text style={styles.itemSub}>Valor: {item.valor}</Text>
+            <Text style={styles.itemSub}>Valor: {formatter.format(item.peca_valorRevenda)}</Text>
+
         </TouchableOpacity>
     );
-
-    const handleProduct = (item) => {
-        navigation.navigate('DetalhesProduto', { produto: item })
-    }
 
     const handleNewProduct = () => {
         navigation.navigate('CadastroDeProdutos')
@@ -56,7 +62,6 @@ export const Produtos = () => {
                     <FlatList
                         data={produtos}
                         renderItem={renderItem}
-                        keyExtractor={(item) => item.id.toString()}
                     />
                 </View>
             </View>
