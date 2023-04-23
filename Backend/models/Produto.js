@@ -1,45 +1,39 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../db.js';
 
-export const Estoque = sequelize.define('TB_estoque', {
-    estoque_id: {
+
+export const Produto = sequelize.define('TB_produto', {
+    produto_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    estoque_produtoNome: {
+    produto_nome: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    estoque_produtoDescricao: {
+    produto_descricao: {
       type: DataTypes.TEXT,
-    },
-    estoque_produtoMarca: {
-      type: DataTypes.STRING
-    },
-    estoque_produtoQuantidade: {
-      type: DataTypes.INTEGER,
       allowNull: false
     },
-    estoque_produtoValorCompra: {
+    produto_valorCompra: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false
     },
-    estoque_produtoValorVenda: {
+    produto_valorVenda: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false
     },
-    estoque_criadoEm: {
+    produto_criadoEm: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW
     },
-    estoque_editadoEm: {
+    produto_atualizadoEm: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
       onUpdate: DataTypes.NOW
     }
   }, {
-    tableName: 'TB_estoque',
+    tableName: 'TB_produto',
     timestamps: false
   });
-  

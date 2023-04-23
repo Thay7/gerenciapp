@@ -12,9 +12,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/api', routes.userRouter);
 app.use('/api', routes.authRoutes);
+app.use('/api', routes.productRoutes);
 app.use('/api', routes.stockRoutes);
 
 
 
 
-app.listen(3005)
+app.listen(3005);
