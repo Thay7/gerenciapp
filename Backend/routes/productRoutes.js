@@ -1,7 +1,40 @@
 import { Router } from 'express';
 import { Produto } from '../models/Produto.js'
+import { Estoque } from '../models/Estoque.js';
+
+import sequelize from '../db.js';
 
 const productRoutes = Router();
+
+// lista os produtos que não tem registro na TB_estoque
+productRoutes.get('/listaProdutosSemEstoque', async (req, res) => {
+  try {
+    const listaProdutosSemEstoque = await Produto.findAll({
+      where: sequelize.literal(`
+        NOT EXISTS (
+          SELECT * FROM TB_estoque AS est
+          WHERE est.produto_id = TB_produto.produto_id
+        )
+      `),
+      include: [{
+        model: Estoque,
+        required: true
+      }]
+    });
+
+    if (listaProdutosSemEstoque) {
+      res.status(200).send(listaProdutosSemEstoque)
+
+    } else {
+      res.status(404).json({ message: 'Todos os produtos já estão cadastrados no estoque!' })
+    }
+
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({message: 'Erro de conexão com a API.'})
+  }
+
+})
 
 productRoutes.post('/cadastrarProdutos', async (req, res) => {
   try {
@@ -61,30 +94,31 @@ productRoutes.delete('/excluirProduto', async (req, res) => {
 })
 
 productRoutes.put('/atualizarProduto', async (req, res) => {
-  const {produto_id, produto_nome, produto_descricao, produto_valorCompra, produto_valorVenda} = req.body
+  const { produto_id, produto_nome, produto_descricao, produto_marca, produto_valorCompra, produto_valorVenda } = req.body
 
   try {
 
     const atualizarProduto = await Produto.update({
       produto_nome: produto_nome,
       produto_descricao: produto_descricao,
+      produto_marca: produto_marca,
       produto_valorCompra: produto_valorCompra,
       produto_valorVenda: produto_valorVenda
-    },{
+    }, {
       where: {
         produto_id: produto_id
       }
     })
 
-    if(atualizarProduto) {
-      res.status(200).json({message: 'Produto atualizado!'})
+    if (atualizarProduto) {
+      res.status(200).json({ message: 'Produto atualizado!' })
     } else {
-      res.status(400).json({message: 'Não foi possível atualizar o produto!'})
+      res.status(400).json({ message: 'Não foi possível atualizar o produto!' })
     }
 
   } catch (error) {
     console.log(error)
-    req.status(500).json({message: 'Erro ao conectar na API.'})
+    res.status(500).json({ message: 'Erro ao conectar na API.' })
   }
 })
 
