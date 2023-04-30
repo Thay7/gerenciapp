@@ -33,7 +33,7 @@ stockRoutes.post('/cadastrarEstoque', async (req, res) => {
             if(cadastrarEstoque) {
                 res.status(200).json({message: 'Produto adicionado ao estoque com sucesso!'})
             } else {
-                res.status(200).json({message: 'Não foi possível adicionar o produto no estoque.'})
+                res.status(400).json({message: 'Não foi possível adicionar o produto no estoque.'})
             }
         }
 
