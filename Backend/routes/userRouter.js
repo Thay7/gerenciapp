@@ -62,7 +62,7 @@ userRouter.post('/testee', async (req, res) => {
         }]
     });
 
-    console.log(user)
+   
 
     if (user) {
         res.json({
