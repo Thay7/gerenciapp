@@ -10,10 +10,10 @@ export const InputApp = ({
     width,
     keyboardType,
     editable
- }) => {
+}) => {
 
     !secureTextEntry ? false : true
-    
+
     const inputStyles = {
         ...styles.input,
     }
@@ -25,6 +25,7 @@ export const InputApp = ({
                     {title}
                 </Text>
             </View>
+
             <TextInput
                 style={inputStyles} // use a variável 'inputStyles' para definir o estilo do TextInput
                 title={title}
@@ -37,7 +38,6 @@ export const InputApp = ({
                 editable={editable}
             />
         </View>
-
     )
 }
 

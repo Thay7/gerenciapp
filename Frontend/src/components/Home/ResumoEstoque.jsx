@@ -8,15 +8,15 @@ const StockSummary = ({ totalPieces, totalValue, mostSoldItem }) => {
                 <Text style={styles.movimentoCaixaTitle}>Resumo do Estoque</Text>
             </View>
             <View style={styles.summaryItem}>
-                <Text style={styles.summaryTitle}>Peças Cadastradas</Text>
+                <Text style={styles.summaryTitle}>Produtos:</Text>
                 <Text style={styles.summaryValue}>100</Text>
             </View>
             <View style={styles.summaryItem}>
-                <Text style={styles.summaryTitle}>Valor Total do Estoque</Text>
+                <Text style={styles.summaryTitle}>Valor Total:</Text>
                 <Text style={styles.summaryValue}>R$ 250,00</Text>
             </View>
             <View style={styles.summaryItem}>
-                <Text style={styles.summaryTitle}>Peça Mais Vendida</Text>
+                <Text style={styles.summaryTitle}>Produto Mais vendido:</Text>
                 <Text style={styles.summaryValue}>Pneu de Moto</Text>
             </View>
         </View>

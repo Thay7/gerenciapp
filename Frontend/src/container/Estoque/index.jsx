@@ -42,6 +42,7 @@ export const Estoque = () => {
                         keyExtractor={(item) => item.id.toString()}
                     />
                 </View>
+
             </View>
         </ScrollView>
     );
