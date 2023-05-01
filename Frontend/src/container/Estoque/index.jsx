@@ -1,35 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { ButtonAdd } from '../../components/Buttons/ButtonAdd'
 import { useNavigation } from '@react-navigation/native';
-
-const getItensEstoque = () => {
-    return [
-        { id: 1, nome: 'Pneu De Moto', quantidade: 10, valorTotal: '150,00' },
-        { id: 2, nome: 'Parafuso', quantidade: 5 },
-        { id: 3, nome: 'Vela De Moto', quantidade: 2 },
-        { id: 4, nome: 'Oléo', quantidade: 2 },
-        { id: 5, nome: 'Aro', quantidade: 2 },
-        { id: 6, nome: 'Capa de Banco', quantidade: 6 },
-        { id: 7, nome: 'Coroa de Moto', quantidade: 5 },
-        { id: 8, nome: 'Pneu de Carro', quantidade: 10 },
-        { id: 9, nome: 'Corrente de Moto', quantidade: 15 },
-    ];
-};
+import { useApi } from '../../Api/useApi';
 
 export const Estoque = () => {
+    const [estoque, setEstoque] = useState([])
+    const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        listaEstoque()
+    }, []);
+
+    const listaEstoque = async () => {
+        setLoading(true)
+        let json = await useApi.listarEstoque()
+        setEstoque(json)
+        setLoading(false)
+    }
+
     const navigation = useNavigation()
-
-    const itensEstoque = getItensEstoque();
-
-    const renderItem = ({ item }) => (
-        <TouchableOpacity style={styles.itemContainer}>
-            <Text style={styles.itemNome}>{item.nome}</Text>
-            <Text style={styles.itemSub}>Quantidade: {item.quantidade}</Text>
-            <Text style={styles.itemSub}>Valor em estoque: R$ {item.valorTotal}</Text>
-        </TouchableOpacity>
-    );
 
     const handleCadastrarEstoque = () => {
         navigation.navigate('CadastroDeEstoque')
@@ -45,11 +36,22 @@ export const Estoque = () => {
                     />
                 </View>
                 <View style={{ marginBottom: 16 }}>
-                    <FlatList
-                        data={itensEstoque}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item.id.toString()}
-                    />
+                    {loading == true ?
+                        (
+                            <View>
+                                <Text>Carregando...</Text>
+                            </View>
+                        )
+                        :
+                        (
+                            estoque.map((item, index) => (
+                                <View style={styles.itemContainer}>
+                                    <Text style={styles.itemNome}>Id: {item.produto_id}</Text>
+                                    <Text>Quantidade: {item.estoque_quantidade}</Text>
+                                </View>
+                                ))
+                        )
+                    }
                 </View>
 
             </View>

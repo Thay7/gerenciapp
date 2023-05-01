@@ -34,9 +34,24 @@ export const useApi = {
             return 500;
         }
     },
+    listarEstoque: async () => {
+        const response = await api.get('/api/listaEstoque')
+        return response.data
+    },
     listaProdutosSemEstoque: async () => {
         const response = await api.get('/api/listaProdutosSemEstoque')
-        console.log(response.data)
         return response.data
+    },
+    cadastrarProdutoNoEstoque: async (formData) => {
+        try {
+            const response = await api.post(`/api/cadastrarEstoque`, formData);
+            if (response.status == 200) {
+                return 200;
+            }
+            return 400;
+        } catch (error) {
+            console.error(error);
+            return 500;
+        }
     }
 }

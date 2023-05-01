@@ -28,7 +28,6 @@ export const CadastroDeProdutos = () => {
 
     const handleSubmit = async () => {
         await useApi.cadastrarProdutos(formData)
-        console.log(formData)
     }
 
     return (

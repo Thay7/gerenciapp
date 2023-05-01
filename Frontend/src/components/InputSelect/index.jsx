@@ -13,26 +13,28 @@ export const InputSelect = ({ title, selectedValue, onValueChange, options }) =>
                 <Picker
                     selectedValue={selectedValue}
                     onValueChange={onValueChange}
+                    enabled={options.length === 0 ? false : true}
                 >
-                    {options.map((item, index) => (
-                        options.length === 0
-                            ? (
-
-                                <Picker.Item
-                                    label="Nenhum produto disponível"
-                                    enabled={false}
-                                />
-
-                            )
-                            : (
-
+                    {options.length === 0
+                        ? (
+                            <Picker.Item
+                                label="Nenhum produto disponível!"
+                                enabled={false}
+                                style={styles.labelPicker}
+                            />
+                        )
+                        :
+                        (
+                            options.map((item, index) => (
                                 <Picker.Item
                                     key={index}
                                     label={item.produto_nome}
-                                    value={item.produto_nome}
+                                    value={item.produto_id}
+                                    style={styles.labelPicker}
                                 />
-                            )
-                    ))}
+                            ))
+                        )
+                    }
                 </Picker >
             </View>
         </View>
@@ -50,8 +52,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 10,
-        paddingLeft: 10,
-        paddingRight: 10,
         marginBottom: 20,
+    },
+    labelPicker: {
+        fontSize: 13,
     }
 })

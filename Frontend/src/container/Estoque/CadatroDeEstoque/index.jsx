@@ -7,21 +7,41 @@ import { useApi } from '../../../Api/useApi';
 import { InputSelect } from '../../../components/InputSelect';
 
 export const CadastroDeEstoque = () => {
-    const [selectedValue, setSelectedValue] = useState()
     const [valuesSelect, setValuesSelect] = useState([])
+    const [selectedValue, setSelectedValue] = useState()
+
+    const [formData, setFormData] = useState({
+        produto_id: null,
+        estoque_quantidade: null
+    })
 
     useEffect(() => {
-        valoreDisponiveis();
+        valoreDisponiveis()
     }, []);
+
+    useEffect(() => {
+        setFormData({
+            ...formData,
+            produto_id: selectedValue
+        });
+    }, [selectedValue]);
 
     const valoreDisponiveis = async () => {
         let json = await useApi.listaProdutosSemEstoque()
         setValuesSelect(json)
-        console.log(json)
     }
 
     const onValueChange = (value) => {
         setSelectedValue(value)
+    }
+
+    const handleInputChange = (name, value) => {
+        setFormData({ ...formData, [name]: value })
+    }
+
+    const handleSubmit = async () => {
+        await useApi.cadastrarProdutoNoEstoque(formData)
+        console.log(formData)
     }
 
     return (
@@ -35,18 +55,25 @@ export const CadastroDeEstoque = () => {
                         <InputSelect
                             title="Selecione o produto"
                             selectedValue={selectedValue}
-                            onValueChange={(value) => onValueChange(value)}
+                            onValueChange={onValueChange}
                             options={valuesSelect}
+                        />
+                        <InputApp
+                            title="Quantidade"
+                            placeholder="Informe a quantidade"
+                            keyboardType="numeric"
+                            fullWidth
+                            value={formData.estoque_quantidade}
+                            onChangeText={(text) => handleInputChange("estoque_quantidade", text)}
                         />
                         <ButtonApp
                             title="Cadastrar"
                             color="#FFF"
                             backgroundColor="#4040ff"
-                        // onPress={valoreDisponiveis}
+                            onPress={handleSubmit}
                         />
                     </View>
                 </View>
-
             </View>
         </ScrollView>
     );
