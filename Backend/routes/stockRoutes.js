@@ -5,39 +5,43 @@ import sequelize from '../db.js';
 
 const stockRoutes = Router();
 
+stockRoutes.put('/editarEstoqueQuantidade', async (req, res) => {
+
+    const {estoque_id, novaQuantidade} = req.body
+
+    try {
+
+        const editarEstoqueQuantidade = await Estoque.update(
+            {estoque_quantidade: novaQuantidade},
+            {where: {estoque_id: estoque_id}}
+        )
+
+        if(editarEstoqueQuantidade) {
+            res.status(200).json({message: 'Quantidade da peça alterada com sucesso!'})
+        } else {
+            res.status(400).json({message: 'Não foi possível alterar a quantidade da peça.'})
+        }
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: 'Erro ao conectar na API.'})
+    }
+})
+
 stockRoutes.post('/cadastrarEstoque', async (req, res) => {
 
     const {produto_id, estoque_quantidade} = req.body
 
     try {
 
-        const verificaEstoque = await Produto.findAll({
-            where: sequelize.literal(`EXISTS (
-                SELECT * FROM TB_estoque AS est
-                WHERE est.produto_id = TB_produto.produto_id
-            )`),
+        const cadastrarEstoque = await Estoque.create({produto_id, estoque_quantidade})
 
-            include: [{
-                model: Estoque,
-                required: true
-              }]
-        })
-
-        
-        if (verificaEstoque) {
-            res.status(400).json({message: 'Este produto já existe no estoque!'})
-
+        if(cadastrarEstoque) {
+            res.status(200).json({message: 'Produto adicionado ao estoque com sucesso!'})
         } else {
-            const cadastrarEstoque = await Estoque.create({produto_id, estoque_quantidade})
-
-            if(cadastrarEstoque) {
-                res.status(200).json({message: 'Produto adicionado ao estoque com sucesso!'})
-            } else {
-                res.status(400).json({message: 'Não foi possível adicionar o produto no estoque.'})
-            }
+            res.status(400).json({message: 'Não foi possível adicionar o produto no estoque.'})
         }
-
-
+        
     } catch (error) {
         console.log(error)
         res.status(500).json({message: 'Erro ao conectar na API.'})
