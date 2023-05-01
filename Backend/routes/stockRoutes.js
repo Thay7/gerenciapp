@@ -1,7 +1,48 @@
 import { Router } from 'express';
 import { Estoque } from '../models/Estoque.js'
+import { Produto } from '../models/Produto.js';
+import sequelize from '../db.js';
 
 const stockRoutes = Router();
+
+stockRoutes.post('/cadastrarEstoque', async (req, res) => {
+
+    const {produto_id, estoque_quantidade} = req.body
+
+    try {
+
+        const verificaEstoque = await Produto.findAll({
+            where: sequelize.literal(`EXISTS (
+                SELECT * FROM TB_estoque AS est
+                WHERE est.produto_id = TB_produto.produto_id
+            )`),
+
+            include: [{
+                model: Estoque,
+                required: true
+              }]
+        })
+
+        
+        if (verificaEstoque) {
+            res.status(400).json({message: 'Este produto já existe no estoque!'})
+
+        } else {
+            const cadastrarEstoque = await Estoque.create({produto_id, estoque_quantidade})
+
+            if(cadastrarEstoque) {
+                res.status(200).json({message: 'Produto adicionado ao estoque com sucesso!'})
+            } else {
+                res.status(400).json({message: 'Não foi possível adicionar o produto no estoque.'})
+            }
+        }
+
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({message: 'Erro ao conectar na API.'})
+    }
+})
 
 stockRoutes.get('/listaEstoque', async (req, res) => {
 
@@ -18,7 +59,7 @@ stockRoutes.get('/listaEstoque', async (req, res) => {
 
     } catch (error) {
         console.log(error)
-        res.status(500).json({ message: 'Erro ao conectar na API' })
+        res.status(500).json({ message: 'Erro ao conectar na API.' })
     }
 
 })
