@@ -12,6 +12,7 @@ import ic_sucesso from '../../icons/ic_sucesso.png'
 
 export const Produtos = () => {
     const navigation = useNavigation()
+    
     const [loading, setLoading] = useState(false)
     const [modalProductIsOpen, setModalProductIsOpen] = useState(false)
     const [selectedProductIndex, setSelectedProductIndex] = useState(null)

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { ButtonAdd } from '../../components/Buttons/ButtonAdd'
+import { useNavigation } from '@react-navigation/native';
 
 const getItensEstoque = () => {
     return [
@@ -18,6 +19,8 @@ const getItensEstoque = () => {
 };
 
 export const Estoque = () => {
+    const navigation = useNavigation()
+
     const itensEstoque = getItensEstoque();
 
     const renderItem = ({ item }) => (
@@ -28,14 +31,20 @@ export const Estoque = () => {
         </TouchableOpacity>
     );
 
+    const handleCadastrarEstoque = () => {
+        navigation.navigate('CadastroDeEstoque')
+    }
+
     return (
         <ScrollView style={styles.container}>
             <View>
                 <View style={styles.header}>
                     <Text style={styles.titulo}>Estoque</Text>
-                    <ButtonAdd />
+                    <ButtonAdd
+                        onPress={handleCadastrarEstoque}
+                    />
                 </View>
-                <View style={{marginBottom: 16}}>
+                <View style={{ marginBottom: 16 }}>
                     <FlatList
                         data={itensEstoque}
                         renderItem={renderItem}

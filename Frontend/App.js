@@ -14,6 +14,7 @@ import { PedidoDeCompra } from './src/container/PedidoDeCompra'
 import { Dashboard } from './src/container/Dashboard'
 import ic_inicio from './src/icons/Home/ic_inicio.png'
 import ic_perfil from './src/icons/Home/ic_perfil.png'
+import { CadastroDeEstoque } from './src/container/Estoque/CadatroDeEstoque';
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -30,6 +31,11 @@ export default function App() {
         <Stack.Screen
           name="Estoque"
           component={Estoque}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="CadastroDeEstoque"
+          component={CadastroDeEstoque}
           options={{ headerShown: false }}
         />
         <Stack.Screen

@@ -8,24 +8,38 @@ export const InputApp = ({
     onPress,
     secureTextEntry,
     width,
+    height,
     keyboardType,
-    editable
+    editable,
+    fullWidth,
+    multiline,
+    textAlignVertical,
+    marginTopText
 }) => {
 
     !secureTextEntry ? false : true
 
+    if (!fullWidth) {
+        width = 300
+    }
+
+    if (!height) {
+        height = 40
+    }
+
     const inputStyles = {
         ...styles.input,
+        width,
+        height,
     }
 
     return (
         <View style={styles.container}>
             <View>
-                <Text style={styles.text}>
+                <Text style={[styles.text]} >
                     {title}
                 </Text>
             </View>
-
             <TextInput
                 style={inputStyles} // use a variável 'inputStyles' para definir o estilo do TextInput
                 title={title}
@@ -36,6 +50,9 @@ export const InputApp = ({
                 secureTextEntry={secureTextEntry}
                 keyboardType={keyboardType}
                 editable={editable}
+                multiline={multiline}
+                textAlignVertical={textAlignVertical}
+                marginTopText={20}
             />
         </View>
     )
@@ -49,7 +66,6 @@ const styles = StyleSheet.create({
         marginBottom: 5
     },
     input: {
-        width: 300,
         height: 40,
         borderWidth: 1,
         borderColor: '#ccc',
