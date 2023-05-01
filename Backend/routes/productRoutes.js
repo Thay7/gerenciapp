@@ -11,14 +11,14 @@ productRoutes.get('/listaProdutosSemEstoque', async (req, res) => {
   try {
     const listaProdutosSemEstoque = await Produto.findAll({
       where: sequelize.literal(`
-        NOT EXISTS (
-          SELECT * FROM TB_estoque AS est
-          WHERE est.produto_id = TB_produto.produto_id
-        )
+      NOT EXISTS (
+        SELECT * FROM TB_estoque AS est
+        WHERE est.produto_id = TB_produto.produto_id
+      )
       `),
       include: [{
         model: Estoque,
-        required: true
+        required: false
       }]
     });
 
@@ -38,14 +38,22 @@ productRoutes.get('/listaProdutosSemEstoque', async (req, res) => {
 
 productRoutes.post('/cadastrarProdutos', async (req, res) => {
   try {
-    const { produtos_nome, produtos_descricao, produtos_marca, produtos_valorCompra, produtos_valorRevenda } = req.body;
-    const novoProduto = await Produto.create({ produtos_nome, produtos_descricao, produtos_marca, produtos_valorCompra, produtos_valorRevenda });
+    const { produto_nome, produto_descricao, produto_marca, produto_valorCompra, produto_valorVenda } = req.body;
+    const novoProduto = await Produto.create({
+      produto_nome: produto_nome,
+      produto_descricao: produto_descricao,
+      produto_marca: produto_marca,
+      produto_valorCompra: produto_valorCompra,
+      produto_valorVenda: produto_valorVenda
+      
+    });
 
     if (novoProduto) {
       res.status(200).json({ message: 'Produto cadastrado!' })
     } else {
       res.status(400).json({ message: 'Produto não cadastrado! Revise os campos e tente novamente' })
     }
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Erro de conexão com a API.' });
@@ -108,6 +116,7 @@ productRoutes.put('/atualizarProduto', async (req, res) => {
       where: {
         produto_id: produto_id
       }
+
     })
 
     if (atualizarProduto) {
