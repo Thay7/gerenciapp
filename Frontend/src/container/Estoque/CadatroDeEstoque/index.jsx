@@ -61,6 +61,7 @@ export const CadastroDeEstoque = () => {
                         <InputApp
                             title="Quantidade"
                             placeholder="Informe a quantidade"
+                            type="number"
                             keyboardType="numeric"
                             fullWidth
                             value={formData.estoque_quantidade}

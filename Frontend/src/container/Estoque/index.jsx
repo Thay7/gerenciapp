@@ -46,7 +46,7 @@ export const Estoque = () => {
                         (
                             estoque.map((item, index) => (
                                 <View style={styles.itemContainer}>
-                                    <Text style={styles.itemNome}>Id: {item.produto_id}</Text>
+                                    <Text style={styles.itemNome}>Nome: {item.TB_produto.produto_nome}</Text>
                                     <Text>Quantidade: {item.estoque_quantidade}</Text>
                                 </View>
                                 ))

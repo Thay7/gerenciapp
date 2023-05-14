@@ -12,7 +12,7 @@ import ic_sucesso from '../../icons/ic_sucesso.png'
 
 export const Produtos = () => {
     const navigation = useNavigation()
-    
+
     const [loading, setLoading] = useState(false)
     const [modalProductIsOpen, setModalProductIsOpen] = useState(false)
     const [selectedProductIndex, setSelectedProductIndex] = useState(null)
@@ -110,9 +110,11 @@ export const Produtos = () => {
                                             <View style={styles.modalContent}>
                                                 <View style={styles.modalHeader}>
                                                     <Text style={styles.tituloModal}>{!editing ? 'Detalhes Produto' : 'Editar Produto'}</Text>
-                                                    <ButtonEdit
-                                                        onPress={() => setEditing(true)}
-                                                    />
+                                                    {!editing &&
+                                                        <ButtonEdit
+                                                            onPress={() => setEditing(true)}
+                                                        />
+                                                    }
                                                 </View>
                                                 {selectedProductIndex !== null &&
                                                     <View>
@@ -143,8 +145,9 @@ export const Produtos = () => {
                                                                     <View>
                                                                         <ButtonApp
                                                                             title="Fechar"
-                                                                            marginTop={10}
-                                                                            color="#4040ff"
+                                                                            marginTop={20}
+                                                                            color="#FFF"
+                                                                            backgroundColor="#4040ff"
                                                                             onPress={() => setModalProductIsOpen(false)}
                                                                         />
                                                                     </View>
@@ -232,14 +235,14 @@ export const Produtos = () => {
                 >
                     <View style={styles.modalMessageContainer}>
                         <View style={styles.modalMessageContent}>
-                            <View style={{alignItems: 'center'}}>
+                            <View style={{ alignItems: 'center' }}>
                                 <Image
                                     source={ic_sucesso}
                                     alt="Minha Imagem"
                                     style={{ width: 150, height: 150, marginBottom: 10 }}
                                 />
                                 <Text
-                                style={{fontSize: 24}}
+                                    style={{ fontSize: 24 }}
                                 >{messageEdit}</Text>
                             </View>
                         </View>
@@ -292,9 +295,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderRadius: 5,
         padding: 16,
-        // paddingVertical: 16,
-        // paddingHorizontal: 30,
-        // width: 300
+        minWidth: 300
     },
     modalHeader: {
         flexDirection: 'row',
@@ -304,8 +305,7 @@ const styles = StyleSheet.create({
     },
     tituloModal: {
         fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 10
+        fontWeight: 'bold'
     },
     itemModalContainer: {
         flexDirection: 'row',
@@ -315,7 +315,6 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
         backgroundColor: '#fff',
-        borderRadius: 8,
         marginVertical: 4,
     },
     modalLabel: {

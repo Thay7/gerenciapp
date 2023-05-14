@@ -7,14 +7,20 @@ export const ButtonApp = ({
     marginBottom,
     backgroundColor,
     color,
-    width
+    width,
+    borderColor,
+    borderWidth
 }) => {
+
+    borderColor ? borderWidth = 1 : borderWidth = 0
 
     const buttonStyles = {
         ...styles.button,
         marginTop: marginTop,
         marginBottom: marginBottom,
         backgroundColor: backgroundColor,
+        borderColor: borderColor,
+        borderWidth: borderWidth,
         width: width
     }
 
@@ -46,12 +52,9 @@ const styles = StyleSheet.create({
     text: {
         color: "#FFF",
         alignSelf: 'center'
-
     },
     button: {
         borderRadius: 8,
         padding: 10,
-        // width: 300
-
     }
 })
