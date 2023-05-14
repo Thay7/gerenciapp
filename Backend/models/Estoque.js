@@ -1,15 +1,26 @@
-import { DataTypes } from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 import sequelize from '../db.js';
+import { Produto } from './Produto.js';
 
-export const Estoque = sequelize.define('TB_estoque', {
+export class Estoque extends Model {}
+Estoque.init({
   estoque_id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
+  produto_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: Produto,
+      key: 'produto_id'
+    }
+  },
   estoque_quantidade: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
+    defaultValue: 0
   },
   estoque_criadoEm: {
     type: DataTypes.DATE,
@@ -19,17 +30,13 @@ export const Estoque = sequelize.define('TB_estoque', {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
     onUpdate: DataTypes.NOW
-  },
-  produto_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: 'Produto',
-      key: 'produto_id'
-    }
   }
 }, {
+  sequelize,
+  modelName: 'Estoque',
   tableName: 'TB_estoque',
   timestamps: false
 });
 
+Produto.hasOne(Estoque, { foreignKey: 'produto_id', as: 'estoque' });
+Estoque.belongsTo(Produto, { foreignKey: 'produto_id' });
