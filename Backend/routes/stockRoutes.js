@@ -5,6 +5,7 @@ import sequelize from '../db.js';
 
 const stockRoutes = Router();
 
+
 stockRoutes.put('/editarEstoqueQuantidade', async (req, res) => {
 
     const {estoque_id, novaQuantidade} = req.body
@@ -34,7 +35,7 @@ stockRoutes.post('/cadastrarEstoque', async (req, res) => {
 
     try {
 
-        const cadastrarEstoque = await Estoque.create({produto_id, estoque_quantidade})
+        const cadastrarEstoque = await Estoque.create({produto_id: produto_id, estoque_quantidade: estoque_quantidade})
 
         if(cadastrarEstoque) {
             res.status(200).json({message: 'Produto adicionado ao estoque com sucesso!'})
@@ -51,11 +52,16 @@ stockRoutes.post('/cadastrarEstoque', async (req, res) => {
 stockRoutes.get('/listaEstoque', async (req, res) => {
 
     try {
-        const somaValorVenda = await Estoque.sum('estoque_produtoValorVenda');
-        const listaEstoque = await Estoque.findAll()
+        //const somaValorVenda = await Estoque.sum('estoque_produtoValorVenda');
+        const listaEstoque = await Estoque.findAll({
+            include:[{
+                model: Produto,
+                attributes: ['produto_nome']
+            }]
+        })
 
         if (listaEstoque) {
-            res.status(200).send({listaEstoque, somaValorVenda})
+            res.status(200).send(listaEstoque)
         } else {
             res.status(400).json({ message: 'Não foi possível listar o estoque!' })
         }

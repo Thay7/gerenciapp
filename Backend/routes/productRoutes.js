@@ -10,14 +10,12 @@ const productRoutes = Router();
 productRoutes.get('/listaProdutosSemEstoque', async (req, res) => {
   try {
     const listaProdutosSemEstoque = await Produto.findAll({
-      where: sequelize.literal(`
-      NOT EXISTS (
-        SELECT * FROM TB_estoque AS est
-        WHERE est.produto_id = TB_produto.produto_id
-      )
-      `),
+      where: {
+        '$estoque.produto_id$': null
+      },
       include: [{
         model: Estoque,
+        as: 'estoque',
         required: false
       }]
     });
