@@ -1,43 +1,57 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { HomeItem } from '../../components/Home/HomeItem';
-import StockSummary from '../../components/Home/ResumoEstoque';
 import { ScrollView } from 'react-native';
-import { CashierMovement } from '../../components/Home/MovimentoCaixa';
+
+import { formatterbrl } from '../../utils/formatterbrl'
+
+//Icons menus
+import ic_vendas from '../../icons/Home/ic_vendas.png';
+import ic_estoque from '../../icons/Home/ic_estoque.png';
+import ic_produtos from '../../icons/Home/ic_produtos.png';
+import ic_pedido_de_compra from '../../icons/Home/ic_pedido_de_compra.png';
+import ic_cadastros from '../../icons/Home/ic_cadastros.png';
+import ic_dashboard from '../../icons/Home/ic_dashboard.png';
+import { ResumoDia } from '../../components/Home/ResumoDia';
 
 export const Home = () => {
+    const menus = [
+        { name: 'Vendas', icon: ic_vendas, page: 'Vendas' },
+        { name: 'Estoque', icon: ic_estoque, page: 'Estoque' },
+        { name: 'Cadastros', icon: ic_cadastros, page: 'Cadastros' },
+        { name: 'Produtos', icon: ic_produtos, page: 'Produtos' },
+        { name: 'Pedido De Compra', icon: ic_pedido_de_compra, page: 'PedidoDeCompra' },
+        { name: 'Relatórios', icon: ic_dashboard, page: 'Dashboard' }
+    ];
+
+    const labelsAndValues = [
+        { label: 'Vendas do dia:', value: 25 },
+        { label: 'Entrada Caixa:', value: formatterbrl(726) },
+        { label: 'Saída Caixa:', value: formatterbrl(1349) },
+        { label: 'Produto mais vendido:', value: 'Oléo Mobil' },
+    ];
+
     return (
         <ScrollView style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.headerText}>Meu Estoque</Text>
-                <Text style={styles.subHeaderText}>Borracharia do Valdir</Text>
+                <Text style={styles.headerText}>GerenciApp</Text>
+                <Text style={styles.subHeaderText}>Olá, Borracharia do Valdir!</Text>
             </View>
-            <View
-                style={styles.contentContainer}
-            >
-                <View
-                    style={styles.movimentoCaixaContainer}
-                >
-                    <CashierMovement />
-                </View>
-                {/* // */}
-                <StockSummary
-                    totalPieces={30}
-                    mostSoldItem="Pneu de Moto"
-                    totalValue={500}
+            <View style={styles.contentBox}>
+                <ResumoDia
+                    labelsAndValues={labelsAndValues}
                 />
-                <View style={styles.homeItemsContainer}>
-                    <HomeItem />
-                </View>
+            </View>
+            <View>
+                <HomeItem
+                    menus={menus}
+                />
             </View>
         </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
     header: {
         height: 80,
         marginTop: 30,
@@ -53,35 +67,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: '#666666',
     },
-    contentContainer: {
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: '#F2F2F2',
-        paddingHorizontal: 20,
-    },
-    movimentoCaixaContainer: {
-        marginVertical: 10,
-        padding: 10,
-        backgroundColor: 'white',
-        borderRadius: 10,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-        width: '100%',
-        maxWidth: 800,
-    },
-    homeItemsContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        marginTop: 10,
-        width: '100%',
-        maxWidth: 800,
+    contentBox: {
+        paddingHorizontal: 16,
     },
 });
