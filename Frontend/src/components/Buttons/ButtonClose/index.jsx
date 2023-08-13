@@ -1,13 +1,13 @@
 import { StyleSheet, TouchableOpacity, Image } from 'react-native'
-import ic_editar from '../../../icons/Buttons/ic_editar.png'
+import ic_close from '../../../icons/Buttons/ic_close.png'
 
-export const ButtonEdit = ({ onPress, marginLeft }) => {
+export const ButtonClose = ({ onPress }) => {
     return (
         <TouchableOpacity
             style={styles.containerIcon}
             onPress={onPress}
         >
-            <Image source={ic_editar} style={styles.icon} />
+            <Image source={ic_close} style={styles.icon} />
         </TouchableOpacity>
     )
 }
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
         elevation: 1
     },
     icon: {
-        width: 25,
-        height: 25,
+        width: 20,
+        height: 20,
     },
 })

@@ -1,5 +1,5 @@
 import { StyleSheet, TouchableOpacity, Image } from 'react-native'
-import ic_add from '../../../icons/Estoque/ic_add.png'
+import ic_add from '../../../icons/Buttons/ic_add.png'
 
 export const ButtonAdd = ({ onPress }) => {
     return (

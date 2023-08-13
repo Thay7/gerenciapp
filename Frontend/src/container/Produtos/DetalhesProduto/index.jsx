@@ -1,92 +1,79 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useRoute } from '@react-navigation/native';
-import { formatterbrl } from '../../../utils/formatterbrl';
+//import { useApi } from '../../Api/useApi';
 import { ButtonEdit } from '../../../components/Buttons/ButtonEdit';
-import { InputApp } from '../../../components/InputApp'
-import { ButtonApp } from '../../../components/Buttons/ButtonApp'
+import { InputApp } from '../../../components/InputApp';
+import { formatterbrl } from '../../../utils/formatterbrl';
+import { useRoute } from "@react-navigation/native";
+import { ButtonApp } from '../../../components/Buttons/ButtonApp';
+
 export const DetalhesProduto = () => {
-    const route = useRoute()
-    const { item } = route.params
-    const [editing, setEditing] = useState(false)
-
-    const [productForm, setProductForm] = useState({
-        nome: '',
-        descricao: '',
-        valorCompra: 0,
-        valorRevenda: 0
-    })
-
-    const handleInputChange = (fieldName, value) => {
-        setProductForm({
-            ...productForm,
-            [fieldName]: value
-        })
-    }
+    const [enable, setEnable] = useState(false);
+    const route = useRoute();
+    const { produto } = route.params;
 
     return (
-        <ScrollView style={styles.container}>
-            <View>
+        <ScrollView >
+            <View style={styles.container}>
                 <View style={styles.header}>
                     <Text style={styles.titulo}>Detalhes Produto</Text>
-                    <ButtonEdit
-                        onPress={() => setEditing(true)}
-                    />
+                    {!enable &&
+                        <ButtonEdit onPress={() => setEnable(true)} />
+                    }
                 </View>
-                {editing ? (
-                    <View>
-                        <InputApp
-                            title="Nome"
-                            value={item.peca_descricao}
-                            onChangeText={(text) => handleInputChange('nome', text)}
-                        />
-                        <InputApp
-                            title="Descrição"
-                            // value={item.peca_descricao}
-                            onChangeText={(text) => handleInputChange('descricao', text)}
-                        />
-                        <InputApp
-                            title="Valor de compra"
-                            value={formatterbrl(item.peca_valorCompra)}
-                            onChangeText={(text) => handleInputChange('valorCompra', text)}
-                        />
-                        <InputApp
-                            title="Valor de revenda"
-                            value={formatterbrl(item.peca_valorRevenda)}
-                            onChangeText={(text) => handleInputChange('valorRevenda', text)}
-                        />
+                <View>
+                    <InputApp
+                        title="Nome"
+                        editable={enable}
+                        value={produto.produto_nome}
+                        fullWidth
+                    //onChangeText={(text) => setSearchName(text)}
+                    />
+                    <InputApp
+                        title="Referência"
+                        editable={enable}
+                        value={produto.produto_referencia}
+                        fullWidth
+                    //onChangeText={(text) => setSearchReference(text)}
+                    />
+                    <InputApp
+                        title="Descrição"
+                        editable={enable}
+                        value={produto.produto_descricao}
+                        fullWidth
+                    //onChangeText={(text) => setSearchReference(text)}
+                    />
+                    <InputApp
+                        title="Marca"
+                        editable={enable}
+                        value={produto.produto_marca}
+                        fullWidth
+                    //onChangeText={(text) => setSearchReference(text)}
+                    />
+                    <InputApp
+                        title="Valor Compra"
+                        editable={enable}
+                        value={formatterbrl(produto.produto_valorCompra)}
+                        fullWidth
+                    //onChangeText={(text) => setSearchReference(text)}
+                    />
+                    <InputApp
+                        title="Valor Venda"
+                        editable={enable}
+                        value={formatterbrl(produto.produto_valorVenda)}
+                        fullWidth
+                    //onChangeText={(text) => setSearchReference(text)}
+                    />
+                    {enable &&
                         <ButtonApp
                             title="Salvar"
+                            color="#fff"
                             backgroundColor="#4040ff"
-                            color="#FFF"
-                            width={300}
-                            onPress={() => setEditing(false)}
+                            onPress={() => setEnable(false)}
                         />
-                    </View>
-                ) :
-                    (
-                        <View >
-                            <View style={styles.row}>
-                                <Text style={styles.itemNome}>Nome:</Text>
-                                <Text style={styles.itemSub}>{item.peca_descricao}</Text>
-                            </View>
-                            <View style={styles.row}>
-                                <Text style={styles.itemNome}>Descrição:</Text>
-                                <Text style={styles.itemSub}></Text>
-                            </View>
-                            <View style={styles.row}>
-                                <Text style={styles.itemNome}>Valor de compra:</Text>
-                                <Text style={styles.itemSub}>{formatterbrl(item.peca_valorCompra)}</Text>
-                            </View>
-
-                            <View style={styles.row}>
-                                <Text style={styles.itemNome}>Valor de revenda:</Text>
-                                <Text style={styles.itemSub}>{formatterbrl(item.peca_valorRevenda)}</Text>
-                            </View>
-                        </View>
-                    )}
-
+                    }
+                </View>
             </View>
         </ScrollView>
     );
@@ -105,14 +92,26 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     titulo: {
-        fontSize: 24,
+        fontSize: 35,
         fontWeight: 'bold',
     },
+    headerIcons: {
+        display: 'flex',
+        flexDirection: 'row',
+    },
     itemContainer: {
-        padding: 10,
+        padding: 16,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
         backgroundColor: '#fff',
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        elevation: 1,
         borderRadius: 8,
         marginVertical: 4,
     },
@@ -123,11 +122,10 @@ const styles = StyleSheet.create({
     itemSub: {
         fontSize: 16,
         color: '#666',
-        marginLeft: 4
     },
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
+    cleanFilterText: {
+        color: 'red',
+        alignSelf: 'flex-end',
+        marginBottom: 5
     }
 });
-

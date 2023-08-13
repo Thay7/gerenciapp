@@ -15,13 +15,11 @@ export const CadastroDeProdutos = () => {
     })
 
     const handleInputChange = (name, value) => {
-        console.log('a')
         if (name === "produto_valorCompra" || name === "produto_valorVenda") {
             if (value.includes(',') || value.includes('.')) {
                 value = value.replace(",", ".");
             }
         } else {
-            console.log('a')
             setFormData({ ...formData, [name]: value })
         }
     }
@@ -36,8 +34,8 @@ export const CadastroDeProdutos = () => {
                 <View style={styles.header}>
                     <Text style={styles.titulo}>Cadastro de Produto</Text>
                 </View>
-                <View style={{ marginBottom: 16 }}>
-                    <View style={{ marginBottom: 16 }}>
+                <View >
+                    <View >
                         <InputApp
                             title="Nome"
                             fullWidth
@@ -47,9 +45,7 @@ export const CadastroDeProdutos = () => {
                         <InputApp
                             title="Descrição"
                             fullWidth
-                            height={100}
                             multiline={true}
-                            textAlignVertical="top"
                             value={formData.descricao}
                             onChangeText={(text) => handleInputChange("produto_descricao", text)}
                         />
@@ -60,21 +56,21 @@ export const CadastroDeProdutos = () => {
                             onChangeText={(text) => handleInputChange("produto_marca", text)}
                         />
                         <InputApp
-                            title="Valor de compra"
+                            title="Valor Compra"
                             fullWidth
                             value={formData.valorCompra}
                             onChangeText={(text) => handleInputChange("produto_valorCompra", text)}
                             keyboardType="numeric"
                         />
                         <InputApp
-                            title="Valor de venda"
+                            title="Valor Venda"
                             fullWidth
                             value={formData.valorVenda}
                             onChangeText={(text) => handleInputChange("produto_valorVenda", text)}
                             keyboardType="numeric"
                         />
                         <ButtonApp
-                            title="Cadastrar"
+                            title="Salvar"
                             color="#FFF"
                             backgroundColor="#4040ff"
                             onPress={handleSubmit}
@@ -100,7 +96,7 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     titulo: {
-        fontSize: 24,
+        fontSize: 35,
         fontWeight: 'bold',
     },
     itemContainer: {

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { View, Button, Modal, Text, StyleSheet } from 'react-native';
+import { View, Button, Modal, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { InputApp } from '../InputApp';
 import { ButtonApp } from '../Buttons/ButtonApp';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { ButtonClose } from '../Buttons/ButtonClose';
 
 export const ModalSearch = ({ title, openModal, fnCloseModal, handleFilter }) => {
   const [searchName, setSearchName] = useState('');
@@ -9,72 +11,72 @@ export const ModalSearch = ({ title, openModal, fnCloseModal, handleFilter }) =>
 
   const handleSearch = () => {
     handleFilter(searchName, searchReference);
-    fnCloseModal(); // Fechar o modal após a pesquisa
+    fnCloseModal();
   };
 
   if (!openModal) {
-    return null; // Não renderizar nada se o modal não estiver aberto
+    return null;
   }
 
   return (
-    <View style={styles.modalContainer}>
-      <View style={styles.modalContent}>
-        <Text style={styles.title}>{title}</Text>
-        <InputApp
-          title="Nome:"
-          onChangeText={(text) => setSearchName(text)}
-        />
-        <InputApp
-          title="Referência:"
-          onChangeText={(text) => setSearchQuantity(text)}
-        />
-        <View style={styles.containerButtons}>
-          <ButtonApp
-            title="Pesquisar"
-            backgroundColor="#4040ff"
-            color="#fff"
-            width={100}
-            onPress={handleSearch}
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={openModal}
+    >
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <View style={styles.headerContent}>
+            <Text style={styles.title}>{title}</Text>
+            <ButtonClose
+              onPress={fnCloseModal}
+            />
+          </View>
+          <InputApp
+            title="Nome:"
+            onChangeText={(text) => setSearchName(text)}
           />
-          <ButtonApp
-            title="Fechar"
-            color="#ff0000"
-            width={100}
-            onPress={fnCloseModal}
+          <InputApp
+            title="Referência:"
+            onChangeText={(text) => setSearchReference(text)}
           />
+          <View>
+            <ButtonApp
+              title="Pesquisar"
+              backgroundColor="#4040ff"
+              color="#fff"
+              onPress={handleSearch}
+            />
+          </View>
         </View>
       </View>
-    </View>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
   modalContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fundo preto transparente
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
     backgroundColor: '#fff',
     padding: 20,
     borderRadius: 8,
-    width: '80%', // Largura0 do modal (80% da largura da tela)
   },
-  title: {
-    fontSize: 25,
-    marginBottom: 30,
-  },
-  containerButtons: {
+  headerContent: {
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 20,
+    marginBottom: 20,
   },
+  title: {
+    fontSize: 30,
+    alignSelf: 'center',
+    fontWeight: 'bold'
+  }
 });
-
 
