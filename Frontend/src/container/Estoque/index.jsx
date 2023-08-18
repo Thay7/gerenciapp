@@ -137,6 +137,7 @@ export const Estoque = () => {
                 openModal={modalIsOpen}
                 fnCloseModal={() => setModalIsOpen(!modalIsOpen)}
                 handleFilter={fnHandleFilter}
+                produtos
             />
         </ScrollView>
     );

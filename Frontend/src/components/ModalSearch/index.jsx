@@ -5,9 +5,13 @@ import { ButtonApp } from '../Buttons/ButtonApp';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ButtonClose } from '../Buttons/ButtonClose';
 
-export const ModalSearch = ({ title, openModal, fnCloseModal, handleFilter }) => {
+export const ModalSearch = ({ title, openModal, fnCloseModal, handleFilter, produtos }) => {
   const [searchName, setSearchName] = useState('');
   const [searchReference, setSearchReference] = useState('');
+  const [searchClientName, setSearchClientName] = useState('');
+  const [searchClientCPF, setSearchClientCPF] = useState('');
+  const [searchDate, setSearchDate] = useState('');
+  const [searchValue, setSearchValue] = useState('');
 
   const handleSearch = () => {
     handleFilter(searchName, searchReference);
@@ -32,14 +36,47 @@ export const ModalSearch = ({ title, openModal, fnCloseModal, handleFilter }) =>
               onPress={fnCloseModal}
             />
           </View>
-          <InputApp
-            title="Nome:"
-            onChangeText={(text) => setSearchName(text)}
-          />
-          <InputApp
-            title="Referência:"
-            onChangeText={(text) => setSearchReference(text)}
-          />
+          {produtos ?
+            (
+              <>
+                <InputApp
+                  title="Nome:"
+                  value={searchName}
+                  onChangeText={(text) => setSearchName(text)}
+                />
+                <InputApp
+                  title="Referência:"
+                  value={searchReference}
+                  onChangeText={(text) => setSearchReference(text)}
+                />
+              </>
+
+            ) :
+            (
+              <>
+                <InputApp
+                  title="Cliente"
+                  value={searchClientName}
+                  onChangeText={(text) => setSearchClientName(text)}
+                />
+                <InputApp
+                  title="CPF"
+                  value={searchClientCPF}
+                  onChangeText={(text) => setSearchClientCPF(text)}
+                />
+                <InputApp
+                  title="Data"
+                  value={searchDate}
+                  onChangeText={(text) => setSearchDate(text)}
+                />
+                <InputApp
+                  title="Valor"
+                  value={searchValue}
+                  onChangeText={(text) => setSearchValue(text)}
+                />
+              </>
+            )
+          }
           <View>
             <ButtonApp
               title="Pesquisar"

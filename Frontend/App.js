@@ -11,6 +11,7 @@ import ic_perfil from './src/icons/Home/ic_perfil.png'
 import { Login } from './src/container/Login';
 import { Home } from './src/container/Home';
 import { Vendas } from './src/container/Vendas';
+import { NovaVenda } from './src/container/Vendas/NovaVenda';
 import { Estoque } from './src/container/Estoque';
 import { Perfil } from './src/container/Perfil';
 import { Produtos } from './src/container/Produtos'
@@ -34,6 +35,11 @@ export default function App() {
         <Stack.Screen
           name="Vendas"
           component={Vendas}
+          options={{ headerShown: false }}
+        />
+          <Stack.Screen
+          name="NovaVenda"
+          component={NovaVenda}
           options={{ headerShown: false }}
         />
         <Stack.Screen

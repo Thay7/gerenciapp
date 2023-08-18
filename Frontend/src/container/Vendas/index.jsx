@@ -1,13 +1,126 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
+import { useApi } from '../../Api/useApi';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { ModalSearch } from '../../components/ModalSearch/index';
+import { ButtonAdd } from '../../components/Buttons/ButtonAdd';
+import { ButtonSearch } from '../../components/Buttons/ButtonSearch';
 
 export const Vendas = () => {
+    const [vendasList, setVendasList] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [search, setSearch] = useState([]);
+    const [noResults, setNoResults] = useState(false);
+
+    useEffect(() => {
+        listaEstoque()
+    }, []);
+
+    const listaEstoque = async () => {
+        setLoading(true)
+        //let json = await useApi.listarEstoque()
+        //setVendasList(json)
+        setVendasList([])
+        setLoading(false)
+    }
+
+    const fnHandleFilter = (name, reference) => {
+        if (name || reference) {
+            const filtered = vendasList.filter(item =>
+                (!name || item.nome.toLowerCase().includes(name.trim().toLowerCase())) &&
+                (!reference || item.referencia.includes(reference.trim().toLowerCase()))
+            );
+            setSearch(filtered);
+            setModalIsOpen(!modalIsOpen);
+
+            if (filtered.length == 0)
+                setNoResults(true);
+            else
+                setNoResults(false);
+        }
+    }
+
+    const handleClearFilter = () => {
+        setSearch([]);
+        setNoResults(false);
+    }
+
+    const navigation = useNavigation()
+
     return (
-        <ScrollView style={styles.container}>
-            <View style={styles.header}>
-                    <Text style={styles.titulo}>Vendas</Text>
+        <ScrollView >
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <Text style={styles.titulo}>Lista Vendas</Text>
+                    <View style={styles.headerIcons}>
+                        <View style={{ marginRight: 5 }}>
+                            <ButtonSearch
+                                onPress={() => setModalIsOpen(true)}
+                            />
+                        </View>
+                        <ButtonAdd
+                            onPress={() => navigation.navigate('NovaVenda')}
+                        />
+                    </View>
                 </View>
+                {
+                    (search.length > 0 || noResults) && (
+                        <TouchableOpacity
+                            onPress={handleClearFilter}
+                        >
+                            <Text style={styles.cleanFilterText}>Limpar filtro</Text>
+                        </TouchableOpacity>
+                    )
+                }
+                <View style={{ marginBottom: 16 }}>
+                    {loading ?
+                        (
+                            <View>
+                                <Text>Carregando...</Text>
+                            </View>
+                        )
+                        :
+                        (
+                            noResults ?
+                                (
+                                    <View>
+                                        <Text>Nenhum resultado para a busca!</Text>
+                                    </View>
+                                )
+                                :
+                                (
+                                    search.length > 0 ?
+                                        (
+                                            search.map((item, index) => (
+                                                <View style={styles.itemContainer} key={index}>
+                                                    <Text style={styles.itemNome}>{item.nome}</Text>
+                                                    <Text>Quantidade: {item.quantidade}</Text>
+                                                </View>
+                                            ))
+                                        )
+                                        :
+                                        vendasList.map((item, index) => (
+                                            <View style={styles.itemContainer} key={index}>
+                                                <Text style={styles.itemNome}>{item.nome}</Text>
+                                                <Text>Quantidade: {item.quantidade}</Text>
+                                            </View>
+                                        ))
+                                )
+                        )
+                    }
+                </View>
+            </View>
+            <ModalSearch
+                title="Pesquisar Venda"
+                list={vendasList}
+                openModal={modalIsOpen}
+                fnCloseModal={() => setModalIsOpen(!modalIsOpen)}
+                handleFilter={fnHandleFilter}
+                produtos={false}
+            />
         </ScrollView>
     );
 };
@@ -25,7 +138,40 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     titulo: {
-        fontSize: 24,
+        fontSize: 35,
         fontWeight: 'bold',
     },
+    headerIcons: {
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    itemContainer: {
+        padding: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+        backgroundColor: '#fff',
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        elevation: 1,
+        borderRadius: 8,
+        marginVertical: 4,
+    },
+    itemNome: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    itemSub: {
+        fontSize: 16,
+        color: '#666',
+    },
+    cleanFilterText: {
+        color: 'red',
+        alignSelf: 'flex-end',
+        marginBottom: 5
+    }
 });
