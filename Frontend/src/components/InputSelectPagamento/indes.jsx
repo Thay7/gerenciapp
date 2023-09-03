@@ -2,12 +2,12 @@ import { Picker } from '@react-native-picker/picker';
 import { View, Text, StyleSheet } from 'react-native';
 import { formatterbrl } from '../../utils/formatterbrl';
 
-export const InputSelect = ({ title, selectedValue, onValueChange, options }) => {
+export const InputSelectPagamento = ({ title, selectedValue, onValueChange, options }) => {
     return (
         <View style={styles.container}>
             <View>
                 <Text style={styles.text}>
-                    {title}
+                    {title} *
                 </Text>
             </View>
             <View style={styles.input}>
@@ -16,10 +16,15 @@ export const InputSelect = ({ title, selectedValue, onValueChange, options }) =>
                     onValueChange={onValueChange}
                     enabled={options.length === 0 ? false : true}
                 >
+                     <Picker.Item
+                                label="Selecione"
+                                enabled={false}
+                                style={styles.labelPicker}
+                            />
                     {options.length === 0
                         ? (
                             <Picker.Item
-                                label="Nenhum produto disponível"
+                                label="Nenhum item disponível"
                                 enabled={false}
                                 style={styles.labelPicker}
                             />
@@ -29,7 +34,7 @@ export const InputSelect = ({ title, selectedValue, onValueChange, options }) =>
                             options.map((item, index) => (
                                 <Picker.Item
                                     key={index}
-                                    label={`${item.nome} - ${formatterbrl(item.valor)}`}
+                                    label={item}
                                     value={item}
                                     style={styles.labelPicker}
                                 />
@@ -48,7 +53,7 @@ const styles = StyleSheet.create({
     },
     text: {
         marginBottom: 5,
-        fontSize: 24,
+        fontSize: 16,
         fontWeight: 'bold',
     },
     input: {

@@ -28,6 +28,7 @@ export const DetalhesProduto = () => {
                         editable={enable}
                         value={produto.produto_nome}
                         fullWidth
+                        borderRadius={10}
                     //onChangeText={(text) => setSearchName(text)}
                     />
                     <InputApp
@@ -35,6 +36,7 @@ export const DetalhesProduto = () => {
                         editable={enable}
                         value={produto.produto_referencia}
                         fullWidth
+                        borderRadius={10}
                     //onChangeText={(text) => setSearchReference(text)}
                     />
                     <InputApp
@@ -42,6 +44,7 @@ export const DetalhesProduto = () => {
                         editable={enable}
                         value={produto.produto_descricao}
                         fullWidth
+                        borderRadius={10}
                     //onChangeText={(text) => setSearchReference(text)}
                     />
                     <InputApp
@@ -49,6 +52,7 @@ export const DetalhesProduto = () => {
                         editable={enable}
                         value={produto.produto_marca}
                         fullWidth
+                        borderRadius={10}
                     //onChangeText={(text) => setSearchReference(text)}
                     />
                     <InputApp
@@ -56,6 +60,7 @@ export const DetalhesProduto = () => {
                         editable={enable}
                         value={formatterbrl(produto.produto_valorCompra)}
                         fullWidth
+                        borderRadius={10}
                     //onChangeText={(text) => setSearchReference(text)}
                     />
                     <InputApp
@@ -63,6 +68,7 @@ export const DetalhesProduto = () => {
                         editable={enable}
                         value={formatterbrl(produto.produto_valorVenda)}
                         fullWidth
+                        borderRadius={10}
                     //onChangeText={(text) => setSearchReference(text)}
                     />
                     {enable &&

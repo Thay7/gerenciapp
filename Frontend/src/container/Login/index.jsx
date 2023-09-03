@@ -48,6 +48,8 @@ export const Login = () => {
                             placeholder="Informe seu usuário"
                             value={login}
                             onChangeText={setLogin}
+                            marginBottom={true}
+                            borderRadius={10}
                         />
                         <InputApp
                             title="Senha"
@@ -55,6 +57,8 @@ export const Login = () => {
                             secureTextEntry={true}
                             value={password}
                             onChangeText={setPassword}
+                            marginBottom={true}
+                            borderRadius={10}
                         />
                         <ButtonApp
                             title="Entrar"

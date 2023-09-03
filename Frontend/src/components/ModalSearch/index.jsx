@@ -43,11 +43,15 @@ export const ModalSearch = ({ title, openModal, fnCloseModal, handleFilter, prod
                   title="Nome:"
                   value={searchName}
                   onChangeText={(text) => setSearchName(text)}
+                  marginBottom={true}
+                  borderRadius={10}
                 />
                 <InputApp
                   title="Referência:"
                   value={searchReference}
                   onChangeText={(text) => setSearchReference(text)}
+                  marginBottom={true}
+                  borderRadius={10}
                 />
               </>
 
@@ -58,21 +62,25 @@ export const ModalSearch = ({ title, openModal, fnCloseModal, handleFilter, prod
                   title="Cliente"
                   value={searchClientName}
                   onChangeText={(text) => setSearchClientName(text)}
+                  borderRadius={10}
                 />
                 <InputApp
                   title="CPF"
                   value={searchClientCPF}
                   onChangeText={(text) => setSearchClientCPF(text)}
+                  borderRadius={10}
                 />
                 <InputApp
                   title="Data"
                   value={searchDate}
                   onChangeText={(text) => setSearchDate(text)}
+                  borderRadius={10}
                 />
                 <InputApp
                   title="Valor"
                   value={searchValue}
                   onChangeText={(text) => setSearchValue(text)}
+                  borderRadius={10}
                 />
               </>
             )

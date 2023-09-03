@@ -14,17 +14,27 @@ export const InputApp = ({
     fullWidth,
     multiline,
     textAlignVertical,
-    marginTopText
+    borderRadius,
+    marginBottom,
+    marginTopText,
+    alignSelf
 }) => {
 
     !secureTextEntry ? false : true
 
     if (!fullWidth) {
-        width = 300
+        width = width
     }
 
     if (!height) {
         height = 40
+    }
+
+    if (!marginBottom) {
+        marginBottom = 0
+    }
+    else {
+        marginBottom = 20
     }
 
     const inputStyles = {
@@ -35,11 +45,13 @@ export const InputApp = ({
 
     return (
         <View style={styles.container}>
-            <View>
-                <Text style={[styles.text]} >
-                    {title}
-                </Text>
-            </View>
+            {title &&
+                <View>
+                    <Text style={[styles.text]} >
+                        {title}
+                    </Text>
+                </View>
+            }
             <TextInput
                 style={inputStyles} // use a variável 'inputStyles' para definir o estilo do TextInput
                 title={title}
@@ -53,6 +65,9 @@ export const InputApp = ({
                 multiline={multiline}
                 textAlignVertical={textAlignVertical}
                 marginTopText={20}
+                marginBottom={marginBottom}
+                borderRadius={borderRadius}
+                alignSelf={alignSelf}
             />
         </View>
     )
@@ -69,9 +84,8 @@ const styles = StyleSheet.create({
         height: 40,
         borderWidth: 1,
         borderColor: '#ccc',
-        borderRadius: 10,
+        // borderRadius: 10,
         paddingLeft: 10,
         paddingRight: 10,
-        marginBottom: 20,
     }
 })

@@ -14,6 +14,7 @@ export const PedidoDeCompra = () => {
                 <View style={{ marginBottom: 16 }}>
                     <InputApp
                         title="Nome"
+                        borderRadius={10}
                     />
                 </View>
             </View>

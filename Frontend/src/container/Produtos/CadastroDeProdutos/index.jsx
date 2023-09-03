@@ -41,6 +41,8 @@ export const CadastroDeProdutos = () => {
                             fullWidth
                             value={formData.nome}
                             onChangeText={(text) => handleInputChange("produto_nome", text)}
+                            marginBottom={true}
+                            borderRadius={10}
                         />
                         <InputApp
                             title="Descrição"
@@ -48,12 +50,16 @@ export const CadastroDeProdutos = () => {
                             multiline={true}
                             value={formData.descricao}
                             onChangeText={(text) => handleInputChange("produto_descricao", text)}
+                            marginBottom={true}
+                            borderRadius={10}
                         />
                         <InputApp
                             title="Marca"
                             fullWidth
                             value={formData.marca}
                             onChangeText={(text) => handleInputChange("produto_marca", text)}
+                            marginBottom={true}
+                            borderRadius={10}
                         />
                         <InputApp
                             title="Valor Compra"
@@ -61,6 +67,8 @@ export const CadastroDeProdutos = () => {
                             value={formData.valorCompra}
                             onChangeText={(text) => handleInputChange("produto_valorCompra", text)}
                             keyboardType="numeric"
+                            marginBottom={true}
+                            borderRadius={10}
                         />
                         <InputApp
                             title="Valor Venda"
@@ -68,6 +76,8 @@ export const CadastroDeProdutos = () => {
                             value={formData.valorVenda}
                             onChangeText={(text) => handleInputChange("produto_valorVenda", text)}
                             keyboardType="numeric"
+                            marginBottom={true}
+                            borderRadius={10}
                         />
                         <ButtonApp
                             title="Salvar"

@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { InputApp } from '../../components/InputApp'
 import { PieChart } from 'react-native-svg-charts'
 
 export const Dashboard = () => {
