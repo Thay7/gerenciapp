@@ -2,7 +2,7 @@ import { Picker } from '@react-native-picker/picker';
 import { View, Text, StyleSheet } from 'react-native';
 import { formatterbrl } from '../../utils/formatterbrl';
 
-export const InputSelectPagamento = ({ title, selectedValue, onValueChange, options }) => {
+export const InputSelectPagamento = ({ title, selectedValue, onValueChange, options, enable }) => {
     return (
         <View style={styles.container}>
             <View>
@@ -14,13 +14,13 @@ export const InputSelectPagamento = ({ title, selectedValue, onValueChange, opti
                 <Picker
                     selectedValue={selectedValue}
                     onValueChange={onValueChange}
-                    enabled={options.length === 0 ? false : true}
+                    enabled={enable != null ? enable : options.length === 0 ? false : true}
                 >
-                     <Picker.Item
-                                label="Selecione"
-                                enabled={false}
-                                style={styles.labelPicker}
-                            />
+                    <Picker.Item
+                        label="Selecione"
+                        enabled={false}
+                        style={styles.labelPicker2}
+                    />
                     {options.length === 0
                         ? (
                             <Picker.Item
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     },
     text: {
         marginBottom: 5,
-        fontSize: 16,
+        fontSize: 15,
         fontWeight: 'bold',
     },
     input: {
@@ -61,8 +61,5 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderRadius: 10,
         marginBottom: 20,
-    },
-    labelPicker: {
-        fontSize: 15,
     }
 })

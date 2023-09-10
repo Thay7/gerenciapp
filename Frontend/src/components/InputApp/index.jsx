@@ -47,7 +47,7 @@ export const InputApp = ({
         <View style={styles.container}>
             {title &&
                 <View>
-                    <Text style={[styles.text]} >
+                    <Text style={styles.text} >
                         {title}
                     </Text>
                 </View>

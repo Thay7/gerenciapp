@@ -16,17 +16,17 @@ const styles = StyleSheet.create({
     containerIcon: {
         borderWidth: 1,
         borderColor: '#ccc',
-        borderRadius: 8,
+        borderRadius: 20,
         padding: 5,
         backgroundColor: "#fff",
-        width: 40,
-        height: 40,
+        width: 30,
+        height: 30,
         alignItems: 'center',
         justifyContent: 'center',
         elevation: 1
     },
     icon: {
-        width: 20,
-        height: 20,
+        width: 15,
+        height: 15,
     },
 })

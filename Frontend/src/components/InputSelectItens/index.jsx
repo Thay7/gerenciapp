@@ -51,7 +51,7 @@ export const InputSelectItens = ({ title, selectedValue, onValueChange, options 
                         (
                             optionsWithSeparators.map((item, index) => (
                                 <Picker.Item
-                                    key={item.id}
+                                    key={index}
                                     label={item.tipo === "Label" ? item.nome : `${item.nome} - ${formatterbrl(item.valor)}`}
                                     value={item}
                                     style={item.tipo === "Label" ? styles.labelSeparator : styles.labelPicker}
@@ -73,7 +73,6 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         fontSize: 16,
         fontWeight: 'bold',
-        // color: '#4040ff'
     },
     input: {
         borderWidth: 1,
@@ -81,11 +80,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginBottom: 20,
     },
-    labelPicker: {
-        fontSize: 15,
-    },
     labelSeparator: {
-        fontSize: 15,
-        backgroundColor: '#f2f2f2',
+        color: '#4040ff'
     }
 })

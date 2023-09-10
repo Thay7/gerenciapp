@@ -12,6 +12,7 @@ import { Login } from './src/container/Login';
 import { Home } from './src/container/Home';
 import { Vendas } from './src/container/Vendas';
 import { NovaVenda } from './src/container/Vendas/NovaVenda';
+import { DetalhesVenda } from './src/container/Vendas/DetalhesVenda'
 import { Estoque } from './src/container/Estoque';
 import { Perfil } from './src/container/Perfil';
 import { Produtos } from './src/container/Produtos'
@@ -37,9 +38,14 @@ export default function App() {
           component={Vendas}
           options={{ headerShown: false }}
         />
-          <Stack.Screen
+        <Stack.Screen
           name="NovaVenda"
           component={NovaVenda}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DetalhesVenda"
+          component={DetalhesVenda}
           options={{ headerShown: false }}
         />
         <Stack.Screen

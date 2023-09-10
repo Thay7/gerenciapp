@@ -9,7 +9,8 @@ export const ButtonApp = ({
     color,
     width,
     borderColor,
-    borderWidth
+    borderWidth,
+    paddingHorizontal
 }) => {
 
     borderColor ? borderWidth = 1 : borderWidth = 0

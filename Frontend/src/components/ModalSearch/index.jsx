@@ -24,7 +24,7 @@ export const ModalSearch = ({ title, openModal, fnCloseModal, handleFilter, prod
 
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={openModal}
     >
@@ -103,8 +103,8 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    paddingHorizontal: 20
   },
   modalContent: {
     backgroundColor: '#fff',
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: 30
   },
   title: {
     fontSize: 30,

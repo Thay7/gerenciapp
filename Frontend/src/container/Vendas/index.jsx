@@ -7,9 +7,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { ModalSearch } from '../../components/ModalSearch/index';
 import { ButtonAdd } from '../../components/Buttons/ButtonAdd';
 import { ButtonSearch } from '../../components/Buttons/ButtonSearch';
+import { formatterbrl } from '../../utils/formatterbrl';
 
 export const Vendas = () => {
-    const [vendasList, setVendasList] = useState([]);
+    const [estoqueList, setEstoqueList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [search, setSearch] = useState([]);
@@ -22,14 +23,33 @@ export const Vendas = () => {
     const listaEstoque = async () => {
         setLoading(true)
         //let json = await useApi.listarEstoque()
-        //setVendasList(json)
-        setVendasList([])
+        //setEstoqueList(json)
+        setEstoqueList([
+            {
+                numeroVenda: '012023',
+                itens: [
+                    { nome: 'Oléo Mobil', valor: 12, quantidade: 1 }, { nome: 'Troca de Óleo', valor: 10 }
+                ],
+                formaDePagamento: 'Cartão de Crédito',
+                numeroParcelas: 1,
+                valorTotal: 22,
+                dataHora: '10/09/2023 14:20'
+            },
+            {
+                numeroVenda: '022023',
+                itens: [{ nome: 'Cabo de Freio', valor: 12, quantidade: 2 },
+                { nome: 'Remendo Pneu Moto', valor: 10 }],
+                formaDePagamento: 'Pix',
+                valorTotal: 34,
+                dataHora: '10/09/2023 14:00'
+            },
+        ])
         setLoading(false)
     }
 
     const fnHandleFilter = (name, reference) => {
         if (name || reference) {
-            const filtered = vendasList.filter(item =>
+            const filtered = estoqueList.filter(item =>
                 (!name || item.nome.toLowerCase().includes(name.trim().toLowerCase())) &&
                 (!reference || item.referencia.includes(reference.trim().toLowerCase()))
             );
@@ -62,7 +82,7 @@ export const Vendas = () => {
                             />
                         </View>
                         <ButtonAdd
-                            onPress={() => navigation.navigate('NovaVenda')}
+                        onPress={() => navigation.navigate('NovaVenda')} 
                         />
                     </View>
                 </View>
@@ -102,11 +122,23 @@ export const Vendas = () => {
                                             ))
                                         )
                                         :
-                                        vendasList.map((item, index) => (
-                                            <View style={styles.itemContainer} key={index}>
-                                                <Text style={styles.itemNome}>{item.nome}</Text>
-                                                <Text>Quantidade: {item.quantidade}</Text>
-                                            </View>
+                                        estoqueList.map((item, index) => (
+                                            <TouchableOpacity style={styles.itemContainer} key={index} onPress={() => {
+                                                navigation.navigate('DetalhesVenda', { venda: item })
+                                            }}>
+                                                <View style={styles.rowBetween}>
+                                                    <Text style={styles.itemNome}>Nº Venda:</Text>
+                                                    <Text style={styles.itemNome}>{item.numeroVenda}</Text>
+                                                </View>
+                                                <View style={styles.rowBetween}>
+                                                    <Text>Data e Hora:</Text>
+                                                    <Text>{item.dataHora}</Text>
+                                                </View>
+                                                <View style={styles.rowBetween}>
+                                                    <Text>Total Compra:</Text>
+                                                    <Text>{formatterbrl(item.valorTotal)}</Text>
+                                                </View>
+                                            </TouchableOpacity>
                                         ))
                                 )
                         )
@@ -114,14 +146,14 @@ export const Vendas = () => {
                 </View>
             </View>
             <ModalSearch
-                title="Pesquisar Venda"
-                list={vendasList}
+                title="Pesquisar Produto"
+                list={estoqueList}
                 openModal={modalIsOpen}
                 fnCloseModal={() => setModalIsOpen(!modalIsOpen)}
                 handleFilter={fnHandleFilter}
-                produtos={false}
+                produtos
             />
-        </ScrollView>
+        </ScrollView >
     );
 };
 
@@ -173,5 +205,10 @@ const styles = StyleSheet.create({
         color: 'red',
         alignSelf: 'flex-end',
         marginBottom: 5
+    },
+    rowBetween: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     }
 });

@@ -29,6 +29,7 @@ export const DetalhesProduto = () => {
                         value={produto.produto_nome}
                         fullWidth
                         borderRadius={10}
+                        marginBottom
                     //onChangeText={(text) => setSearchName(text)}
                     />
                     <InputApp
@@ -37,6 +38,7 @@ export const DetalhesProduto = () => {
                         value={produto.produto_referencia}
                         fullWidth
                         borderRadius={10}
+                        marginBottom
                     //onChangeText={(text) => setSearchReference(text)}
                     />
                     <InputApp
@@ -45,6 +47,7 @@ export const DetalhesProduto = () => {
                         value={produto.produto_descricao}
                         fullWidth
                         borderRadius={10}
+                        marginBottom
                     //onChangeText={(text) => setSearchReference(text)}
                     />
                     <InputApp
@@ -53,6 +56,7 @@ export const DetalhesProduto = () => {
                         value={produto.produto_marca}
                         fullWidth
                         borderRadius={10}
+                        marginBottom
                     //onChangeText={(text) => setSearchReference(text)}
                     />
                     <InputApp
@@ -61,6 +65,7 @@ export const DetalhesProduto = () => {
                         value={formatterbrl(produto.produto_valorCompra)}
                         fullWidth
                         borderRadius={10}
+                        marginBottom
                     //onChangeText={(text) => setSearchReference(text)}
                     />
                     <InputApp
@@ -69,6 +74,7 @@ export const DetalhesProduto = () => {
                         value={formatterbrl(produto.produto_valorVenda)}
                         fullWidth
                         borderRadius={10}
+                        marginBottom
                     //onChangeText={(text) => setSearchReference(text)}
                     />
                     {enable &&
