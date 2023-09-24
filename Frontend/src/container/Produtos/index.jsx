@@ -161,7 +161,7 @@ export const Produtos = () => {
                 list={produtos}
                 openModal={modalIsOpen}
                 fnCloseModal={() => setModalIsOpen(!modalIsOpen)}
-                handleFilter={fnHandleFilter}
+                handleFilterProducts={fnHandleFilter}
                 produtos
             />
         </ScrollView >

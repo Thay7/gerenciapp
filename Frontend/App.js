@@ -10,15 +10,27 @@ import ic_perfil from './src/icons/Home/ic_perfil.png'
 //Componentes
 import { Login } from './src/container/Login';
 import { Home } from './src/container/Home';
-import { Vendas } from './src/container/Vendas';
-import { NovaVenda } from './src/container/Vendas/NovaVenda';
-import { DetalhesVenda } from './src/container/Vendas/DetalhesVenda'
-import { Estoque } from './src/container/Estoque';
 import { Perfil } from './src/container/Perfil';
+
+//Módulo Vendas
+import { Vendas } from './src/container/Vendas';
+import { DetalhesVenda } from './src/container/Vendas/DetalhesVenda'
+import { NovaVenda } from './src/container/Vendas/NovaVenda';
+
+//Módulo Estoque
+import { Estoque } from './src/container/Estoque';
+import { DetalhesEstoque } from './src/container/Estoque/DetalhesEstoque';
+import { EntradaEstoque } from './src/container/Estoque/EntradaEstoque';
+
+//Módulo Produtos
 import { Produtos } from './src/container/Produtos'
-import { CadastroDeProdutos } from './src/container/Produtos/CadastroDeProdutos';
 import { DetalhesProduto } from './src/container/Produtos/DetalhesProduto';
+import { CadastroDeProdutos } from './src/container/Produtos/CadastroDeProdutos';
+
+//Módulo Pedido Compra
 import { PedidoDeCompra } from './src/container/PedidoDeCompra'
+
+//Módulo Dashboard
 import { Dashboard } from './src/container/Dashboard'
 
 export default function App() {
@@ -51,6 +63,16 @@ export default function App() {
         <Stack.Screen
           name="Estoque"
           component={Estoque}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DetalhesEstoque"
+          component={DetalhesEstoque}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="EntradaEstoque"
+          component={EntradaEstoque}
           options={{ headerShown: false }}
         />
         <Stack.Screen

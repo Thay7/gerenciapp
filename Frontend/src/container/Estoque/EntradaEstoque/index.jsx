@@ -6,36 +6,54 @@ import { ButtonApp } from '../../../components/Buttons/ButtonApp';
 import { useApi } from '../../../Api/useApi';
 import { ModalErrors } from '../../../components/ModalErrors';
 import { ModalSucces } from '../../../components/ModalSucces';
+import { InputSelectProductsEstoque } from '../../../components/InputSelectProductsEstoque';
 
-export const CadastroDeProdutos = () => {
-    const [formData, setFormData] = useState({
-        produto_nome: '',
-        produto_descricao: '',
-        produto_marca: '',
-        produto_valorCompra: 0,
-        produto_valorVenda: 0
-    })
+export const EntradaEstoque = () => {
+    //Lidar com o produto selecionado
+    const [optionsProducts, setOptionsItens] = useState(
+        [
+            { id: '1', nome: 'Oléo Mobil', valor: '10', tipo: "Produto" },
+            { id: '2', nome: 'Oléo Dulub', valor: '12', tipo: "Produto" },
+            { id: '3', nome: 'Rolamento', valor: '12', tipo: "Produto" },
+            { id: '4', nome: 'Viseira', valor: '12', tipo: "Produto" },
+            { id: '5', nome: 'Luz Pisca - Biz', valor: '12', tipo: "Produto" },
+            { id: '6', nome: 'Cabo de Freio', valor: '12', tipo: "Produto" },
+            { id: '7', nome: 'Troca de Oléo', valor: '12', tipo: "Serviço" },
+            { id: '8', nome: 'Remendo Pneu Moto', valor: '12', tipo: "Serviço" },
+            { id: '9', nome: 'Remendo Pneu Carro', valor: '12', tipo: "Serviço" }
+        ]
+    );
 
     const [modalErrors, setModalErrors] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+
+    //Obj a ser enviado para o back
+    const [objEstoque, setObjEstoque] = useState({
+        produto_id: '',
+        produto_quantidade: '',
+    })
+
     const handleInputChange = (name, value) => {
         if (name === "produto_valorCompra" || name === "produto_valorVenda") {
             if (value.includes(',') || value.includes('.')) {
                 value = value.replace(",", ".");
             }
         }
-        setFormData({ ...formData, [name]: value })
+        setObjEstoque({ ...objEstoque, [name]: value })
     }
 
+    //Onchange do select do produto
+    const handleOnValueChange = (value) => {
+        setSelectedProduct(value);
+        handleInputChange("produto_id", selectedProduct.id)
+    };
+
     const handleSubmit = async () => {
-        console.log(formData.produto_nome);
-        console.log(formData.produto_valorCompra);
-        console.log(formData.produto_valorVenda);
-        if (formData.produto_nome != '' && formData.produto_valorCompra > 0 && formData.produto_valorVenda > 0) {
+        if (objEstoque.produto_id != '' && objEstoque.produto_quantidade != '') {
             console.log('nome valor compra e valor venda ta preenchido');
         }
         else {
             setModalErrors(true);
-
         }
     }
 
@@ -43,51 +61,24 @@ export const CadastroDeProdutos = () => {
         <ScrollView style={styles.container}>
             <View>
                 <View style={styles.header}>
-                    <Text style={styles.titulo}>Cadastro de Produto</Text>
+                    <Text style={styles.titulo}>Entrada de Estoque</Text>
                 </View>
                 <View>
-                    <InputApp
-                        title="Nome *"
-                        fullWidth
-                        value={formData.nome}
-                        onChangeText={(text) => handleInputChange("produto_nome", text)}
-                        marginBottom={true}
-                        borderRadius={10}
+                    <InputSelectProductsEstoque
+                        title="Produto"
+                        options={optionsProducts}
+                        selectedValue={selectedProduct}
+                        onValueChange={(value) => handleOnValueChange(value)}
                     />
                     <InputApp
-                        title="Descrição"
+                        title="Quantidade *"
                         fullWidth
                         multiline={true}
-                        value={formData.descricao}
-                        onChangeText={(text) => handleInputChange("produto_descricao", text)}
+                        value={objEstoque.produto_quantidade}
                         marginBottom={true}
                         borderRadius={10}
-                    />
-                    <InputApp
-                        title="Marca"
-                        fullWidth
-                        value={formData.marca}
-                        onChangeText={(text) => handleInputChange("produto_marca", text)}
-                        marginBottom={true}
-                        borderRadius={10}
-                    />
-                    <InputApp
-                        title="Valor Compra *"
-                        fullWidth
-                        value={formData.valorCompra}
-                        onChangeText={(text) => handleInputChange("produto_valorCompra", text)}
                         keyboardType="numeric"
-                        marginBottom={true}
-                        borderRadius={10}
-                    />
-                    <InputApp
-                        title="Valor Venda *"
-                        fullWidth
-                        value={formData.valorVenda}
-                        onChangeText={(text) => handleInputChange("produto_valorVenda", text)}
-                        keyboardType="numeric"
-                        marginBottom={true}
-                        borderRadius={10}
+                        onChangeText={(text) => handleInputChange("produto_quantidade", text)}
                     />
                     <ButtonApp
                         title="Salvar"

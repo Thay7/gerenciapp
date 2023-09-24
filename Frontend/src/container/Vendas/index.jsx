@@ -10,7 +10,7 @@ import { ButtonSearch } from '../../components/Buttons/ButtonSearch';
 import { formatterbrl } from '../../utils/formatterbrl';
 
 export const Vendas = () => {
-    const [estoqueList, setEstoqueList] = useState([]);
+    const [vendasList, setVendasList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [search, setSearch] = useState([]);
@@ -24,35 +24,37 @@ export const Vendas = () => {
         setLoading(true)
         //let json = await useApi.listarEstoque()
         //setEstoqueList(json)
-        setEstoqueList([
+        setVendasList([
             {
                 numeroVenda: '012023',
                 itens: [
-                    { nome: 'Oléo Mobil', valor: 12, quantidade: 1 }, { nome: 'Troca de Óleo', valor: 10 }
+                    { nome: 'Oléo Mobil', valor: '12', quantidade: '1' }, { nome: 'Troca de Óleo', valor: '10' }
                 ],
                 formaDePagamento: 'Cartão de Crédito',
-                numeroParcelas: 1,
-                valorTotal: 22,
+                numeroParcelas: '1',
+                valorTotal: '22',
                 dataHora: '10/09/2023 14:20'
             },
             {
                 numeroVenda: '022023',
-                itens: [{ nome: 'Cabo de Freio', valor: 12, quantidade: 2 },
-                { nome: 'Remendo Pneu Moto', valor: 10 }],
+                itens: [{ nome: 'Cabo de Freio', valor: '12', quantidade: '2' },
+                { nome: 'Remendo Pneu Moto', valor: '10' }],
                 formaDePagamento: 'Pix',
-                valorTotal: 34,
+                valorTotal: '34',
                 dataHora: '10/09/2023 14:00'
             },
         ])
         setLoading(false)
     }
 
-    const fnHandleFilter = (name, reference) => {
-        if (name || reference) {
-            const filtered = estoqueList.filter(item =>
-                (!name || item.nome.toLowerCase().includes(name.trim().toLowerCase())) &&
-                (!reference || item.referencia.includes(reference.trim().toLowerCase()))
+    const fnHandleFilter = (number, value, dateHour) => {
+        if (number || value || dateHour) {
+            const filtered = vendasList.filter(item =>
+                (!number || item.numeroVenda.includes(number.trim())) &&
+                (!value || item.valorTotal.includes(value.trim())) &&
+                (!dateHour || item.dataHora.includes(dateHour.trim()))
             );
+
             setSearch(filtered);
             setModalIsOpen(!modalIsOpen);
 
@@ -82,7 +84,7 @@ export const Vendas = () => {
                             />
                         </View>
                         <ButtonAdd
-                        onPress={() => navigation.navigate('NovaVenda')} 
+                            onPress={() => navigation.navigate('NovaVenda')}
                         />
                     </View>
                 </View>
@@ -115,14 +117,26 @@ export const Vendas = () => {
                                     search.length > 0 ?
                                         (
                                             search.map((item, index) => (
-                                                <View style={styles.itemContainer} key={index}>
-                                                    <Text style={styles.itemNome}>{item.nome}</Text>
-                                                    <Text>Quantidade: {item.quantidade}</Text>
-                                                </View>
+                                                <TouchableOpacity style={styles.itemContainer} key={index} onPress={() => {
+                                                    navigation.navigate('DetalhesVenda', { venda: item })
+                                                }}>
+                                                    <View style={styles.rowBetween}>
+                                                        <Text style={styles.itemNome}>Nº Venda:</Text>
+                                                        <Text style={styles.itemNome}>{item.numeroVenda}</Text>
+                                                    </View>
+                                                    <View style={styles.rowBetween}>
+                                                        <Text>Data e Hora:</Text>
+                                                        <Text>{item.dataHora}</Text>
+                                                    </View>
+                                                    <View style={styles.rowBetween}>
+                                                        <Text>Total Compra:</Text>
+                                                        <Text>{formatterbrl(item.valorTotal)}</Text>
+                                                    </View>
+                                                </TouchableOpacity>
                                             ))
                                         )
                                         :
-                                        estoqueList.map((item, index) => (
+                                        vendasList.map((item, index) => (
                                             <TouchableOpacity style={styles.itemContainer} key={index} onPress={() => {
                                                 navigation.navigate('DetalhesVenda', { venda: item })
                                             }}>
@@ -146,12 +160,12 @@ export const Vendas = () => {
                 </View>
             </View>
             <ModalSearch
-                title="Pesquisar Produto"
-                list={estoqueList}
+                title="Pesquisar Venda"
+                list={vendasList}
                 openModal={modalIsOpen}
                 fnCloseModal={() => setModalIsOpen(!modalIsOpen)}
-                handleFilter={fnHandleFilter}
-                produtos
+                handleFilterSales={fnHandleFilter}
+                vendas
             />
         </ScrollView >
     );

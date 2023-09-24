@@ -9,7 +9,7 @@ export const ModalErrors = ({ title, message, openModal, fnCloseModal }) => {
 
     return (
         <Modal
-            animationType="none"
+            animationType="fade"
             transparent={true}
             visible={openModal}
             

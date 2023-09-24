@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { ModalSearch } from '../../components/ModalSearch/index';
 import { ButtonAdd } from '../../components/Buttons/ButtonAdd';
 import { ButtonSearch } from '../../components/Buttons/ButtonSearch';
+import { ButtonImport } from '../../components/Buttons/ButtonImport';
 
 export const Estoque = () => {
     const [estoqueList, setEstoqueList] = useState([]);
@@ -75,20 +76,19 @@ export const Estoque = () => {
                 <View style={styles.header}>
                     <Text style={styles.titulo}>Lista Estoque</Text>
                     <View style={styles.headerIcons}>
-                        <View style={{ marginRight: 5 }}>
-                            <ButtonSearch
-                                onPress={() => setModalIsOpen(true)}
-                            />
+                        <ButtonSearch onPress={() => setModalIsOpen(true)} />
+                        <View style={{ marginLeft: 5 }}>
+                            <ButtonAdd
+                                onPress={() => {
+                                    navigation.navigate('EntradaEstoque')
+                                }} />
                         </View>
-                        <ButtonAdd
-                        />
+                        <View style={{ marginLeft: 5 }}><ButtonImport /></View>
                     </View>
                 </View>
                 {
                     (search.length > 0 || noResults) && (
-                        <TouchableOpacity
-                            onPress={handleClearFilter}
-                        >
+                        <TouchableOpacity onPress={handleClearFilter}>
                             <Text style={styles.cleanFilterText}>Limpar filtro</Text>
                         </TouchableOpacity>
                     )
@@ -113,18 +113,26 @@ export const Estoque = () => {
                                     search.length > 0 ?
                                         (
                                             search.map((item, index) => (
-                                                <View style={styles.itemContainer} key={index}>
+                                                <TouchableOpacity style={styles.itemContainer} key={index}
+                                                    onPress={() => {
+                                                        navigation.navigate('DetalhesEstoque', { produto: item });
+                                                    }}>
                                                     <Text style={styles.itemNome}>{item.nome}</Text>
+                                                    <Text>Referência: {item.referencia}</Text>
                                                     <Text>Quantidade: {item.quantidade}</Text>
-                                                </View>
+                                                </TouchableOpacity>
                                             ))
                                         )
                                         :
                                         estoqueList.map((item, index) => (
-                                            <View style={styles.itemContainer} key={index}>
+                                            <TouchableOpacity style={styles.itemContainer} key={index}
+                                                onPress={() => {
+                                                    navigation.navigate('DetalhesEstoque', { produto: item });
+                                                }}>
                                                 <Text style={styles.itemNome}>{item.nome}</Text>
+                                                <Text>Referência: {item.referencia}</Text>
                                                 <Text>Quantidade: {item.quantidade}</Text>
-                                            </View>
+                                            </TouchableOpacity>
                                         ))
                                 )
                         )
@@ -136,7 +144,7 @@ export const Estoque = () => {
                 list={estoqueList}
                 openModal={modalIsOpen}
                 fnCloseModal={() => setModalIsOpen(!modalIsOpen)}
-                handleFilter={fnHandleFilter}
+                handleFilterProducts={fnHandleFilter}
                 produtos
             />
         </ScrollView>
@@ -161,7 +169,7 @@ const styles = StyleSheet.create({
     },
     headerIcons: {
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'row'
     },
     itemContainer: {
         padding: 16,

@@ -1,20 +1,30 @@
 import React, { useState } from 'react';
-import { View, Button, Modal, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Modal, Text, StyleSheet } from 'react-native';
+
+//import components
 import { InputApp } from '../InputApp';
 import { ButtonApp } from '../Buttons/ButtonApp';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { ButtonClose } from '../Buttons/ButtonClose';
 
-export const ModalSearch = ({ title, openModal, fnCloseModal, handleFilter, produtos }) => {
+export const ModalSearch = ({ title, openModal, fnCloseModal, handleFilterProducts, handleFilterSales, produtos, vendas }) => {
+  //states para modal do tipo produtos
   const [searchName, setSearchName] = useState('');
   const [searchReference, setSearchReference] = useState('');
-  const [searchClientName, setSearchClientName] = useState('');
-  const [searchClientCPF, setSearchClientCPF] = useState('');
-  const [searchDate, setSearchDate] = useState('');
-  const [searchValue, setSearchValue] = useState('');
+
+  //states para modal do tipo vendas
+  const [searchNumeroVenda, setSearchNumeroVenda] = useState('');
+  const [searchValor, setSearchValor] = useState(0);
+  const [searchDataHora, setSearchDataHora] = useState(null);
 
   const handleSearch = () => {
-    handleFilter(searchName, searchReference);
+    if (produtos) {
+      //Função filtrar de produtos
+      handleFilterProducts(searchName, searchReference);
+    }
+    if (vendas) {
+      //Função filtrar de produtos
+      handleFilterSales(searchNumeroVenda, searchValor, searchDataHora);
+    }
     fnCloseModal();
   };
 
@@ -36,7 +46,7 @@ export const ModalSearch = ({ title, openModal, fnCloseModal, handleFilter, prod
               onPress={fnCloseModal}
             />
           </View>
-          {produtos ?
+          {produtos &&
             (
               <>
                 <InputApp
@@ -54,34 +64,37 @@ export const ModalSearch = ({ title, openModal, fnCloseModal, handleFilter, prod
                   borderRadius={10}
                 />
               </>
-
-            ) :
+            )
+          }
+          {vendas &&
             (
               <>
-                <InputApp
-                  title="Cliente"
-                  value={searchClientName}
-                  onChangeText={(text) => setSearchClientName(text)}
-                  borderRadius={10}
-                />
-                <InputApp
-                  title="CPF"
-                  value={searchClientCPF}
-                  onChangeText={(text) => setSearchClientCPF(text)}
-                  borderRadius={10}
-                />
-                <InputApp
-                  title="Data"
-                  value={searchDate}
-                  onChangeText={(text) => setSearchDate(text)}
-                  borderRadius={10}
-                />
-                <InputApp
-                  title="Valor"
-                  value={searchValue}
-                  onChangeText={(text) => setSearchValue(text)}
-                  borderRadius={10}
-                />
+                <>
+                  <InputApp
+                    title="Número Venda:"
+                    value={searchNumeroVenda}
+                    keyboardType="numeric"
+                    onChangeText={(text) => setSearchNumeroVenda(text)}
+                    marginBottom={true}
+                    borderRadius={10}
+                  />
+                  <InputApp
+                    title="Valor:"
+                    value={searchValor}
+                    keyboardType="numeric"
+                    onChangeText={(text) => setSearchValor(text)}
+                    marginBottom={true}
+                    borderRadius={10}
+                  />
+                  <InputApp
+                    title="Data/Hora:"
+                    value={searchDataHora}
+                    keyboardType="numeric"
+                    onChangeText={(text) => setSearchDataHora(text)}
+                    marginBottom={true}
+                    borderRadius={10}
+                  />
+                </>
               </>
             )
           }
