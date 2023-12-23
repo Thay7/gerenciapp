@@ -21,7 +21,7 @@ export const Home = () => {
         { name: 'Cadastros', icon: ic_cadastros, page: 'Cadastros' },
         { name: 'Produtos', icon: ic_produtos, page: 'Produtos' },
         { name: 'Pedido De Compra', icon: ic_pedido_de_compra, page: 'PedidoDeCompra' },
-        { name: 'Relatórios', icon: ic_dashboard, page: 'Dashboard' }
+        { name: 'Relatórios', icon: ic_dashboard, page: 'Relatorios' }
     ];
 
     const labelsAndValues = [

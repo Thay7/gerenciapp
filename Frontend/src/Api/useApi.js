@@ -1,13 +1,13 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://34.134.114.172:3005',
-    timeout: 1000,
+    baseURL: 'http://192.168.0.4:5000',
+    timeout: 5000,
 })
 
 export const useApi = {
     listarProdutos: async () => {
-        const response = await api.get('/api/listaProdutos')
+        const response = await api.get('/api/listar')
         return response.data
     },
     cadastrarProdutos: async (formData) => {

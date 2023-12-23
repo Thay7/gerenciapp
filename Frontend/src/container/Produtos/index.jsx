@@ -16,26 +16,28 @@ export const Produtos = () => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [noResults, setNoResults] = useState(false);
     const [search, setSearch] = useState([]);
-    const [produtos, setProdutos] = useState([
-        { produto_id: 1, produto_nome: 'Aro', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-        { produto_id: 2, produto_nome: 'Pneu Moto', produto_referencia: '1686822', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-        { produto_id: 3, produto_nome: 'Oléo X', produto_referencia: '1686822', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-        { produto_id: 4, produto_nome: 'Retrovisor Biz', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-        { produto_id: 5, produto_nome: 'Amortecedor Motocicleta (Par)', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-        { produto_id: 6, produto_nome: 'Pneu Carro', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-        { produto_id: 7, produto_nome: 'Pisca (Par)', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-        { produto_id: 8, produto_nome: 'Punho Moto', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-        { produto_id: 9, produto_nome: 'Interruptor Pisca', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-        { produto_id: 10, produto_nome: 'Aro', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-        { produto_id: 11, produto_nome: 'Pneu Moto', produto_referencia: '1686822', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-        { produto_id: 12, produto_nome: 'Oléo X', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-        { produto_id: 13, produto_nome: 'Retrovisor Biz', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-        { produto_id: 14, produto_nome: 'Amortecedor Motocicleta (Par)', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-        { produto_id: 15, produto_nome: 'Pneu Carro', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-        { produto_id: 16, produto_nome: 'Pisca (Par)', produto_referencia: '1686825', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-        { produto_id: 17, produto_nome: 'Punho Moto', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-        { produto_id: 18, produto_nome: 'Interruptor Pisca', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-    ]);
+    const [produtos, setProdutos] = useState([]
+        /* [
+         { produto_id: 1, produto_nome: 'Aro', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
+         { produto_id: 2, produto_nome: 'Pneu Moto', produto_referencia: '1686822', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
+         { produto_id: 3, produto_nome: 'Oléo X', produto_referencia: '1686822', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
+         { produto_id: 4, produto_nome: 'Retrovisor Biz', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
+         { produto_id: 5, produto_nome: 'Amortecedor Motocicleta (Par)', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
+         { produto_id: 6, produto_nome: 'Pneu Carro', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
+         { produto_id: 7, produto_nome: 'Pisca (Par)', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
+         { produto_id: 8, produto_nome: 'Punho Moto', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
+         { produto_id: 9, produto_nome: 'Interruptor Pisca', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
+         { produto_id: 10, produto_nome: 'Aro', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
+         { produto_id: 11, produto_nome: 'Pneu Moto', produto_referencia: '1686822', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
+         { produto_id: 12, produto_nome: 'Oléo X', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
+         { produto_id: 13, produto_nome: 'Retrovisor Biz', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
+         { produto_id: 14, produto_nome: 'Amortecedor Motocicleta (Par)', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
+         { produto_id: 15, produto_nome: 'Pneu Carro', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
+         { produto_id: 16, produto_nome: 'Pisca (Par)', produto_referencia: '1686825', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
+         { produto_id: 17, produto_nome: 'Punho Moto', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
+         { produto_id: 18, produto_nome: 'Interruptor Pisca', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
+     ]*/
+    );
 
     const fnHandleFilter = (name, reference) => {
         if (name || reference) {
@@ -52,16 +54,18 @@ export const Produtos = () => {
                 setNoResults(false);
         }
     }
-    // useEffect(() => {
-    //     buscarProdutos()
-    // }, [])
 
-    // const buscarProdutos = async () => {
-    //     setLoading(true)
-    //     let json = await useApi.listarProdutos()
-    //     setProdutos(json)
-    //     setLoading(false)
-    // }
+    useEffect(() => {
+        buscarProdutos()
+    }, [])
+
+    const buscarProdutos = async () => {
+        console.log('entrou no buscar produtos')
+        setLoading(true)
+        let json = await useApi.listarProdutos()
+        setProdutos(json)
+        setLoading(false)
+    }
 
     const handleNewProduct = () => {
         navigation.navigate('CadastroDeProdutos')
@@ -133,22 +137,23 @@ export const Produtos = () => {
                                     :
                                     (
                                         <View style={{ marginBottom: 16 }}>
-                                            {produtos.map((item, index) => (
-                                                <TouchableOpacity
-                                                    style={styles.itemContainer}
-                                                    onPress={() => {
-                                                        navigation.navigate('DetalhesProduto', { produto: item });
-                                                    }}
-                                                    key={index}
-                                                >
-                                                    <Text style={styles.itemNome}>{item.produto_nome}</Text>
-                                                    <Text style={styles.itemSub}>Referência: {item.produto_referencia}</Text>
-                                                    {item.produto_descricao &&
-                                                        <Text style={styles.itemSub}>Descrição: {item.produto_descricao}</Text>
-                                                    }
-                                                    <Text style={styles.itemSub}>Valor: {formatterbrl(item.produto_valorVenda)}</Text>
-                                                </TouchableOpacity>
-                                            ))}
+                                            {produtos.length > 0 &&
+                                                produtos.map((item, index) => (
+                                                    <TouchableOpacity
+                                                        style={styles.itemContainer}
+                                                        onPress={() => {
+                                                            navigation.navigate('DetalhesProduto', { produto: item });
+                                                        }}
+                                                        key={index}
+                                                    >
+                                                        <Text style={styles.itemNome}>{item.produto_nome}</Text>
+                                                        <Text style={styles.itemSub}>Referência: {item.produto_referencia}</Text>
+                                                        {item.produto_descricao &&
+                                                            <Text style={styles.itemSub}>Descrição: {item.produto_descricao}</Text>
+                                                        }
+                                                        <Text style={styles.itemSub}>Valor: {formatterbrl(item.produto_valorVenda)}</Text>
+                                                    </TouchableOpacity>
+                                                ))}
 
                                         </View>
                                     )
@@ -181,7 +186,7 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     titulo: {
-        fontSize: 35,
+        fontSize: 30,
         fontWeight: 'bold',
     },
     itemContainer: {

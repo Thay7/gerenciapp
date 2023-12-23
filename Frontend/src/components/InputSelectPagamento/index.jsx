@@ -3,6 +3,16 @@ import { View, Text, StyleSheet } from 'react-native';
 import { formatterbrl } from '../../utils/formatterbrl';
 
 export const InputSelectPagamento = ({ title, selectedValue, onValueChange, options, enable }) => {
+    if (!enable)
+        color = 'grey'
+    else
+        color = '';
+
+    const inputStyles = {
+        ...styles.textColor,
+        color,
+    }
+
     return (
         <View style={styles.container}>
             <View>
@@ -19,14 +29,13 @@ export const InputSelectPagamento = ({ title, selectedValue, onValueChange, opti
                     <Picker.Item
                         label="Selecione"
                         enabled={false}
-                        style={styles.labelPicker2}
+                        style={inputStyles}
                     />
                     {options.length === 0
                         ? (
                             <Picker.Item
                                 label="Nenhum item disponível"
                                 enabled={false}
-                                style={styles.labelPicker}
                             />
                         )
                         :
@@ -36,7 +45,6 @@ export const InputSelectPagamento = ({ title, selectedValue, onValueChange, opti
                                     key={index}
                                     label={item}
                                     value={item}
-                                    style={styles.labelPicker}
                                 />
                             ))
                         )
@@ -54,12 +62,12 @@ const styles = StyleSheet.create({
     text: {
         marginBottom: 5,
         fontSize: 15,
-        fontWeight: 'bold',
+        fontWeight: 'bold'
     },
     input: {
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 10,
-        marginBottom: 20,
+        marginBottom: 20
     }
 })

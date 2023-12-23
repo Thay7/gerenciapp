@@ -22,7 +22,7 @@ export const DetalhesVenda = () => {
         'Cartão de Crédito'
     ]);
 
-    const [selectedPagamento, setSelectedPagamento] = useState(null);
+    const [selectedPagamento, setSelectedPagamento] = useState(venda.formaDePagamento);
 
     const handleOnValueChangePagamento = (value) => {
         setSelectedPagamento(value);
@@ -36,87 +36,93 @@ export const DetalhesVenda = () => {
                         <ButtonEdit onPress={() => setEnable(true)} />
                     }
                 </View>
-                <View style={styles.itemContainer}>
-                    <View style={[{ marginBottom: 10 }, styles.rowBetween]}>
-                        <View >
-                            <Text style={styles.itemNome}>Nº Venda</Text>
-                            <Text style={styles.itemSub}>{venda.numeroVenda}</Text>
-                        </View>
-                        <View>
-                            <Text style={styles.itemNome}>Data e Hora</Text>
-                            <Text style={styles.itemSub}>{venda.dataHora}</Text>
-                        </View>
+                <View style={[{ marginTop: 10, marginBottom: 10, marginHorizontal: 5 }, styles.rowBetween]}>
+                    <View >
+                        <Text style={styles.itemNome}>Nº Venda</Text>
+                        <Text style={styles.itemSub}>{venda.numeroVenda}</Text>
                     </View>
                     <View>
-                        {venda.itens.map((item, index) => (
+                        <Text style={styles.itemNome}>Data e Hora</Text>
+                        <Text style={styles.itemSub}>{venda.dataHora}</Text>
+                    </View>
+                </View>
+                <View style={styles.itemContainer}>
+                    {venda.itens.map((item, index) => (
+                        <View>
                             <View>
-                                <Text style={[styles.itemNome, { marginBottom: 5 }]}>Item {index + 1}</Text>
-                                <View>
-                                    <Text style={styles.itemSub}>{item.nome}</Text>
-                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                            <Text style={[styles.itemNome, { marginBottom: 10 }]}>{item.nome}</Text>
+                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                                    <InputApp
+                                        title="Valor"
+                                        editable={enable}
+                                        value={item.valor.toString()}
+                                        width={130}
+                                        fullWidth
+                                        borderRadius={10}
+                                        marginBottom
+                                    //onChangeText={(text) => setSearchReference(text)}
+                                    />
+                                    {item.quantidade &&
                                         <InputApp
-                                            title="Valor"
+                                            title="Quantidade"
                                             editable={enable}
-                                            value={item.valor.toString()}
+                                            value={item.quantidade.toString()}
                                             width={130}
                                             fullWidth
                                             borderRadius={10}
                                             marginBottom
                                         //onChangeText={(text) => setSearchReference(text)}
                                         />
-                                        {item.quantidade &&
-                                            <InputApp
-                                                title="Quantidade"
-                                                editable={enable}
-                                                value={item.quantidade.toString()}
-                                                width={130}
-                                                fullWidth
-                                                borderRadius={10}
-                                                marginBottom
-                                            //onChangeText={(text) => setSearchReference(text)}
-                                            />
-                                        }
-                                    </View>
+                                    }
                                 </View>
                             </View>
-                        ))}
-                        <InputSelectPagamento
-                            title="Forma de Pagamento"
-                            options={optionsPagamento}
-                            selectedValue={selectedPagamento}
-                            onValueChange={(value) => handleOnValueChangePagamento(value)}
-                            enable={enable}
-                        />
-                        {venda.formaDePagamento == "Cartão de Crédito" &&
-                            <InputApp
-                                title="Nº Parcelas"
-                                editable={false}
-                                value={venda.numeroParcelas.toString()}
-                                fullWidth
-                                borderRadius={10}
-                                marginBottom
-                            //onChangeText={(text) => setSearchReference(text)}
-                            />
-                        }
+                        </View>
+                    ))}
+                </View>
+                <View style={styles.itemContainer}>
+                    <InputSelectPagamento
+                        title="Forma de Pagamento"
+                        options={optionsPagamento}
+                        selectedValue={selectedPagamento}
+                        onValueChange={(value) => handleOnValueChangePagamento(value)}
+                        enable={enable}
+                    />
+                    {venda.formaDePagamento == "Cartão de Crédito" &&
                         <InputApp
-                            title="Valor Total"
-                            editable={enable}
-                            value={venda.valorTotal.toString()}
+                            title="Nº Parcelas"
+                            editable={false}
+                            value={venda.numeroParcelas.toString()}
                             fullWidth
                             borderRadius={10}
                             marginBottom
                         //onChangeText={(text) => setSearchReference(text)}
                         />
-                        {enable &&
-                            <ButtonApp
-                                title="Salvar"
-                                color="#fff"
-                                backgroundColor="#4040ff"
-                                onPress={() => setEnable(false)}
-                            />
-                        }
-                    </View>
+                    }
+                    <InputApp
+                        title="Valor Total"
+                        editable={enable}
+                        value={venda.valorTotal.toString()}
+                        fullWidth
+                        borderRadius={10}
+                        marginBottom
+                    //onChangeText={(text) => setSearchReference(text)}
+                    />
                 </View>
+                {enable &&
+                    <>
+                        <ButtonApp
+                            title="Salvar"
+                            color="#fff"
+                            backgroundColor="#4040ff"
+                            onPress={() => setEnable(false)}
+                        />
+                        <ButtonApp
+                            title="Cancelar"
+                            color="#FF0000"
+                            onPress={() => setEnable(false)}
+                        />
+                    </>
+                }
             </View>
         </ScrollView>
     );
@@ -135,7 +141,7 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     titulo: {
-        fontSize: 35,
+        fontSize: 30,
         fontWeight: 'bold',
     },
     headerIcons: {
@@ -157,7 +163,7 @@ const styles = StyleSheet.create({
         elevation: 1,
         borderRadius: 8,
         marginVertical: 4,
-        marginBottom: 20
+        marginBottom: 10
     },
     itemNome: {
         fontSize: 18,

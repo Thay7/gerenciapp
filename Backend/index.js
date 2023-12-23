@@ -1,21 +1,16 @@
-import express from 'express'
-const app = express()
-import cors from 'cors'
-import bodyParser from 'body-parser'
-import routes from './routes/routes.js';
+const express = require('express');
+const produtosRoutes = require('./routes/produtosRoutes');
+//const funcionalidade2Routes = require('./routes/funcionalidade2Routes');
 
-app.use(cors());
+const app = express();
 
-app.use(express.json());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// Utilizando as rotas
+app.use('/api/produtos', produtosRoutes);
+//app.use('/api/funcionalidade2', funcionalidade2Routes);
 
-app.use('/api', routes.userRouter);
-app.use('/api', routes.authRoutes);
-app.use('/api', routes.productRoutes);
-app.use('/api', routes.stockRoutes);
+// Outras configurações do servidor...
 
-
-
-
-app.listen(3005);
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});

@@ -82,13 +82,9 @@ export const NovaVenda = () => {
         //Adicionando à quantidade ao item
         itensVenda.forEach(element => {
             if (element.id == item.id) {
-                if (value == 0) {
-                    element.quantidade = 1;
-                }
-                else {
-                    element.quantidade = value;
-                }
+                element.quantidade = value;
             }
+            console.log(element.quantidade)
         });
     };
 
@@ -115,11 +111,8 @@ export const NovaVenda = () => {
         let error = 0;
 
         for (let i = 0; i < itensVenda.length; i++) {
-            console.log(itensVenda[i].tipo)
-            console.log(itensVenda[i].nome)
             if (itensVenda[i].tipo == "Produto") {
                 if (itensVenda[i].quantidade == 0 || itensVenda[i].quantidade == null) {
-                    console.log(itensVenda[i].nome);
                     error++;
                 }
             }
@@ -128,6 +121,10 @@ export const NovaVenda = () => {
         if (error > 0) {
             setErrorsStep1(true);
             setModalErrorsStep1(true);
+        }
+        else{
+            setErrorsStep1(false);
+            setModalErrorsStep1(false);
         }
     };
 
@@ -177,6 +174,10 @@ export const NovaVenda = () => {
         if (error > 0) {
             setErrorsStep2(true);
             setModalErrorsStep2(true);
+        }
+        else{
+            setErrorsStep2(false);
+            setModalErrorsStep2(false);
         }
     };
 
@@ -412,7 +413,7 @@ export const NovaVenda = () => {
                             )
                         }
                         <ModalErrors
-                            title="Erro"
+                            title="Aviso"
                             message={messageModalErrorStep2}
                             openModal={modalErrorsStep2}
                             fnCloseModal={() => setModalErrorsStep2(!modalErrorsStep2)}
@@ -510,7 +511,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     titulo: {
-        fontSize: 35,
+        fontSize: 30,
         fontWeight: 'bold',
     },
     itemContainer: {

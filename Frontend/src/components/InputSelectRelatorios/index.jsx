@@ -2,7 +2,7 @@ import { Picker } from '@react-native-picker/picker';
 import { View, Text, StyleSheet } from 'react-native';
 import { formatterbrl } from '../../utils/formatterbrl';
 
-export const InputSelectProductsEstoque = ({ title, selectedValue, onValueChange, options }) => {
+export const InputSelectRelatorios = ({ title, selectedValue, onValueChange, options }) => {
     return (
         <View style={styles.container}>
             <View>
@@ -14,12 +14,10 @@ export const InputSelectProductsEstoque = ({ title, selectedValue, onValueChange
                 <Picker
                     selectedValue={selectedValue}
                     onValueChange={onValueChange}
-                    enabled={options.length === 0 ? false : true}
                 >
                     <Picker.Item
                         label="Selecione"
                         enabled={false}
-                        style={styles.labelPicker2}
                     />
                     {options.length === 0
                         ? (
@@ -34,9 +32,8 @@ export const InputSelectProductsEstoque = ({ title, selectedValue, onValueChange
                             options.map((item, index) => (
                                 <Picker.Item
                                     key={index}
-                                    label={`${item.nome} - ${formatterbrl(item.valor)} - Quantidade atual: ${item.quantidadeAtual}`}
+                                    label={item}
                                     value={item}
-                                    style={styles.labelPicker}
                                 />
                             ))
                         )

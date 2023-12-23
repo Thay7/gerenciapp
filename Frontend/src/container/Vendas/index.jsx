@@ -129,7 +129,7 @@ export const Vendas = () => {
                                                         <Text>{item.dataHora}</Text>
                                                     </View>
                                                     <View style={styles.rowBetween}>
-                                                        <Text>Total Compra:</Text>
+                                                        <Text>Total:</Text>
                                                         <Text>{formatterbrl(item.valorTotal)}</Text>
                                                     </View>
                                                 </TouchableOpacity>
@@ -149,7 +149,7 @@ export const Vendas = () => {
                                                     <Text>{item.dataHora}</Text>
                                                 </View>
                                                 <View style={styles.rowBetween}>
-                                                    <Text>Total Compra:</Text>
+                                                    <Text>Total:</Text>
                                                     <Text>{formatterbrl(item.valorTotal)}</Text>
                                                 </View>
                                             </TouchableOpacity>
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     titulo: {
-        fontSize: 35,
+        fontSize: 30,
         fontWeight: 'bold',
     },
     headerIcons: {

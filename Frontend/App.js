@@ -17,21 +17,30 @@ import { Vendas } from './src/container/Vendas';
 import { DetalhesVenda } from './src/container/Vendas/DetalhesVenda'
 import { NovaVenda } from './src/container/Vendas/NovaVenda';
 
-//Módulo Estoque
-import { Estoque } from './src/container/Estoque';
-import { DetalhesEstoque } from './src/container/Estoque/DetalhesEstoque';
-import { EntradaEstoque } from './src/container/Estoque/EntradaEstoque';
-
 //Módulo Produtos
 import { Produtos } from './src/container/Produtos'
 import { DetalhesProduto } from './src/container/Produtos/DetalhesProduto';
 import { CadastroDeProdutos } from './src/container/Produtos/CadastroDeProdutos';
 
+//Módulo Estoque
+import { Estoque } from './src/container/Estoque';
+import { DetalhesEstoque } from './src/container/Estoque/DetalhesEstoque';
+import { EntradaEstoque } from './src/container/Estoque/EntradaEstoque';
+
 //Módulo Pedido Compra
 import { PedidoDeCompra } from './src/container/PedidoDeCompra'
+import { NovoPedidoCompra } from './src/container/PedidoDeCompra/NovoPedidoCompra';
+import { DetalhesPedidoCompra } from './src/container/PedidoDeCompra/DetalhesPedidoCompra';
 
-//Módulo Dashboard
-import { Dashboard } from './src/container/Dashboard'
+//Módulo Cadastros
+import { Cadastros } from './src/container/Cadastros';
+import { ListaCadastros } from './src/container/Cadastros/ListaCadastros'
+import { NovoCadastro } from './src/container/Cadastros/NovoCadastro';
+import { DetalhesCadastro } from './src/container/Cadastros/DetalhesCadastro'
+
+//Módulo Relatorios
+import { Relatorios } from './src/container/Relatorios'
+import { VendasPorMesAno } from './src/container/Relatorios/Vendas/VendasPorMesAno'
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -43,61 +52,6 @@ export default function App() {
         <Stack.Screen
           name="Login"
           component={Login}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Vendas"
-          component={Vendas}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="NovaVenda"
-          component={NovaVenda}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="DetalhesVenda"
-          component={DetalhesVenda}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Estoque"
-          component={Estoque}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="DetalhesEstoque"
-          component={DetalhesEstoque}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="EntradaEstoque"
-          component={EntradaEstoque}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Produtos"
-          component={Produtos}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="DetalhesProduto"
-          component={DetalhesProduto}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="CadastroDeProdutos"
-          component={CadastroDeProdutos}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="PedidoDeCompra"
-          component={PedidoDeCompra}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Dashboard"
-          component={Dashboard}
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -134,6 +88,96 @@ export default function App() {
               />
             </Tab.Navigator>
           )}
+        />
+        <Stack.Screen
+          name="Vendas"
+          component={Vendas}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DetalhesVenda"
+          component={DetalhesVenda}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="NovaVenda"
+          component={NovaVenda}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Produtos"
+          component={Produtos}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DetalhesProduto"
+          component={DetalhesProduto}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="CadastroDeProdutos"
+          component={CadastroDeProdutos}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Estoque"
+          component={Estoque}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DetalhesEstoque"
+          component={DetalhesEstoque}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="EntradaEstoque"
+          component={EntradaEstoque}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="PedidoDeCompra"
+          component={PedidoDeCompra}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DetalhesPedidoCompra"
+          component={DetalhesPedidoCompra}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="NovoPedidoCompra"
+          component={NovoPedidoCompra}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Cadastros"
+          component={Cadastros}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ListaCadastros"
+          component={ListaCadastros}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DetalhesCadastro"
+          component={DetalhesCadastro}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="NovoCadastro"
+          component={NovoCadastro}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Relatorios"
+          component={Relatorios}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="VendasPorMesAno"
+          component={VendasPorMesAno}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

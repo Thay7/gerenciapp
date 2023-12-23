@@ -97,7 +97,7 @@ export const CadastroDeProdutos = () => {
                     />
                 </View>
                 <ModalErrors
-                    title="Erro"
+                    title="Aviso"
                     message="Preencha todos os campos obrigatórios."
                     openModal={modalErrors}
                     fnCloseModal={() => setModalErrors(!modalErrors)}
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     titulo: {
-        fontSize: 35,
+        fontSize: 30,
         fontWeight: 'bold',
     },
     itemContainer: {
