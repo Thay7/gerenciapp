@@ -40,7 +40,7 @@ export const DetalhesCadastro = () => {
                                 title="Nome fantasia"
                                 fullWidth
                                 value={item.nomeFantasia}
-                                onChangeText={(text) => handleInputChange("produto_nome", text)}
+                                onChangeText={(text) => handleInputChange("nome", text)}
                                 marginBottom={true}
                                 borderRadius={10}
                             />
@@ -49,7 +49,7 @@ export const DetalhesCadastro = () => {
                                 fullWidth
                                 multiline={true}
                                 value={item.razaoSocial}
-                                onChangeText={(text) => handleInputChange("produto_descricao", text)}
+                                onChangeText={(text) => handleInputChange("descricao", text)}
                                 marginBottom={true}
                                 borderRadius={10}
                             />
@@ -57,7 +57,7 @@ export const DetalhesCadastro = () => {
                                 title="CNPJ"
                                 fullWidth
                                 value={item.cnpj}
-                                onChangeText={(text) => handleInputChange("produto_marca", text)}
+                                onChangeText={(text) => handleInputChange("marca", text)}
                                 marginBottom={true}
                                 borderRadius={10}
                             />
@@ -65,7 +65,7 @@ export const DetalhesCadastro = () => {
                                 title="Contato"
                                 fullWidth
                                 value={item.contato}
-                                onChangeText={(text) => handleInputChange("produto_valorCompra", text)}
+                                onChangeText={(text) => handleInputChange("valor_ompra", text)}
                                 keyboardType="numeric"
                                 marginBottom={true}
                                 borderRadius={10}

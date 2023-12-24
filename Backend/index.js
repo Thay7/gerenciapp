@@ -1,14 +1,10 @@
 const express = require('express');
-const produtosRoutes = require('./routes/produtosRoutes');
-//const funcionalidade2Routes = require('./routes/funcionalidade2Routes');
-
 const app = express();
 
-// Utilizando as rotas
-app.use('/api/produtos', produtosRoutes);
-//app.use('/api/funcionalidade2', funcionalidade2Routes);
+app.use(express.json());
 
-// Outras configurações do servidor...
+// Rotas
+app.use('/api/produtos', require('./routes/produtosRoutes'));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

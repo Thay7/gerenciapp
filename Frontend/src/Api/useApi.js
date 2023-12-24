@@ -1,18 +1,18 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://192.168.0.4:5000',
+    baseURL: 'http://192.168.0.4:5000/api/',
     timeout: 5000,
 })
 
 export const useApi = {
     listarProdutos: async () => {
-        const response = await api.get('/api/listar')
+        const response = await api.get('produtos/listar')
         return response.data
     },
-    cadastrarProdutos: async (formData) => {
+    cadastrarProduto: async (formData) => {
         try {
-            const response = await api.post(`/api/cadastrarProdutos`, formData);
+            const response = await api.post(`produtos/cadastrar`, formData);
             if (response.status == 200) {
                 return 200;
             }
@@ -22,9 +22,10 @@ export const useApi = {
             return 500;
         }
     },
-    editarProdutos: async (newData) => {
+    editarProduto: async (formData) => {
         try {
-            const response = await api.put(`/api/atualizarProduto`, newData);
+            const id = formData.id;
+            const response = await api.put(`produtos/editar/${id}`, formData);
             if (response.status == 200) {
                 return 200;
             }
@@ -34,17 +35,10 @@ export const useApi = {
             return 500;
         }
     },
-    listarEstoque: async () => {
-        const response = await api.get('/api/listaEstoque')
-        return response.data
-    },
-    listaProdutosSemEstoque: async () => {
-        const response = await api.get('/api/listaProdutosSemEstoque')
-        return response.data
-    },
-    cadastrarProdutoNoEstoque: async (formData) => {
+    deletarProduto: async (id) => {
+        console.log(id + 'front')
         try {
-            const response = await api.post(`/api/cadastrarEstoque`, formData);
+            const response = await api.delete(`produtos/deletar/${id}`);
             if (response.status == 200) {
                 return 200;
             }

@@ -3,47 +3,30 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { useApi } from '../../Api/useApi';
+import { useRoute } from "@react-navigation/native";
 
 import { formatterbrl } from '../../utils/formatterbrl';
 import { ButtonAdd } from '../../components/Buttons/ButtonAdd';
 import { ButtonImport } from '../../components/Buttons/ButtonImport';
 import { ButtonSearch } from '../../components/Buttons/ButtonSearch';
 import { ModalSearch } from '../../components/ModalSearch';
+import { Loading } from '../../components/Loading'
 
 export const Produtos = () => {
     const navigation = useNavigation()
+    const route = useRoute();
+
     const [loading, setLoading] = useState(false);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [noResults, setNoResults] = useState(false);
     const [search, setSearch] = useState([]);
-    const [produtos, setProdutos] = useState([]
-        /* [
-         { produto_id: 1, produto_nome: 'Aro', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-         { produto_id: 2, produto_nome: 'Pneu Moto', produto_referencia: '1686822', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-         { produto_id: 3, produto_nome: 'Oléo X', produto_referencia: '1686822', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-         { produto_id: 4, produto_nome: 'Retrovisor Biz', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-         { produto_id: 5, produto_nome: 'Amortecedor Motocicleta (Par)', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-         { produto_id: 6, produto_nome: 'Pneu Carro', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-         { produto_id: 7, produto_nome: 'Pisca (Par)', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-         { produto_id: 8, produto_nome: 'Punho Moto', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-         { produto_id: 9, produto_nome: 'Interruptor Pisca', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-         { produto_id: 10, produto_nome: 'Aro', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-         { produto_id: 11, produto_nome: 'Pneu Moto', produto_referencia: '1686822', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-         { produto_id: 12, produto_nome: 'Oléo X', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-         { produto_id: 13, produto_nome: 'Retrovisor Biz', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-         { produto_id: 14, produto_nome: 'Amortecedor Motocicleta (Par)', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-         { produto_id: 15, produto_nome: 'Pneu Carro', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-         { produto_id: 16, produto_nome: 'Pisca (Par)', produto_referencia: '1686825', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-         { produto_id: 17, produto_nome: 'Punho Moto', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-         { produto_id: 18, produto_nome: 'Interruptor Pisca', produto_referencia: '1686821', produto_descricao: 'descrição do produto', produto_marca: 'marca x', produto_valorCompra: 10, produto_valorVenda: 25 },
-     ]*/
-    );
+    const [produtos, setProdutos] = useState([]);
 
     const fnHandleFilter = (name, reference) => {
         if (name || reference) {
             const filtered = produtos.filter(item =>
                 (!name || item.produto_nome.toLowerCase().includes(name.trim().toLowerCase())) &&
-                (!reference || item.produto_referencia.includes(reference.trim().toLowerCase()))
+                (!reference || item.cod_produto.includes(reference.trim().toLowerCase()))
             );
             setSearch(filtered);
             setModalIsOpen(!modalIsOpen);
@@ -76,6 +59,24 @@ export const Produtos = () => {
         setNoResults(false);
     }
 
+    useEffect(() => {
+        if (route.params?.novoProduto) {
+            const novoProduto = route.params.novoProduto;
+            setProdutos([...produtos, novoProduto]);
+        }
+
+        if (route.params?.produtoAtualizado) {
+            const produtoAtualizado = route.params.produtoAtualizado;
+            setProdutos(produtos.map(produto => (produto.id === produtoAtualizado.id ? produtoAtualizado : produto)));
+        }
+
+        if (route.params?.produtoDeletado) {
+            const produtoDeletado = route.params.produtoDeletado;
+            const updatedOptions = produtos.filter(item => item.id !== produtoDeletado.id);
+            setProdutos(updatedOptions);
+        }
+    }, [route.params?.novoProduto, route.params?.produtoAtualizado, route.params?.produtoDeletado]);
+
     return (
         <ScrollView >
             <View style={styles.container}>
@@ -102,8 +103,8 @@ export const Produtos = () => {
                 }
                 {loading == true ?
                     (
-                        <View>
-                            <Text>Carregando...</Text>
+                        <View >
+                            <Loading />
                         </View>
                     )
                     :
@@ -125,12 +126,12 @@ export const Produtos = () => {
                                             }}
                                             key={index}
                                         >
-                                            <Text style={styles.itemNome}>{item.produto_nome}</Text>
-                                            <Text style={styles.itemSub}>Referência: {item.produto_referencia}</Text>
+                                            <Text style={styles.itemNome}>{item.nome}</Text>
+                                            <Text style={styles.itemSub}>Referência: {item.cod_produto}</Text>
                                             {item.produto_descricao &&
-                                                <Text style={styles.itemSub}>Descrição: {item.produto_descricao}</Text>
+                                                <Text style={styles.itemSub}>Descrição: {item.descricao}</Text>
                                             }
-                                            <Text style={styles.itemSub}>Valor: {formatterbrl(item.produto_valorVenda)}</Text>
+                                            <Text style={styles.itemSub}>Valor: {formatterbrl(item.valor_venda)}</Text>
                                         </TouchableOpacity>
                                     ))
                                 )
@@ -146,12 +147,12 @@ export const Produtos = () => {
                                                         }}
                                                         key={index}
                                                     >
-                                                        <Text style={styles.itemNome}>{item.produto_nome}</Text>
-                                                        <Text style={styles.itemSub}>Referência: {item.produto_referencia}</Text>
+                                                        <Text style={styles.itemNome}>{item.nome}</Text>
+                                                        <Text style={styles.itemSub}>Referência: {item.cod_produto}</Text>
                                                         {item.produto_descricao &&
-                                                            <Text style={styles.itemSub}>Descrição: {item.produto_descricao}</Text>
+                                                            <Text style={styles.itemSub}>Descrição: {item.descricao}</Text>
                                                         }
-                                                        <Text style={styles.itemSub}>Valor: {formatterbrl(item.produto_valorVenda)}</Text>
+                                                        <Text style={styles.itemSub}>Valor: {formatterbrl(item.valor_venda)}</Text>
                                                     </TouchableOpacity>
                                                 ))}
 
@@ -177,7 +178,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 20,
-        marginTop: 50,
+        marginTop: 50
     },
     header: {
         flexDirection: 'row',

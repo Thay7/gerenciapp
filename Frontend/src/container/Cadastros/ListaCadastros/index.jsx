@@ -25,8 +25,8 @@ export const ListaCadastros = () => {
     const fnHandleFilter = (name, reference) => {
         if (name || reference) {
             const filtered = dados.filter(item =>
-                (!name || item.produto_nome.toLowerCase().includes(name.trim().toLowerCase())) &&
-                (!reference || item.produto_referencia.includes(reference.trim().toLowerCase()))
+                (!name || item.nome.toLowerCase().includes(name.trim().toLowerCase())) &&
+                (!reference || item.cod_produto.includes(reference.trim().toLowerCase()))
             );
             setSearch(filtered);
             setModalIsOpen(!modalIsOpen);

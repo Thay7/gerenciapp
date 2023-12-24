@@ -6,19 +6,28 @@ import { ButtonApp } from '../../../components/Buttons/ButtonApp';
 import { useApi } from '../../../Api/useApi';
 import { ModalErrors } from '../../../components/ModalErrors';
 import { ModalSucces } from '../../../components/ModalSucces';
+import { Loading } from '../../../components/Loading';
+import { useNavigation } from '@react-navigation/native';
 
 export const CadastroDeProdutos = () => {
+    const navigation = useNavigation()
     const [formData, setFormData] = useState({
-        produto_nome: '',
-        produto_descricao: '',
-        produto_marca: '',
-        produto_valorCompra: 0,
-        produto_valorVenda: 0
-    })
+        nome: '',
+        cod_produto: 0,
+        descricao: '',
+        marca: '',
+        valor_compra: 0,
+        valor_venda: 0
+    });
 
     const [modalErrors, setModalErrors] = useState(false);
+    const [modalSucess, setModalSucess] = useState(false);
+    const [titleModal, setTitleModal] = useState('Aviso');
+    const [mensagemModal, setMensagemModal] = useState('Preencha todos os campos obrigatórios.');
+    const [loading, setLoading] = useState(false);
+
     const handleInputChange = (name, value) => {
-        if (name === "produto_valorCompra" || name === "produto_valorVenda") {
+        if (name === "valor_compra" || name === "valor_venda") {
             if (value.includes(',') || value.includes('.')) {
                 value = value.replace(",", ".");
             }
@@ -26,16 +35,31 @@ export const CadastroDeProdutos = () => {
         setFormData({ ...formData, [name]: value })
     }
 
+    const cadastraNovoProduto = async () => {
+        setLoading(true)
+        if (await useApi.cadastrarProduto(formData) == 200) {
+            setModalSucess(true);
+            setTimeout(() => {
+                navigation.navigate('Produtos', { novoProduto: formData });
+            }, 3000);
+        } else {
+            setTitleModal('Erro')
+            setMensagemModal('Erro ao cadastrar produto. Entre em contato com o suporte.');
+            setModalErrors(true);
+            setTimeout(() => {
+                navigation.navigate('Produtos');
+            }, 3000);
+        }
+        setLoading(false);
+    }
+
     const handleSubmit = async () => {
-        console.log(formData.produto_nome);
-        console.log(formData.produto_valorCompra);
-        console.log(formData.produto_valorVenda);
-        if (formData.produto_nome != '' && formData.produto_valorCompra > 0 && formData.produto_valorVenda > 0) {
-            console.log('nome valor compra e valor venda ta preenchido');
+        if (formData.nome != '' && formData.cod_produto != 0 && formData.marca != '' && formData.valor_compra > 0 && formData.valor_venda > 0) {
+            console.log(formData)
+            cadastraNovoProduto()
         }
         else {
             setModalErrors(true);
-
         }
     }
 
@@ -45,21 +69,31 @@ export const CadastroDeProdutos = () => {
                 <View style={styles.header}>
                     <Text style={styles.titulo}>Cadastro de Produto</Text>
                 </View>
+                {loading && <Loading />}
                 <View>
                     <InputApp
                         title="Nome *"
                         fullWidth
                         value={formData.nome}
-                        onChangeText={(text) => handleInputChange("produto_nome", text)}
+                        onChangeText={(text) => handleInputChange("nome", text)}
                         marginBottom={true}
                         borderRadius={10}
+                    />
+                    <InputApp
+                        title="Código produto *"
+                        fullWidth
+                        value={formData.cod_produto}
+                        onChangeText={(text) => handleInputChange("cod_produto", text)}
+                        marginBottom={true}
+                        borderRadius={10}
+                        keyboardType="numeric"
                     />
                     <InputApp
                         title="Descrição"
                         fullWidth
                         multiline={true}
                         value={formData.descricao}
-                        onChangeText={(text) => handleInputChange("produto_descricao", text)}
+                        onChangeText={(text) => handleInputChange("descricao", text)}
                         marginBottom={true}
                         borderRadius={10}
                     />
@@ -67,15 +101,15 @@ export const CadastroDeProdutos = () => {
                         title="Marca"
                         fullWidth
                         value={formData.marca}
-                        onChangeText={(text) => handleInputChange("produto_marca", text)}
+                        onChangeText={(text) => handleInputChange("marca", text)}
                         marginBottom={true}
                         borderRadius={10}
                     />
                     <InputApp
                         title="Valor Compra *"
                         fullWidth
-                        value={formData.valorCompra}
-                        onChangeText={(text) => handleInputChange("produto_valorCompra", text)}
+                        value={formData.valor_compra}
+                        onChangeText={(text) => handleInputChange("valor_compra", text)}
                         keyboardType="numeric"
                         marginBottom={true}
                         borderRadius={10}
@@ -83,8 +117,8 @@ export const CadastroDeProdutos = () => {
                     <InputApp
                         title="Valor Venda *"
                         fullWidth
-                        value={formData.valorVenda}
-                        onChangeText={(text) => handleInputChange("produto_valorVenda", text)}
+                        value={formData.valor_venda}
+                        onChangeText={(text) => handleInputChange("valor_venda", text)}
                         keyboardType="numeric"
                         marginBottom={true}
                         borderRadius={10}
@@ -97,10 +131,16 @@ export const CadastroDeProdutos = () => {
                     />
                 </View>
                 <ModalErrors
-                    title="Aviso"
-                    message="Preencha todos os campos obrigatórios."
+                    title={titleModal}
+                    message={mensagemModal}
                     openModal={modalErrors}
                     fnCloseModal={() => setModalErrors(!modalErrors)}
+                />
+                <ModalSucces
+                    title="Sucesso"
+                    message="Produto cadastrado com sucesso!"
+                    openModal={modalSucess}
+                    fnCloseModal={() => setModalSucess(!modalSucess)}
                 />
             </View>
         </ScrollView>
