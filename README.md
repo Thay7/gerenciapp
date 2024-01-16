@@ -1,1 +1,1 @@
-# App para Gerenciamento de Estoque
+# App para Gerenciamento de Empresa
