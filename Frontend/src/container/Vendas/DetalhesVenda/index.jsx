@@ -1,18 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-//import { useApi } from '../../Api/useApi';
-import { ButtonEdit } from '../../../components/Buttons/ButtonEdit';
-import { InputApp } from '../../../components/InputApp';
-import { formatterbrl } from '../../../utils/formatterbrl';
 import { useRoute } from "@react-navigation/native";
-import { ButtonApp } from '../../../components/Buttons/ButtonApp';
+
+import { useApi } from '../../../Api/useApi';
+import { InputApp } from '../../../components/InputApp';
 import { InputSelectPagamento } from '../../../components/InputSelectPagamento';
+import { ButtonApp } from '../../../components/Buttons/ButtonApp';
+import { ButtonDelete } from '../../../components/Buttons/ButtonDelete';
+import { ButtonEdit } from '../../../components/Buttons/ButtonEdit';
+import { ModalConfirm } from '../../../components/ModalConfirm';
 
 export const DetalhesVenda = () => {
-    const [enable, setEnable] = useState(false);
     const route = useRoute();
     const { venda } = route.params;
+
+    const [formData, setFormData] = useState({
+        id: venda.id,
+        itens: venda.itens,
+        forma_pagamento: venda.forma_pagamento,
+        numero_parcelas: venda.numero_parcelas,
+        valor_total: venda.valor_total,
+        data_hora: venda.data_hora
+    });
+
+    const [enable, setEnable] = useState(false);
+    const [modalConfirm, setModalConfirm] = useState(false);
 
     //Lidar com a forma de pagamento
     const [optionsPagamento, setOptionsPagamento] = useState([
@@ -22,59 +35,147 @@ export const DetalhesVenda = () => {
         'Cartão de Crédito'
     ]);
 
-    const [selectedPagamento, setSelectedPagamento] = useState(venda.formaDePagamento);
+    const [selectedPagamento, setSelectedPagamento] = useState(formData.forma_pagamento);
 
     const handleOnValueChangePagamento = (value) => {
         setSelectedPagamento(value);
+        setFormData({ ...formData, forma_pagamento: value });
     };
+
+    const handleInputChange = (name, value, id_item) => {
+        if (name == 'quantidade' || name == 'valor') {
+            const itemAtualizado = formData.itens.map(item => {
+                if (item.id_item === id_item) {
+
+                    // Atualiza o valor específico (quantidade ou valor) do item desejado
+                    return { ...item, [name]: value };
+                }
+                return item;
+            });
+
+            // Atualiza o estado com o array de itens atualizado
+            setFormData({ ...formData, itens: itemAtualizado });
+        } else {
+
+            // Se o nome não for 'quantidade' ou 'valor', atualiza normalmente
+            setFormData({ ...formData, [name]: value });
+        }
+    }
+
+    //Calcular total da compra a cada nova ação nos itens
+    useEffect(() => {
+        let totalCompra = 0;
+        for (let i = 0; i < formData.itens.length; i++) {
+            if (formData.itens[i].hasOwnProperty('quantidade')) {
+                totalCompra += formData.itens[i].valor * formData.itens[i].quantidade;
+            }
+            else {
+                totalCompra += formData.itens[i].valor;
+            }
+        };
+        setFormData({ ...formData, valor_total: totalCompra });
+    }, [formData.itens]);
+
+    const fnEditarVenda = async () => {
+        // setLoading(true)
+        console.log(formData)
+        if (await useApi.editarVenda(formData) == 200) {
+            console.log('deu certo')
+            /* setMessageSucess('Venda editada com sucesso.');
+             setModalSucess(true);
+             setEnable(false);
+             setTimeout(() => {
+                 navigation.navigate('Vendas', { vendaAtualizada: formData });
+             }, 3000);*/
+        } else {
+            console.log('deu erro')
+            /* setTitleModal('Erro')
+             setMensagemModal('Erro ao editar venda.');
+             setModalErrors(true);
+             setTimeout(() => {
+                 navigation.navigate('Vendas', { vendaAtualizada: formData });
+             }, 3000);*/
+        }
+        setLoading(false);
+
+    };
+
+    const handleSubmit = async () => {
+        let errors = 0;
+        for (let i = 0; i < formData.itens.length; i++) {
+            if (formData.itens[i].quantidade == 0 ||
+                formData.itens[i].quantidade == null ||
+                formData.itens[i].valor == 0 ||
+                formData.itens[i].valor == null) {
+                errors++;
+            }
+        }
+
+        if (formData.valor != '' &&
+            formData.quantidade != 0 &&
+            formData.forma_pagamento != '' &&
+            formData.valor_total > 0 &&
+            errors == 0) {
+            fnEditarVenda()
+        }
+        else {
+            //titulo modal: preencha todos os campos!
+            console.log('preencha todos os campos!');
+            //setModalErrors(true);
+        }
+    };
+
     return (
         <ScrollView >
             <View style={styles.container}>
                 <View style={styles.header}>
                     <Text style={styles.titulo}>Detalhes Venda</Text>
                     {!enable &&
-                        <ButtonEdit onPress={() => setEnable(true)} />
+                        <View style={styles.headerIcons}>
+                            <View style={{ marginRight: 5 }}>
+                                <ButtonEdit onPress={() => setEnable(true)} />
+                            </View>
+                            <ButtonDelete onPress={() => setModalConfirm(true)} />
+                        </View>
                     }
                 </View>
                 <View style={[{ marginTop: 10, marginBottom: 10, marginHorizontal: 5 }, styles.rowBetween]}>
                     <View >
                         <Text style={styles.itemNome}>Nº Venda</Text>
-                        <Text style={styles.itemSub}>{venda.numeroVenda}</Text>
+                        <Text style={styles.itemSub}>{venda.numero_venda}</Text>
                     </View>
                     <View>
                         <Text style={styles.itemNome}>Data e Hora</Text>
-                        <Text style={styles.itemSub}>{venda.dataHora}</Text>
+                        <Text style={styles.itemSub}>{venda.data_hora}</Text>
                     </View>
                 </View>
                 <View style={styles.itemContainer}>
-                    {venda.itens.map((item, index) => (
-                        <View>
-                            <View>
+                    {formData.itens.map((item, index) => (
+                        <View key={index}>
                             <Text style={[styles.itemNome, { marginBottom: 10 }]}>{item.nome}</Text>
-                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
-                                    <InputApp
-                                        title="Valor"
-                                        editable={enable}
-                                        value={item.valor.toString()}
-                                        width={130}
-                                        fullWidth
-                                        borderRadius={10}
-                                        marginBottom
-                                    //onChangeText={(text) => setSearchReference(text)}
-                                    />
-                                    {item.quantidade &&
-                                        <InputApp
-                                            title="Quantidade"
-                                            editable={enable}
-                                            value={item.quantidade.toString()}
-                                            width={130}
-                                            fullWidth
-                                            borderRadius={10}
-                                            marginBottom
-                                        //onChangeText={(text) => setSearchReference(text)}
-                                        />
-                                    }
-                                </View>
+                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                                <InputApp
+                                    title="Valor"
+                                    editable={enable}
+                                    value={item.valor.toString()}
+                                    width={130}
+                                    fullWidth
+                                    borderRadius={10}
+                                    marginBottom
+                                    keyboardType="numeric"
+                                    onChangeText={(text) => handleInputChange("valor", text, item.id_item)}
+                                />
+                                <InputApp
+                                    title="Quantidade"
+                                    editable={enable}
+                                    value={item.quantidade.toString()}
+                                    width={130}
+                                    fullWidth
+                                    borderRadius={10}
+                                    marginBottom
+                                    keyboardType="numeric"
+                                    onChangeText={(text) => handleInputChange("quantidade", text, item.id_item)}
+                                />
                             </View>
                         </View>
                     ))}
@@ -87,25 +188,27 @@ export const DetalhesVenda = () => {
                         onValueChange={(value) => handleOnValueChangePagamento(value)}
                         enable={enable}
                     />
-                    {venda.formaDePagamento == "Cartão de Crédito" &&
+                    {formData.forma_pagamento === "Cartão de Crédito" &&
                         <InputApp
                             title="Nº Parcelas"
-                            editable={false}
-                            value={venda.numeroParcelas.toString()}
+                            editable={enable}
+                            value={formData.numero_parcelas.toString()}
                             fullWidth
                             borderRadius={10}
                             marginBottom
-                        //onChangeText={(text) => setSearchReference(text)}
+                            keyboardType="numeric"
+                            onChangeText={(text) => handleInputChange("numero_parcelas", text)}
                         />
                     }
                     <InputApp
                         title="Valor Total"
                         editable={enable}
-                        value={venda.valorTotal.toString()}
+                        value={formData.valor_total.toString()}
                         fullWidth
                         borderRadius={10}
                         marginBottom
-                    //onChangeText={(text) => setSearchReference(text)}
+                        keyboardType="numeric"
+                        onChangeText={(text) => handleInputChange("valor_total", text)}
                     />
                 </View>
                 {enable &&
@@ -114,7 +217,7 @@ export const DetalhesVenda = () => {
                             title="Salvar"
                             color="#fff"
                             backgroundColor="#4040ff"
-                            onPress={() => setEnable(false)}
+                            onPress={handleSubmit}
                         />
                         <ButtonApp
                             title="Cancelar"
@@ -123,6 +226,13 @@ export const DetalhesVenda = () => {
                         />
                     </>
                 }
+                <ModalConfirm
+                    title="Atenção"
+                    message="Tem certeza que deseja excluir?"
+                    openModal={modalConfirm}
+                    fnCloseModal={() => setModalConfirm(!modalConfirm)}
+                //fnConfirm={handleDelete}
+                />
             </View>
         </ScrollView>
     );

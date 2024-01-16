@@ -2,7 +2,7 @@ import { Picker } from '@react-native-picker/picker';
 import { View, Text, StyleSheet } from 'react-native';
 import { formatterbrl } from '../../utils/formatterbrl';
 
-export const InputSelectItens = ({ title, selectedValue, onValueChange, options }) => {
+export const InputSelectItens = ({ title, selectedValue, onValueChange, options, venda, pedidoCompra }) => {
 
     // Ordenar os dados antes de renderizar
     const sortedOptions = [...options].sort((a, b) => {
@@ -52,7 +52,7 @@ export const InputSelectItens = ({ title, selectedValue, onValueChange, options 
                             optionsWithSeparators.map((item, index) => (
                                 <Picker.Item
                                     key={index}
-                                    label={item.tipo === "Label" ? item.nome : `${item.nome} - ${formatterbrl(item.valor)}`}
+                                    label={item.tipo === "Label" ? item.nome : `${item.nome} - ${ venda ? formatterbrl(item.valor_venda) : formatterbrl(item.valor_compra)}`}
                                     value={item}
                                     style={item.tipo === "Label" ? styles.labelSeparator : styles.labelPicker}
                                 />

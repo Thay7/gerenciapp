@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import { useRoute } from "@react-navigation/native";
+
 import { useApi } from '../../Api/useApi';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { ModalSearch } from '../../components/ModalSearch/index';
 import { ButtonAdd } from '../../components/Buttons/ButtonAdd';
 import { ButtonSearch } from '../../components/Buttons/ButtonSearch';
 import { formatterbrl } from '../../utils/formatterbrl';
+import { Loading } from '../../components/Loading';
 
 export const Vendas = () => {
     const [vendasList, setVendasList] = useState([]);
@@ -15,44 +17,26 @@ export const Vendas = () => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [search, setSearch] = useState([]);
     const [noResults, setNoResults] = useState(false);
+    const route = useRoute();
 
     useEffect(() => {
-        listaEstoque()
-    }, []);
+        buscarVendas()
+    }, [])
 
-    const listaEstoque = async () => {
-        setLoading(true)
-        //let json = await useApi.listarEstoque()
-        //setEstoqueList(json)
-        setVendasList([
-            {
-                numeroVenda: '012023',
-                itens: [
-                    { nome: 'Oléo Mobil', valor: '12', quantidade: '1' }, { nome: 'Troca de Óleo', valor: '10' }
-                ],
-                formaDePagamento: 'Cartão de Crédito',
-                numeroParcelas: '1',
-                valorTotal: '22',
-                dataHora: '10/09/2023 14:20'
-            },
-            {
-                numeroVenda: '022023',
-                itens: [{ nome: 'Cabo de Freio', valor: '12', quantidade: '2' },
-                { nome: 'Remendo Pneu Moto', valor: '10' }],
-                formaDePagamento: 'Pix',
-                valorTotal: '34',
-                dataHora: '10/09/2023 14:00'
-            },
-        ])
-        setLoading(false)
+    const buscarVendas = async () => {
+        setLoading(true);
+        let json = await useApi.listarVendas();
+        console.log(json)
+        setVendasList(json);
+        setLoading(false);
     }
 
     const fnHandleFilter = (number, value, dateHour) => {
         if (number || value || dateHour) {
             const filtered = vendasList.filter(item =>
-                (!number || item.numeroVenda.includes(number.trim())) &&
-                (!value || item.valorTotal.includes(value.trim())) &&
-                (!dateHour || item.dataHora.includes(dateHour.trim()))
+                (!number || item.numero_venda.includes(number.trim())) &&
+                (!value || item.valor.includes(value.trim())) &&
+                (!dateHour || item.data_hora.includes(dateHour.trim()))
             );
 
             setSearch(filtered);
@@ -63,14 +47,34 @@ export const Vendas = () => {
             else
                 setNoResults(false);
         }
-    }
+    };
 
     const handleClearFilter = () => {
         setSearch([]);
         setNoResults(false);
-    }
+    };
 
     const navigation = useNavigation()
+
+    /*Ao adicionar, editar ou deletar um produto, será redirecionado para essa tela novamente.
+    Esse useEffect atualiza a lista de produtos para exibir corretamente depois da alteração/deleção*/
+    useEffect(() => {
+       /* if (route.params?.novaVenda) {
+            const novaVenda = route.params.novaVenda;
+            setVendasList([...vendasList, novaVenda]);
+        }*/
+
+        /*if (route.params?.produtoAtualizado) {
+            const produtoAtualizado = route.params.produtoAtualizado;
+            setProdutos(produtos.map(produto => (produto.id === produtoAtualizado.id ? produtoAtualizado : produto)));
+        }
+
+        if (route.params?.produtoDeletado) {
+            const produtoDeletado = route.params.produtoDeletado;
+            const updatedOptions = produtos.filter(item => item.id !== produtoDeletado.id);
+            setProdutos(updatedOptions);
+        }*/
+    }, [route.params?.novaVenda]);
 
     return (
         <ScrollView >
@@ -101,12 +105,12 @@ export const Vendas = () => {
                     {loading ?
                         (
                             <View>
-                                <Text>Carregando...</Text>
+                                <Loading />
                             </View>
                         )
                         :
                         (
-                            noResults ?
+                            !vendasList.length > 0 ?
                                 (
                                     <View>
                                         <Text>Nenhum resultado para a busca!</Text>
@@ -122,15 +126,15 @@ export const Vendas = () => {
                                                 }}>
                                                     <View style={styles.rowBetween}>
                                                         <Text style={styles.itemNome}>Nº Venda:</Text>
-                                                        <Text style={styles.itemNome}>{item.numeroVenda}</Text>
+                                                        <Text style={styles.itemNome}>{item.numero_venda}</Text>
                                                     </View>
                                                     <View style={styles.rowBetween}>
                                                         <Text>Data e Hora:</Text>
-                                                        <Text>{item.dataHora}</Text>
+                                                        <Text>{item.data_hora}</Text>
                                                     </View>
                                                     <View style={styles.rowBetween}>
                                                         <Text>Total:</Text>
-                                                        <Text>{formatterbrl(item.valorTotal)}</Text>
+                                                        <Text>{formatterbrl(item.valor_total)}</Text>
                                                     </View>
                                                 </TouchableOpacity>
                                             ))
@@ -142,15 +146,15 @@ export const Vendas = () => {
                                             }}>
                                                 <View style={styles.rowBetween}>
                                                     <Text style={styles.itemNome}>Nº Venda:</Text>
-                                                    <Text style={styles.itemNome}>{item.numeroVenda}</Text>
+                                                    <Text style={styles.itemNome}>{item.numero_venda}</Text>
                                                 </View>
                                                 <View style={styles.rowBetween}>
                                                     <Text>Data e Hora:</Text>
-                                                    <Text>{item.dataHora}</Text>
+                                                    <Text>{item.data_hora}</Text>
                                                 </View>
                                                 <View style={styles.rowBetween}>
                                                     <Text>Total:</Text>
-                                                    <Text>{formatterbrl(item.valorTotal)}</Text>
+                                                    <Text>{formatterbrl(item.valor_total)}</Text>
                                                 </View>
                                             </TouchableOpacity>
                                         ))

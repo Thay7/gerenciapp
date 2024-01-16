@@ -8,27 +8,26 @@ import { InputApp } from '../../../components/InputApp';
 import { InputSelectItens } from '../../../components/InputSelectItens';
 import { formatterbrl } from '../../../utils/formatterbrl';
 import { InputSelectPagamento } from '../../../components/InputSelectPagamento';
-
+import { useApi } from '../../../Api/useApi'
 //import icon
 import ic_remove from '../../../icons/ic_remove.png'
 import { ModalErrors } from '../../../components/ModalErrors';
 import { ModalSucces } from '../../../components/ModalSucces';
+import { Loading } from '../../../components/Loading';
+import { formatterdate } from '../../../utils/formatterdate';
 
 export const NovaVenda = () => {
     //Step 1 - Itens
-    const [optionsItens, setOptionsItens] = useState(
-        [
-            { id: 1, nome: 'Oléo Mobil', valor: 10, tipo: "Produto" },
-            { id: 2, nome: 'Oléo Dulub', valor: 12, tipo: "Produto" },
-            { id: 3, nome: 'Rolamento', valor: 12, tipo: "Produto" },
-            { id: 4, nome: 'Viseira', valor: 12, tipo: "Produto" },
-            { id: 5, nome: 'Luz Pisca - Biz', valor: 12, tipo: "Produto" },
-            { id: 6, nome: 'Cabo de Freio', valor: 12, tipo: "Produto" },
-            { id: 7, nome: 'Troca de Oléo', valor: 12, tipo: "Serviço" },
-            { id: 8, nome: 'Remendo Pneu Moto', valor: 12, tipo: "Serviço" },
-            { id: 9, nome: 'Remendo Pneu Carro', valor: 12, tipo: "Serviço" }
-        ]
-    );
+    const [optionsItens, setOptionsItens] = useState([]);
+
+    useEffect(() => {
+        buscarItens()
+    }, [])
+
+    const buscarItens = async () => {
+        let json = await useApi.listarItens()
+        setOptionsItens(json)
+    };;
 
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [objVenda, setObjVenda] = useState({
@@ -84,7 +83,6 @@ export const NovaVenda = () => {
             if (element.id == item.id) {
                 element.quantidade = value;
             }
-            console.log(element.quantidade)
         });
     };
 
@@ -93,9 +91,9 @@ export const NovaVenda = () => {
         let totalCompra = 0;
         for (let i = 0; i < itensVenda.length; i++) {
             if (itensVenda[i].hasOwnProperty('quantidade'))
-                totalCompra += itensVenda[i].valor * itensVenda[i].quantidade;
+                totalCompra += itensVenda[i].valor_venda * itensVenda[i].quantidade;
             else {
-                totalCompra += itensVenda[i].valor;
+                totalCompra += itensVenda[i].valor_venda;
             }
         };
         setTotalCompra(totalCompra);
@@ -122,7 +120,7 @@ export const NovaVenda = () => {
             setErrorsStep1(true);
             setModalErrorsStep1(true);
         }
-        else{
+        else {
             setErrorsStep1(false);
             setModalErrorsStep1(false);
         }
@@ -175,7 +173,7 @@ export const NovaVenda = () => {
             setErrorsStep2(true);
             setModalErrorsStep2(true);
         }
-        else{
+        else {
             setErrorsStep2(false);
             setModalErrorsStep2(false);
         }
@@ -204,25 +202,49 @@ export const NovaVenda = () => {
     };
 
     //Step 3 - Finalização
-    //Montando o JSON da venda para enviar ao banco
-    const [modalSucces, setModalSucces] = useState(false);
-    const onSubmit = () => {
-        setObjVenda({
-            //itensVenda.nome, itensVenda.quantidade, itensVenda.valor
-            itens: itensVenda,
-            pagamento: [{ formaPagamento: selectedPagamento }, { numeroParcelas: numeroParcelas }, { valorTotal: totalCompra }],
-            dataHora: new Date()
-        })
-
-        setModalSucces(true);
-    };
+    const [modalSucess, setModalSucess] = useState(false);
+    const [modalErrors, setModalErrors] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const navigation = useNavigation()
 
-    const handleModalSucces = () => {
-        navigation.navigate('Vendas');
-        setModalSucces(false);
+    const handleNovaVenda = async () => {
+        setLoading(true)
+        if (await useApi.cadastrarVenda(objVenda) == 200) {
+            setModalSucess(true);
+            setTimeout(() => {
+                navigation.navigate('Vendas', {
+                    novaVenda: objVenda
+                });
+            }, 3000);
+        } else {
+            setModalErrors(true);
+            setTimeout(() => {
+                navigation.navigate('Vendas');
+            }, 3000);
+        }
+        setLoading(false);
     }
+
+    //Montando o JSON da venda para enviar ao banco
+    useEffect(() => {
+        const dataHoraAtual = new Date();
+
+        setObjVenda({
+            itens: itensVenda,
+            forma_pagamento: selectedPagamento,
+            numero_parcelas: numeroParcelas,
+            valor_total: totalCompra,
+            data_hora: formatterdate(dataHoraAtual)
+        })
+    }, [itensVenda, selectedPagamento, numeroParcelas, totalCompra])
+
+    const fnOnSubmit = async () => {
+        if (objVenda.itens && objVenda.forma_pagamento && objVenda.numero_parcelas && objVenda.valor_total && objVenda.data_hora
+        ) {
+            handleNovaVenda();
+        }
+    };
 
     return (
         <ScrollView >
@@ -244,11 +266,13 @@ export const NovaVenda = () => {
                         onNext={handleOnNextStep1}
                         errors={errorsStep1}
                     >
+                        {loading && <Loading />}
                         <InputSelectItens
                             title="Selecione os itens"
                             options={optionsItens}
                             selectedValue={selectedProduct}
                             onValueChange={(value) => handleOnValueChange(value)}
+                            venda
                         />
                         {itensVenda.length > 0 && <Text style={[styles.itemNome]}>Itens Venda</Text>}
                         <View>
@@ -266,7 +290,7 @@ export const NovaVenda = () => {
                                                 </View>
                                                 <View>
                                                     <Text style={styles.itemNome}>Valor</Text>
-                                                    <Text>{formatterbrl(item.valor)}</Text>
+                                                    <Text>{formatterbrl(item.valor_venda)}</Text>
                                                 </View>
                                                 <View>
                                                     <Text style={styles.itemNome}>Quantidade</Text>
@@ -295,7 +319,7 @@ export const NovaVenda = () => {
                                                 </View>
                                                 <View style={{ marginLeft: 58 }}>
                                                     <Text style={styles.itemNome}>Valor</Text>
-                                                    <Text>{formatterbrl(item.valor)}</Text>
+                                                    <Text>{formatterbrl(item.valor_venda)}</Text>
                                                 </View>
                                             </View>
                                         </View>
@@ -343,7 +367,7 @@ export const NovaVenda = () => {
                                         </View>
                                         <View style={{ marginLeft: 58 }}>
                                             <Text style={styles.itemNome}>Valor</Text>
-                                            <Text>{formatterbrl(item.valor)}</Text>
+                                            <Text>{formatterbrl(item.valor_venda)}</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -359,7 +383,7 @@ export const NovaVenda = () => {
                                         </View>
                                         <View style={{ marginLeft: 58 }}>
                                             <Text style={styles.itemNome}>Valor</Text>
-                                            <Text>{formatterbrl(item.valor)}</Text>
+                                            <Text>{formatterbrl(item.valor_venda)}</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -426,7 +450,7 @@ export const NovaVenda = () => {
                         previousBtnTextStyle={buttonTextStyle}
                         previousBtnText="Voltar"
                         finishBtnText="Finalizar"
-                        onSubmit={onSubmit}
+                        onSubmit={fnOnSubmit}
                     >
                         <Text style={styles.itemNome}>Resumo Itens</Text>
                         <View >
@@ -442,7 +466,7 @@ export const NovaVenda = () => {
                                                 </View>
                                                 <View>
                                                     <Text style={styles.itemNome}>Valor</Text>
-                                                    <Text>{formatterbrl(item.valor)}</Text>
+                                                    <Text>{formatterbrl(item.valor_venda)}</Text>
                                                 </View>
                                                 <View>
                                                     <Text style={styles.itemNome}>Quantidade</Text>
@@ -461,7 +485,7 @@ export const NovaVenda = () => {
                                                 </View>
                                                 <View style={{ marginLeft: 58 }}>
                                                     <Text style={styles.itemNome}>Valor</Text>
-                                                    <Text>{formatterbrl(item.valor)}</Text>
+                                                    <Text>{formatterbrl(item.valor_venda)}</Text>
                                                 </View>
                                             </View>
                                         </View>
@@ -486,11 +510,17 @@ export const NovaVenda = () => {
                             </View>
 
                         </View>
+                        <ModalErrors
+                            title="Erro"
+                            message="Erro ao realizar nova venda. Entre em contato com o suporte."
+                            openModal={modalErrors}
+                            fnCloseModal={() => setModalErrors(!modalErrors)}
+                        />
                         <ModalSucces
                             title="Sucesso"
                             message="Venda realizada com sucesso!"
-                            openModal={modalSucces}
-                            fnCloseModal={handleModalSucces}
+                            openModal={modalSucess}
+                            fnCloseModal={() => setModalSucess(!modalSucess)}
                         />
                     </ProgressStep>
                 </ProgressSteps>

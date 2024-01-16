@@ -17,7 +17,8 @@ export const CadastroDeProdutos = () => {
         descricao: '',
         marca: '',
         valor_compra: 0,
-        valor_venda: 0
+        valor_venda: 0,
+        tipo: 'Produto'
     });
 
     const [modalErrors, setModalErrors] = useState(false);
@@ -37,7 +38,7 @@ export const CadastroDeProdutos = () => {
 
     const cadastraNovoProduto = async () => {
         setLoading(true)
-        if (await useApi.cadastrarProduto(formData) == 200) {
+        if (await useApi.cadastrarItem(formData) == 200) {
             setModalSucess(true);
             setTimeout(() => {
                 navigation.navigate('Produtos', { novoProduto: formData });
@@ -98,7 +99,7 @@ export const CadastroDeProdutos = () => {
                         borderRadius={10}
                     />
                     <InputApp
-                        title="Marca"
+                        title="Marca *"
                         fullWidth
                         value={formData.marca}
                         onChangeText={(text) => handleInputChange("marca", text)}

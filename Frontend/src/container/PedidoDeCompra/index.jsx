@@ -2,100 +2,40 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+
 import { useApi } from '../../Api/useApi';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { ModalSearch } from '../../components/ModalSearch/index';
 import { ButtonAdd } from '../../components/Buttons/ButtonAdd';
 import { ButtonSearch } from '../../components/Buttons/ButtonSearch';
 import { formatterbrl } from '../../utils/formatterbrl';
+import { useRoute } from "@react-navigation/native";
 
 export const PedidoDeCompra = () => {
-    const [comprasList, setComprasList] = useState([]);
+    const [pedidosCompraList, setPedidosCompraList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [search, setSearch] = useState([]);
     const [noResults, setNoResults] = useState(false);
+    const route = useRoute();
 
     useEffect(() => {
-        listaCompras()
+        fnListarPedidosCompras()
     }, []);
 
-    const listaCompras = async () => {
+    const fnListarPedidosCompras = async () => {
         setLoading(true)
-        //let json = await useApi.listarEstoque()
-        //setEstoqueList(json)
-        setComprasList([
-            {
-                numeroCompra: '012023',
-                itens: [
-                    { nome: 'Caixa Oléo Mobil', valor: '120', quantidade: '2' },
-                    { nome: 'Caixa Oléo Dulub', valor: '110', quantidade: '2' },
-                    { nome: 'Caixa Oléo Dulub', valor: '110', quantidade: '2' },
-                    { nome: 'Caixa Oléo Dulub', valor: '110', quantidade: '2' },
-                    { nome: 'Caixa Oléo Dulub', valor: '110', quantidade: '2' },
-                    { nome: 'Caixa Oléo Dulub', valor: '110', quantidade: '2' },
-                    { nome: 'Caixa Oléo Mobil', valor: '120', quantidade: '2' },
-                    { nome: 'Caixa Oléo Mobil', valor: '120', quantidade: '2' },
-                    { nome: 'Caixa Oléo Mobil', valor: '120', quantidade: '2' },
-                    { nome: 'Caixa Oléo Mobil', valor: '120', quantidade: '2' },
-                    { nome: 'Caixa Oléo Mobil', valor: '120', quantidade: '2' },
-                    { nome: 'Caixa Oléo Mobil', valor: '120', quantidade: '2' },
-                    { nome: 'Caixa Oléo Mobil', valor: '120', quantidade: '2' },
-                    { nome: 'Caixa Oléo Mobil', valor: '120', quantidade: '2' },
-                    { nome: 'Caixa Oléo Mobil', valor: '120', quantidade: '2' },
-                    { nome: 'Caixa Oléo Mobil', valor: '120', quantidade: '2' },
-                    { nome: 'Caixa Oléo Mobil', valor: '120', quantidade: '2' },
-                    { nome: 'Caixa Oléo Mobil', valor: '120', quantidade: '2' },
-                    { nome: 'Caixa Oléo Mobil', valor: '120', quantidade: '2' },
-                    { nome: 'Caixa Oléo Mobil', valor: '120', quantidade: '2' },
-                    { nome: 'Caixa Oléo Mobil', valor: '120', quantidade: '2' },
-                    { nome: 'Caixa Oléo Mobil', valor: '120', quantidade: '2' },
-                    { nome: 'Caixa Oléo Mobil', valor: '120', quantidade: '2' },
-
-
-                ],
-                fornecedor: {
-                    id: 1,
-                    nomeFantasia: 'AutoPeças Master',
-                    razaoSocial: 'Master Autopeças Ltda',
-                    cnpj: '12.345.678/0001-90',
-                    contato: '(84) 9 9999-9991'
-                },
-                formaDePagamento: 'Boleto',
-                numeroParcelas: '1',
-                valorTotal: '230',
-                dataHora: '10/09/2023 14:20',
-                status: 'Efetuado'
-            },
-            {
-                numeroCompra: '022023',
-                itens: [
-                    { nome: 'Cabo de Freio', valor: '50', quantidade: '2' },
-                    { nome: 'Pneu Moto', valor: '100', quantidade: '2' }
-                ],
-                fornecedor: {
-                    id: 2,
-                    nomeFantasia: 'MecânicaParts',
-                    razaoSocial: 'Mecânica Parts Distribuidora de Peças Automotivas EIRELI',
-                    cnpj: '98.765.432/0001-21',
-                    contato: '(84) 9 9999-9992'
-                },
-                formaDePagamento: 'Pix',
-                numeroParcelas: '1',
-                valorTotal: '34',
-                dataHora: '10/09/2023 14:00',
-                status: 'Recebido'
-            },
-        ])
+        let json = await useApi.listarPedidosCompras()
+        setPedidosCompraList(json)
+        console.log(json)
         setLoading(false)
     }
 
     const fnHandleFilter = (number, value, dateHour) => {
         if (number || value || dateHour) {
-            const filtered = comprasList.filter(item =>
-                (!number || item.numeroCompra.includes(number.trim())) &&
-                (!value || item.valorTotal.includes(value.trim())) &&
-                (!dateHour || item.dataHora.includes(dateHour.trim()))
+            const filtered = pedidosCompraList.filter(item =>
+                (!number || item.numero_pedido_compra.includes(number.trim())) &&
+                (!value || item.valor_total.includes(value.trim())) &&
+                (!dateHour || item.data_hora.includes(dateHour.trim()))
             );
 
             setSearch(filtered);
@@ -114,6 +54,31 @@ export const PedidoDeCompra = () => {
     }
 
     const navigation = useNavigation()
+
+    /*Ao adicionar, editar ou deletar um pedido de compra, será redirecionado para essa tela novamente.
+    Esse useEffect atualiza a lista de produtos para exibir corretamente depois da alteração/deleção*/
+    useEffect(() => {
+        if (route.params?.novoPedidoCompra) {
+            const novoPedido = route.params.novoPedidoCompra;
+            setPedidosCompraList([...pedidosCompraList, novoPedido]);
+        };
+
+        if (route.params?.pedidoRecebido) {
+            const pedidoRecebido = route.params.pedidoRecebido;
+            setPedidosCompraList(pedidosCompraList.map(pedido => (pedido.numero_pedido_compra === pedidoRecebido.numero_pedido_compra ? pedidoRecebido : pedido)));
+        };
+
+        if (route.params?.pedidoAtualizado) {
+            const pedidoAtualizado = route.params.produtoAtualizado;
+            setProdutos(produtos.map(pedido => (pedido.numero_pedido_compra === pedidoAtualizado.numero_pedido_compra ? pedidoAtualizado : pedido)));
+        };
+
+        if (route.params?.pedidoDeletado) {
+            const pedidoDeletado = route.params.pedidoDeletado;
+            const updatedOptions = produtos.filter(item => item.numero_pedido_compra !== pedidoDeletado.numero_pedido_compra);
+            setProdutos(updatedOptions);
+        };
+    }, [route.params?.novoPedidoCompra, route.params?.pedidoRecebido, route.params?.produtoDeletado]);
 
     return (
         <ScrollView >
@@ -165,43 +130,43 @@ export const PedidoDeCompra = () => {
                                                 }}>
                                                     <View style={styles.rowBetween}>
                                                         <Text style={styles.itemNome}>Nº Pedido:</Text>
-                                                        <Text style={styles.itemNome}>{item.numeroCompra}</Text>
+                                                        <Text style={styles.itemNome}>{item.numero_pedido_compra}</Text>
                                                     </View>
                                                     <View style={styles.rowBetween}>
                                                         <Text>Data e Hora:</Text>
-                                                        <Text>{item.dataHora}</Text>
+                                                        <Text>{item.data_hora}</Text>
                                                     </View>
                                                     <View style={styles.rowBetween}>
                                                         <Text>Total:</Text>
-                                                        <Text>{formatterbrl(item.valorTotal)}</Text>
+                                                        <Text>{formatterbrl(item.valor_total)}</Text>
                                                     </View>
                                                     <View style={[styles.rowBetween, { marginTop: 8 }]}>
                                                         <Text style={styles.itemNome}>Status:</Text>
-                                                        <Text style={[styles.itemNome, { color: '#4040ff' }]}>{item.status}</Text>
+                                                        <Text style={[styles.itemNome, { color: item.recebido == false ? '#4040ff' : 'green' }]}>{item.recebido == false ? "Efetuado" : "Recebido"}</Text>
                                                     </View>
                                                 </TouchableOpacity>
                                             ))
                                         )
                                         :
-                                        comprasList.map((item, index) => (
+                                        pedidosCompraList.map((item, index) => (
                                             <TouchableOpacity style={styles.itemContainer} key={index} onPress={() => {
                                                 navigation.navigate('DetalhesPedidoCompra', { pedidocompra: item })
                                             }}>
                                                 <View style={styles.rowBetween}>
                                                     <Text style={styles.itemNome}>Nº Pedido:</Text>
-                                                    <Text style={styles.itemNome}>{item.numeroCompra}</Text>
+                                                    <Text style={styles.itemNome}>{item.numero_pedido_compra}</Text>
                                                 </View>
                                                 <View style={styles.rowBetween}>
                                                     <Text>Data e Hora:</Text>
-                                                    <Text>{item.dataHora}</Text>
+                                                    <Text>{item.data_hora}</Text>
                                                 </View>
                                                 <View style={styles.rowBetween}>
                                                     <Text>Total:</Text>
-                                                    <Text>{formatterbrl(item.valorTotal)}</Text>
+                                                    <Text>{formatterbrl(item.valor_total)}</Text>
                                                 </View>
                                                 <View style={[styles.rowBetween, { marginTop: 8 }]}>
                                                     <Text style={styles.itemNome}>Status:</Text>
-                                                    <Text style={[styles.itemNome, { color: item.status == 'Efetuado' ? '#4040ff' : 'green' }]}>{item.status}</Text>
+                                                    <Text style={[styles.itemNome, { color: item.recebido == false ? '#4040ff' : 'green' }]}>{item.recebido == false ? "Efetuado" : "Recebido"}</Text>
                                                 </View>
                                             </TouchableOpacity>
                                         ))
@@ -212,7 +177,7 @@ export const PedidoDeCompra = () => {
             </View>
             <ModalSearch
                 title="Pesquisar Pedido Compra"
-                list={comprasList}
+                list={pedidosCompraList}
                 openModal={modalIsOpen}
                 fnCloseModal={() => setModalIsOpen(!modalIsOpen)}
                 handleFilterSales={fnHandleFilter}

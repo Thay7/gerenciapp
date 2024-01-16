@@ -1,24 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useApi } from '../../../Api/useApi';
-import { ButtonEdit } from '../../../components/Buttons/ButtonEdit';
-import { InputApp } from '../../../components/InputApp';
-import { formatterbrl } from '../../../utils/formatterbrl';
 import { useRoute } from "@react-navigation/native";
-import { ButtonApp } from '../../../components/Buttons/ButtonApp';
+import { useNavigation } from '@react-navigation/native';
+
+import { useApi } from '../../../Api/useApi';
+import { InputApp } from '../../../components/InputApp';
 import { Loading } from '../../../components/Loading';
+import { ButtonEdit } from '../../../components/Buttons/ButtonEdit';
+import { ButtonApp } from '../../../components/Buttons/ButtonApp';
+import { ButtonDelete } from '../../../components/Buttons/ButtonDelete';
 import { ModalErrors } from '../../../components/ModalErrors';
 import { ModalSucces } from '../../../components/ModalSucces';
-import { useNavigation } from '@react-navigation/native';
-import { ButtonDelete } from '../../../components/Buttons/ButtonDelete';
+import { ModalConfirm } from '../../../components/ModalConfirm'
 
 export const DetalhesProduto = () => {
     const navigation = useNavigation()
     const [enable, setEnable] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    //Modais
     const [modalErrors, setModalErrors] = useState(false);
     const [modalSucess, setModalSucess] = useState(false);
+    const [modalConfirm, setModalConfirm] = useState(false);
     const [titleModal, setTitleModal] = useState('Aviso');
     const [mensagemModal, setMensagemModal] = useState('Preencha todos os campos obrigatórios.');
     const [messageSucess, setMessageSucess] = useState('');
@@ -46,7 +50,7 @@ export const DetalhesProduto = () => {
 
     const fnEditarProduto = async () => {
         setLoading(true)
-        if (await useApi.editarProduto(formData) == 200) {
+        if (await useApi.editarItem(formData) == 200) {
             setMessageSucess('Produto editado com sucesso.');
             setModalSucess(true);
             setEnable(false);
@@ -74,9 +78,10 @@ export const DetalhesProduto = () => {
     }
 
     const handleDelete = async () => {
+        setModalConfirm(false);
         setLoading(true)
         const id = formData.id;
-        if (await useApi.deletarProduto(id) == 200) {
+        if (await useApi.deletarItem(id) == 200) {
             setMessageSucess('Produto deletado com sucesso.');
             setModalSucess(true);
             setTimeout(() => {
@@ -101,7 +106,7 @@ export const DetalhesProduto = () => {
                             <View style={{ marginRight: 5 }}>
                                 <ButtonEdit onPress={() => setEnable(true)} />
                             </View>
-                            <ButtonDelete onPress={handleDelete} />
+                            <ButtonDelete onPress={() => setModalConfirm(true)} />
                         </View>
                     }
                 </View>
@@ -187,6 +192,13 @@ export const DetalhesProduto = () => {
                         message={messageSucess}
                         openModal={modalSucess}
                         fnCloseModal={() => setModalSucess(!modalSucess)}
+                    />
+                    <ModalConfirm
+                        title="Atenção"
+                        message="Tem certeza que deseja excluir?"
+                        openModal={modalConfirm}
+                        fnCloseModal={() => setModalConfirm(!modalConfirm)}
+                        fnConfirm={handleDelete}
                     />
                 </View>
             </View>

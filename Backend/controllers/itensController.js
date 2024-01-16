@@ -1,24 +1,24 @@
 const db = require('../db'); // Importe a conexão
 
-// Exemplo de um controller
-const produtosController = {
+const itensController = {
   async listar(req, res) {
     try {
-      const [rows, fields] = await db.query('SELECT * FROM produtos');
-      res.json(rows); // Envie os resultados como JSON
-    } catch (error) {
+      const [rows, fields] = await db.query('SELECT * FROM itens WHERE tipo = "Produto"');
+      res.json(rows); 
+      console.log(rows)
 
+    } catch (error) {
       console.error('Erro ao listar produtos:', error);
-      res.status(500).send('Erro ao listar produtos');
+      res.status(500).send('Erro ao listar itens');
     }
   },
   async cadastrar(req, res) {
     try {
-      const { nome, cod_produto, descricao, marca, valor_compra, valor_venda } = req.body;
-      const query = `INSERT INTO produtos (nome, cod_produto, descricao, marca, valor_compra, valor_venda)
-                     VALUES (?, ?, ?, ?, ?, ?)`
+      const { nome, cod_produto, descricao, marca, valor_compra, valor_venda, tipo } = req.body;
+      const query = `INSERT INTO itens (nome, cod_produto, descricao, marca, valor_compra, valor_venda, tipo)
+                     VALUES (?, ?, ?, ?, ?, ?, ?)`
 
-      await db.query(query, [nome, cod_produto, descricao, marca, valor_compra, valor_venda]);
+      await db.query(query, [nome, cod_produto, descricao, marca, valor_compra, valor_venda, tipo]);
 
       res.status(200).json({ success: true, message: 'Produto cadastrado com sucesso!' });
     } catch (error) {
@@ -30,9 +30,10 @@ const produtosController = {
     try {
       const { nome, cod_produto, descricao, marca, valor_compra, valor_venda } = req.body;
       const { id } = req.params;
-      const query = `UPDATE produtos 
+      const query = `UPDATE itens 
                       SET nome=?, cod_produto=?, descricao=?, marca=?, valor_compra=?, valor_venda=? 
-                       WHERE id=?`;
+                      WHERE id=?
+                      AND tipo = "Produto"`;
 
       await db.query(query, [nome, cod_produto, descricao, marca, valor_compra, valor_venda, id]);
 
@@ -47,7 +48,7 @@ const produtosController = {
       const { id } = req.params;
       console.log(id + 'back')
 
-      const query = `DELETE FROM produtos WHERE id=?`;
+      const query = `DELETE FROM itens WHERE id=? AND tipo = "Produto"`;
 
       await db.query(query, [id]);
 
@@ -59,4 +60,4 @@ const produtosController = {
   },
 };
 
-module.exports = produtosController;
+module.exports = itensController;

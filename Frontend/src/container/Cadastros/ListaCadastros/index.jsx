@@ -48,7 +48,7 @@ export const ListaCadastros = () => {
 
     // const buscarProdutos = async () => {
     //     setLoading(true)
-    //     let json = await useApi.listarProdutos()
+    //     let json = await useApi.listarItens()
     //     setProdutos(json)
     //     setLoading(false)
     // }

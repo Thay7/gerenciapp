@@ -4,6 +4,7 @@ import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import { useNavigation } from '@react-navigation/native';
 
 //import componentes personalizados 
+import { useApi } from '../../../Api/useApi';
 import { ButtonApp } from '../../../components/Buttons/ButtonApp';
 import { InputApp } from '../../../components/InputApp';
 import { formatterbrl } from '../../../utils/formatterbrl';
@@ -11,35 +12,31 @@ import { ModalReaproveitarPedidoCompra } from '../../../components/ModalReaprove
 import { InputSelectPagamento } from '../../../components/InputSelectPagamento';
 import { InputSelectItens } from '../../../components/InputSelectItens';
 import { InputSelectSimples } from '../../../components/InputSelectSimples';
+import { formatterdate } from '../../../utils/formatterdate';
+import { ModalErrors } from '../../../components/ModalErrors';
+import { ModalSucces } from '../../../components/ModalSucces';
+import { Loading } from '../../../components/Loading';
 
 //import icons
 import ic_remove from '../../../icons/ic_remove.png'
-import { ModalErrors } from '../../../components/ModalErrors';
-import { ModalSucces } from '../../../components/ModalSucces';
-
 
 export const NovoPedidoCompra = () => {
     //Step 1 - Itens
-    const [optionsItens, setOptionsItens] = useState(
-        [
-            { id: 1, nome: 'Caixa Oléo Mobil', valor: 10, tipo: 'Produto' },
-            { id: 2, nome: 'Caixa Oléo Dulub', valor: 12, tipo: 'Produto' },
-            { id: 3, nome: 'Caixa Rolamento biz', valor: 12, tipo: 'Produto' },
-            { id: 4, nome: 'Viseira', valor: 12, tipo: 'Produto' },
-            { id: 5, nome: 'Luz Pisca - Biz', valor: 12, tipo: 'Produto' },
-            { id: 6, nome: 'Cabo de Freio', valor: 12, tipo: 'Produto' },
-            { id: 7, nome: 'Camara de ar 18', valor: 12, tipo: 'Produto' },
-            { id: 8, nome: 'Patins de freio', valor: 12, tipo: 'Produto' },
-            { id: 9, nome: 'Pneu moto', valor: 12, tipo: 'Produto' }
-        ]
-    );
-    const [selectedProduct, setSelectedProduct] = useState(null);
-    const [objVenda, setObjVenda] = useState({
-        itens: null,
-        pagamento: null
-    });
+    const [optionsItens, setOptionsItens] = useState([]);
 
-    //Infos venda
+    useEffect(() => {
+        buscarProdutosSelect()
+    }, [])
+
+    const buscarProdutosSelect = async () => {
+        let json = await useApi.listarItens()
+        setOptionsItens(json)
+    };;
+
+    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [objPedidoCompra, setObjPedidoCompra] = useState(null);
+
+    //Infos
     const [itensCompra, setItensCompra] = useState([]);
     const [totalCompra, setTotalCompra] = useState(0);
 
@@ -54,10 +51,10 @@ export const NovoPedidoCompra = () => {
     };
 
     const verificaItemPresente = (itemClicado) => {
-        // Verifica se o item clicado já está na lista de vendas
+        // Verifica se o item clicado já está na lista
         const itemAlreadyInCompra = itensCompra.some(item => item.id === itemClicado.id);
 
-        // Adiciona o item clicado à lista de vendas
+        // Adiciona o item clicado à lista
         if (!itemAlreadyInCompra)
             itensCompra.push(itemClicado);
 
@@ -74,7 +71,7 @@ export const NovoPedidoCompra = () => {
             }
         });
 
-        //Removendo o item da venda
+        //Removendo o item
         const updatedItensVenda = itensCompra.filter(item => item.id !== value.id);
         setItensCompra(updatedItensVenda);
         setSelectedProduct(null);
@@ -98,13 +95,12 @@ export const NovoPedidoCompra = () => {
 
     //Calcular total da compra a cada nova ação dos itens
     useEffect(() => {
-        console.log('entrou no useeffect')
         let totalCompra = 0;
         for (let i = 0; i < itensCompra.length; i++) {
             if (itensCompra[i].hasOwnProperty('quantidade'))
-                totalCompra += itensCompra[i].valor * itensCompra[i].quantidade;
+                totalCompra += itensCompra[i].valor_compra * itensCompra[i].quantidade;
             else {
-                totalCompra += itensCompra[i].valor;
+                totalCompra += itensCompra[i].valor_compra;
             }
         };
         setTotalCompra(totalCompra);
@@ -223,11 +219,20 @@ export const NovoPedidoCompra = () => {
     };
 
     //Step 3 - Fornecedor
-    const [optionsFornecedor, setOptionsFornecedor] = useState([
-        { id: 1, nomeFantasia: 'AutoPeças Master', razaoSocial: 'Master Autopeças Ltda', cnpj: '12.345.678/0001-90', contato: '(84) 9 9999-9991' },
-        { id: 2, nomeFantasia: 'MecânicaParts', razaoSocial: 'Mecânica Parts Distribuidora de Peças Automotivas EIRELI', cnpj: '98.765.432/0001-21', contato: '(84) 9 9999-9992' },
-    ]);
+
+    useEffect(() => {
+        buscarFornecedores()
+    }, [])
+
+    const buscarFornecedores = async () => {
+        let json = await useApi.listarFornecedores()
+        setOptionsFornecedor(json)
+    };
+
+    const [optionsFornecedor, setOptionsFornecedor] = useState([]);
     const [selectedFornecedor, setSelectedFornecedor] = useState(null);
+    const [modalSucess, setModalSucess] = useState(false);
+
     const removeBtnStep3 = selectedFornecedor != null ? false : true;
 
     const handleOnValueFornecedorChange = (value) => {
@@ -235,23 +240,18 @@ export const NovoPedidoCompra = () => {
     };
 
     //Step 4 - Finalização
-    //Montando o JSON da venda para enviar ao banco
-    const [modalSucces, setModalSucces] = useState(false);
-    const onSubmit = () => {
-        setObjVenda({
-            //itensVenda.nome, itensVenda.quantidade, itensVenda.valor
-            itens: itensCompra,
-            pagamento: [{ formaPagamento: selectedPagamento }, { numeroParcelas: numeroParcelas }, { valorTotal: totalCompra }],
-            dataHora: new Date()
-        })
+    const [loading, setLoading] = useState(false);
 
-        if (objVenda != null) {
+    const handleNovoPedidoCompra = async () => {
+        setLoading(true)
+        if (await useApi.cadastrarPedidoCompra(objPedidoCompra) == 200) {
+            setLoading(false);
 
-            let textoPedido = `Olá ${selectedFornecedor.nomeFantasia}!\nAqui está meu pedido:\n\n`;
+            //Montando mensagem a ser enviada ao fornecedor ao wpp com o pedido
+            let textoPedido = `Olá ${selectedFornecedor.nome_fantasia}!\nAqui está meu pedido:\n\n`;
 
             itensCompra.forEach(element => {
                 textoPedido += `${element.nome} - Quantidade: ${element.quantidade}\n`
-                console.log(textoPedido)
             });
 
             textoPedido += `\nForma de pagamento: ${selectedPagamento}`
@@ -262,10 +262,46 @@ export const NovoPedidoCompra = () => {
             const linkWhatsApp = `https://api.whatsapp.com/send?phone=${numeroFornecedorTeste}&text=${textoCodificado}`;
 
             Linking.openURL(linkWhatsApp).catch(err => console.error('Erro ao redirecionar:', err));
-        }
 
-        //salvar o pedido no banco para listagem posterior - colocar botao para usuario informar se o pedido foi realizado de fato
-        navigation.navigate('PedidoDeCompra');
+            setModalSucess(true);
+            setTimeout(() => {
+                navigation.navigate('PedidoDeCompra', {
+                    novoPedidoCompra: objPedidoCompra
+                });
+            }, 3000);
+        } else {
+            setModalErrorsStep2(true);
+            setModalErrorsStep2("Erro ao realizar pedido de compra. Entre em contato com o suporte.");
+            setTimeout(() => {
+                navigation.navigate('PedidoDeCompra');
+            }, 3000);
+        }
+    }
+
+    useEffect(() => {
+        const dataHoraAtual = new Date();
+        setObjPedidoCompra({
+            itens: itensCompra,
+            forma_pagamento: selectedPagamento,
+            numero_parcelas: numeroParcelas,
+            valor_total: totalCompra,
+            data_hora: formatterdate(dataHoraAtual),
+            fornecedor: selectedFornecedor
+        })
+    }, [itensCompra, selectedPagamento, numeroParcelas, totalCompra, selectedFornecedor])
+
+    const [modalSucces, setModalSucces] = useState(false);
+    const onSubmit = () => {
+        if (
+            objPedidoCompra.itens &&
+            objPedidoCompra.forma_pagamento &&
+            objPedidoCompra.numero_parcelas &&
+            objPedidoCompra.valor_total &&
+            objPedidoCompra.data_hora &&
+            objPedidoCompra.fornecedor
+        ) {
+            handleNovoPedidoCompra();
+        }
     };
 
     const navigation = useNavigation()
@@ -418,11 +454,13 @@ export const NovoPedidoCompra = () => {
                         onNext={() => handleOnNextStep1(false)}
                         errors={errorsStep1}
                     >
+                        {loading && <Loading />}
                         <InputSelectItens
                             title="Selecione os itens"
                             options={optionsItens}
                             selectedValue={selectedProduct}
                             onValueChange={(value) => handleOnValueChange(value)}
+                            pedidoCompra
                         />
                         <ButtonApp
                             title={!reaproveitarPedidoCompra || (reaproveitarPedidoCompra && itensCompra.length <= 0) ? "Reaproveitar pedido de compra" : "Selecionar outro pedido de compra"}
@@ -445,7 +483,7 @@ export const NovoPedidoCompra = () => {
                                         </View>
                                         <View>
                                             <Text style={styles.itemNome}>Valor</Text>
-                                            <Text>{formatterbrl(item.valor)}</Text>
+                                            <Text>{formatterbrl(item.valor_compra)}</Text>
                                         </View>
                                         <View>
                                             <Text style={styles.itemNome}>Quantidade</Text>
@@ -492,42 +530,42 @@ export const NovoPedidoCompra = () => {
                             selectedValue={selectedPagamento}
                             onValueChange={(value) => handleOnValueChangePagamento(value)}
                         />
-
-                        <Text style={[styles.itemNome, { marginTop: 10 }]}>Detalhes Parcelamento</Text>
-                        <View style={[styles.itemContainer, { marginBottom: 1 }]}>
-                            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                                <Text style={styles.itemNome}>Nº Parcelas</Text>
-                                <InputApp
-                                    value={numeroParcelas.toString()}
-                                    onChangeText={(value) => handleChangeParcelas(value)}
-                                    keyboardType="numeric"
-                                    marginBottom={false}
-                                    height={30}
-                                    width={100}
-                                    borderRadius={5}
-                                    alignSelf="flex-end"
-                                />
-                            </View>
-                            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                <View>
-                                    <Text style={styles.itemNome}>Valor Total</Text>
-                                </View>
-                                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                    <InputApp
-                                        value={totalCompra.toString()}
-                                        onChangeText={(value) => handleChangeValorTotal(value)}
-                                        keyboardType="numeric"
-                                        marginBottom={false}
-                                        height={30}
-                                        width={100}
-                                        borderRadius={5}
-                                        alignSelf="flex-end"
-                                    />
-                                </View>
-                            </View>
-                        </View>
                         {selectedPagamento != null && (
                             <>
+
+                                <Text style={[styles.itemNome, { marginTop: 10 }]}>Detalhes Parcelamento</Text>
+                                <View style={[styles.itemContainer, { marginBottom: 1 }]}>
+                                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                                        <Text style={styles.itemNome}>Nº Parcelas</Text>
+                                        <InputApp
+                                            value={numeroParcelas.toString()}
+                                            onChangeText={(value) => handleChangeParcelas(value)}
+                                            keyboardType="numeric"
+                                            marginBottom={false}
+                                            height={30}
+                                            width={100}
+                                            borderRadius={5}
+                                            alignSelf="flex-end"
+                                        />
+                                    </View>
+                                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                        <View>
+                                            <Text style={styles.itemNome}>Valor Total</Text>
+                                        </View>
+                                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                            <InputApp
+                                                value={totalCompra.toString()}
+                                                onChangeText={(value) => handleChangeValorTotal(value)}
+                                                keyboardType="numeric"
+                                                marginBottom={false}
+                                                height={30}
+                                                width={100}
+                                                borderRadius={5}
+                                                alignSelf="flex-end"
+                                            />
+                                        </View>
+                                    </View>
+                                </View>
                                 <Text style={styles.value}>Valor Total:</Text>
                                 <Text style={styles.value}>{formatterbrl(totalCompra)}</Text>
                             </>
@@ -559,7 +597,7 @@ export const NovoPedidoCompra = () => {
                                 <View style={styles.itemContainer}>
                                     <Text style={styles.itemNome}>Nome Fantasia</Text>
                                     <InputApp
-                                        value={selectedFornecedor.nomeFantasia}
+                                        value={selectedFornecedor.nome_fantasia}
                                         keyboardType="numeric"
                                         marginBottom={true}
                                         height={30}
@@ -567,7 +605,7 @@ export const NovoPedidoCompra = () => {
                                     />
                                     <Text style={styles.itemNome}>Razão Social</Text>
                                     <InputApp
-                                        value={selectedFornecedor.razaoSocial}
+                                        value={selectedFornecedor.razao_social}
                                         keyboardType="numeric"
                                         marginBottom={true}
                                         height={30}
@@ -614,7 +652,7 @@ export const NovoPedidoCompra = () => {
                                         </View>
                                         <View>
                                             <Text style={styles.itemNome}>Valor</Text>
-                                            <Text style={{ fontSize: 15 }}>{formatterbrl(item.valor)}</Text>
+                                            <Text style={{ fontSize: 15 }}>{formatterbrl(item.valor_compra)}</Text>
                                         </View>
                                         <View>
                                             <Text style={styles.itemNome}>Quantidade</Text>
@@ -630,7 +668,7 @@ export const NovoPedidoCompra = () => {
                                 <View style={styles.itemContainer}>
                                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                         <Text style={styles.itemNome}>Nome Fantasia</Text>
-                                        <Text style={{ fontSize: 15 }}>{selectedFornecedor.nomeFantasia}</Text>
+                                        <Text style={{ fontSize: 15 }}>{selectedFornecedor.nome_fantasia}</Text>
                                     </View>
                                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                         <Text style={styles.itemNome}>CNPJ</Text>
@@ -662,7 +700,7 @@ export const NovoPedidoCompra = () => {
                         }
                         <ModalSucces
                             title="Sucesso"
-                            message="Venda realizada com sucesso!"
+                            message="Peiddo compra realizado com sucesso!"
                             openModal={modalSucces}
                             fnCloseModal={handleModalSucces}
                         />

@@ -43,9 +43,8 @@ export const Produtos = () => {
     }, [])
 
     const buscarProdutos = async () => {
-        console.log('entrou no buscar produtos')
         setLoading(true)
-        let json = await useApi.listarProdutos()
+        let json = await useApi.listarItens()
         setProdutos(json)
         setLoading(false)
     }
@@ -59,6 +58,8 @@ export const Produtos = () => {
         setNoResults(false);
     }
 
+    /*Ao adicionar, editar ou deletar um produto, será redirecionado para essa tela novamente.
+    Esse useEffect atualiza a lista de produtos para exibir corretamente depois da alteração/deleção*/
     useEffect(() => {
         if (route.params?.novoProduto) {
             const novoProduto = route.params.novoProduto;
@@ -109,7 +110,7 @@ export const Produtos = () => {
                     )
                     :
                     (
-                        noResults ?
+                        !produtos.length > 0 ?
                             (
                                 <View>
                                     <Text>Nenhum resultado para a busca!</Text>

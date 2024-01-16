@@ -32,7 +32,7 @@ export const InputSelectSimples = ({ title, selectedValue, onValueChange, option
                             options.map((item, index) => (
                                 <Picker.Item
                                     key={index}
-                                    label={item.nomeFantasia}
+                                    label={item.nome_fantasia}
                                     value={item}
                                 />
                             ))
