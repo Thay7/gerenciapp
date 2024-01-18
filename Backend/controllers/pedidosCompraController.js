@@ -16,10 +16,12 @@ const pedidosCompraController = {
   },
   async listar(req, res) {
     try {
-      const [rows, fields] = await db.query(`SELECT p.*, ip.id as item_id, ip.nome, ip.valor, ip.quantidade, f.cnpj, f.nome_fantasia, f.razao_social, f.contato FROM pedidos_compra p 
-      INNER JOIN itens_pedidos_compra ip on ip.id_pedido_compra = p.id 
-      INNER JOIN fornecedores f on p.id_fornecedor = f.id
-      ORDER BY p.id DESC`);
+      const [rows, fields] = await db.query(`SELECT p.*, ip.id as item_id, i.nome, ip.valor, ip.quantidade, f.cnpj, f.nome_fantasia, f.razao_social, f.contato 
+        FROM pedidos_compra p 
+        INNER JOIN itens_pedidos_compra ip on ip.id_pedido_compra = p.id 
+        INNER JOIN fornecedores f on p.id_fornecedor = f.id
+        INNER JOIN itens i on ip.id_item = i.id
+        ORDER BY p.id DESC`);
       const pedidosFormatados = rows.reduce((formattedSales, row) => {
         const foundSale = formattedSales.find(sale => sale.numero_pedido_compra === row.numero_pedido_compra);
 
@@ -51,7 +53,7 @@ const pedidosCompraController = {
             razao_social: row.razao_social,
             contato: row.contato
           };
-          
+
           formattedSales.push(formattedSale);
         }
         return formattedSales;

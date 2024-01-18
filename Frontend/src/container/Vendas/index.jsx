@@ -56,25 +56,25 @@ export const Vendas = () => {
 
     const navigation = useNavigation()
 
-    /*Ao adicionar, editar ou deletar um produto, será redirecionado para essa tela novamente.
-    Esse useEffect atualiza a lista de produtos para exibir corretamente depois da alteração/deleção*/
+    /*Ao adicionar, editar ou deletar uma venda, será redirecionado para essa tela novamente.
+    Esse useEffect atualiza a lista de vendas para exibir corretamente depois da alteração/deleção*/
     useEffect(() => {
-       /* if (route.params?.novaVenda) {
+        if (route.params?.novaVenda) {
             const novaVenda = route.params.novaVenda;
             setVendasList([...vendasList, novaVenda]);
-        }*/
-
-        /*if (route.params?.produtoAtualizado) {
-            const produtoAtualizado = route.params.produtoAtualizado;
-            setProdutos(produtos.map(produto => (produto.id === produtoAtualizado.id ? produtoAtualizado : produto)));
         }
 
-        if (route.params?.produtoDeletado) {
-            const produtoDeletado = route.params.produtoDeletado;
-            const updatedOptions = produtos.filter(item => item.id !== produtoDeletado.id);
-            setProdutos(updatedOptions);
-        }*/
-    }, [route.params?.novaVenda]);
+        if (route.params?.vendaAtualizada) {
+            const vendaAtualizada = route.params.vendaAtualizada;
+            setVendasList(vendasList.map(venda => (venda.id === vendaAtualizada.id ? vendaAtualizada : venda)));
+        }
+
+        if (route.params?.vendaDeletada) {
+            const vendaDeletada = route.params.vendaDeletada;
+            const updatedOptions = vendasList.filter(item => item.id !== vendaDeletada.id);
+            setVendasList(updatedOptions);
+        }
+    }, [route.params?.novaVenda, route.params?.vendaAtualizada,route.params?.vendaDeletada]);
 
     return (
         <ScrollView >

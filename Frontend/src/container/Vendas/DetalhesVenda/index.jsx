@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useRoute } from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native';
 
 import { useApi } from '../../../Api/useApi';
 import { InputApp } from '../../../components/InputApp';
@@ -10,6 +11,9 @@ import { ButtonApp } from '../../../components/Buttons/ButtonApp';
 import { ButtonDelete } from '../../../components/Buttons/ButtonDelete';
 import { ButtonEdit } from '../../../components/Buttons/ButtonEdit';
 import { ModalConfirm } from '../../../components/ModalConfirm';
+import { ModalSucces } from '../../../components/ModalSucces';
+import { ModalErrors } from '../../../components/ModalErrors';
+import { Loading } from '../../../components/Loading';
 
 export const DetalhesVenda = () => {
     const route = useRoute();
@@ -25,7 +29,16 @@ export const DetalhesVenda = () => {
     });
 
     const [enable, setEnable] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const navigation = useNavigation()
+
+    //Modais
+    const [modalErrors, setModalErrors] = useState(false);
+    const [modalSucess, setModalSucess] = useState(false);
     const [modalConfirm, setModalConfirm] = useState(false);
+    const [titleModal, setTitleModal] = useState('Aviso');
+    const [mensagemModal, setMensagemModal] = useState('Preencha todos os campos obrigatórios.');
+    const [messageSucess, setMessageSucess] = useState('');
 
     //Lidar com a forma de pagamento
     const [optionsPagamento, setOptionsPagamento] = useState([
@@ -77,24 +90,21 @@ export const DetalhesVenda = () => {
     }, [formData.itens]);
 
     const fnEditarVenda = async () => {
-        // setLoading(true)
-        console.log(formData)
+        setLoading(true)
         if (await useApi.editarVenda(formData) == 200) {
-            console.log('deu certo')
-            /* setMessageSucess('Venda editada com sucesso.');
-             setModalSucess(true);
-             setEnable(false);
-             setTimeout(() => {
-                 navigation.navigate('Vendas', { vendaAtualizada: formData });
-             }, 3000);*/
+            setMessageSucess('Venda editada com sucesso.');
+            setModalSucess(true);
+            setEnable(false);
+            setTimeout(() => {
+                navigation.navigate('Vendas', { vendaAtualizada: formData });
+            }, 3000);
         } else {
-            console.log('deu erro')
-            /* setTitleModal('Erro')
-             setMensagemModal('Erro ao editar venda.');
-             setModalErrors(true);
-             setTimeout(() => {
-                 navigation.navigate('Vendas', { vendaAtualizada: formData });
-             }, 3000);*/
+            setTitleModal('Erro')
+            setMensagemModal('Erro ao editar venda.');
+            setModalErrors(true);
+            setTimeout(() => {
+                navigation.navigate('Vendas');
+            }, 3000);
         }
         setLoading(false);
 
@@ -119,10 +129,29 @@ export const DetalhesVenda = () => {
             fnEditarVenda()
         }
         else {
-            //titulo modal: preencha todos os campos!
-            console.log('preencha todos os campos!');
-            //setModalErrors(true);
+            setTitleModal('Erro')
+            setMensagemModal('Preencha todos os campos.');
+            setModalErrors(true);
         }
+    };
+
+
+    const handleDelete = async () => {
+        setModalConfirm(false);
+        setLoading(true)
+        if (await useApi.deletarVenda(formData) == 200) {
+            setMessageSucess('Venda deletada com sucesso.');
+            setModalSucess(true);
+            setTimeout(() => {
+                navigation.navigate('Vendas', { vendaDeletada: formData });
+            }, 3000);
+        } else {
+            setTitleModal('Erro')
+            setMensagemModal('Erro ao deletar venda.');
+            setModalErrors(true);
+        }
+        setLoading(false);
+
     };
 
     return (
@@ -139,6 +168,7 @@ export const DetalhesVenda = () => {
                         </View>
                     }
                 </View>
+                {loading && <Loading />}
                 <View style={[{ marginTop: 10, marginBottom: 10, marginHorizontal: 5 }, styles.rowBetween]}>
                     <View >
                         <Text style={styles.itemNome}>Nº Venda</Text>
@@ -226,12 +256,24 @@ export const DetalhesVenda = () => {
                         />
                     </>
                 }
+                <ModalErrors
+                    title={titleModal}
+                    message={mensagemModal}
+                    openModal={modalErrors}
+                    fnCloseModal={() => setModalErrors(!modalErrors)}
+                />
+                <ModalSucces
+                    title="Sucesso"
+                    message={messageSucess}
+                    openModal={modalSucess}
+                    fnCloseModal={() => setModalSucess(!modalSucess)}
+                />
                 <ModalConfirm
                     title="Atenção"
                     message="Tem certeza que deseja excluir?"
                     openModal={modalConfirm}
                     fnCloseModal={() => setModalConfirm(!modalConfirm)}
-                //fnConfirm={handleDelete}
+                    fnConfirm={handleDelete}
                 />
             </View>
         </ScrollView>

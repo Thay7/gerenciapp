@@ -12,7 +12,7 @@ export const ModalSucces = ({ title, message, openModal, fnCloseModal }) => {
             animationType="none"
             transparent={true}
             visible={openModal}
-            
+
         >
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
@@ -20,9 +20,9 @@ export const ModalSucces = ({ title, message, openModal, fnCloseModal }) => {
                         <Text style={styles.title}>{title}</Text>
                     </View>
                     <Text style={styles.message}>{message}</Text>
-                    <TouchableOpacity style={styles.closeButton} onPress={fnCloseModal}>
+                    {/* <TouchableOpacity style={styles.closeButton} onPress={fnCloseModal}>
                         <Image source={ic_close} style={styles.icon} />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             </View>
         </Modal>

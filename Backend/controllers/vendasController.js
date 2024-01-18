@@ -3,7 +3,7 @@ const db = require('../db'); // Importe a conexão
 const vendasController = {
   async listar(req, res) {
     try {
-      const [rows, fields] = await db.query(`SELECT v.id as id_venda, v.numero_venda, v.forma_pagamento, v.numero_parcelas, v.valor_total, v.data_hora, iv.nome, iv.valor, iv.quantidade, iv.id as item_id, i.* FROM vendas v INNER JOIN itens_venda iv on iv.id_venda = v.id INNER JOIN itens i on iv.id_item = i.id ORDER BY v.id DESC`);
+      const [rows, fields] = await db.query(`SELECT v.id as id_venda, v.numero_venda, v.forma_pagamento, v.numero_parcelas, v.valor_total, v.data_hora, i.nome, iv.valor, iv.quantidade, iv.id as item_id, i.* FROM vendas v INNER JOIN itens_venda iv on iv.id_venda = v.id INNER JOIN itens i on iv.id_item = i.id ORDER BY v.id DESC`);
       const vendasFormatadas = rows.reduce((formattedSales, row) => {
 
         // Verifica se a venda já existe no array de vendas formatadas
@@ -106,7 +106,6 @@ const vendasController = {
                                  WHERE id_venda=?
                                  AND id=?`;
 
-        console.log("Consulta:", insertItemQuery, [valor, quantidade, id, id_item]);
         await db.query(insertItemQuery, [valor, quantidade, id, id_item]);
       }
       res.status(200).json({ success: true, message: 'Venda editada com sucesso!' });
@@ -118,16 +117,22 @@ const vendasController = {
   async deletar(req, res) {
     try {
       const { id } = req.params;
-      console.log(id + 'back')
+      const [rows, fields] = await db.query(`SELECT * FROM itens_venda WHERE id_venda=?`, [id]);
 
-      const query = `DELETE FROM itens WHERE id=? AND tipo = "Produto"`;
+      for (const item of rows) {
+        const { id } = item;
+        const deleteItemQuery = `DELETE FROM itens_venda
+                                 WHERE id=?`;
+        await db.query(deleteItemQuery, [id]);
+      }
 
-      await db.query(query, [id]);
+      const deleteVendaQuery = `DELETE FROM vendas WHERE id=?`;
+      await db.query(deleteVendaQuery, [id]);
 
-      res.status(200).json({ success: true, message: 'Produto editado com sucesso!' });
+      res.status(200).json({ success: true, message: 'Venda deletada com sucesso!' });
     } catch (error) {
-      console.error('Erro ao deletar produto:', error);
-      res.status(500).json({ success: false, message: 'Erro ao deletar o produto' });
+      console.error('Erro ao deletar venda:', error);
+      res.status(500).json({ success: false, message: 'Erro ao deletar venda' });
     }
   },
 };

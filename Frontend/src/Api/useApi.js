@@ -68,8 +68,20 @@ export const useApi = {
     editarVenda: async (formData) => {
         try {
             const id = formData.id;
-            console.log('id na api front: ' + id)
             const response = await api.put(`vendas/editar/${id}`, formData);
+            if (response.status == 200) {
+                return 200;
+            }
+            return 400;
+        } catch (error) {
+            console.error(error);
+            return 500;
+        }
+    },
+    deletarVenda: async (formData) => {
+        try {
+            const id_venda = formData.id;
+            const response = await api.delete(`vendas/deletar/${id_venda}`);
             if (response.status == 200) {
                 return 200;
             }
