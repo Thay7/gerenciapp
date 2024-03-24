@@ -1,169 +1,326 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Button } from 'react-native'
-import { InputApp } from '../../components/InputApp'
-import { ButtonApp } from '../../components/Buttons/ButtonApp'
-import ic_editar_perfil from '../../icons/Perfil/ic_editar_perfil.png'
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { useRoute } from "@react-navigation/native";
+import { useNavigation } from '@react-navigation/native';
+
+import { useApi } from '../../Api/useApi';
+import { InputApp } from '../../components/InputApp';
+import { Loading } from '../../components/Loading';
+import { ButtonEdit } from '../../components/Buttons/ButtonEdit';
+import { ButtonApp } from '../../components/Buttons/ButtonApp';
+import { ButtonDelete } from '../../components/Buttons/ButtonDelete';
+import { ModalErrors } from '../../components/ModalErrors';
+import { ModalSucces } from '../../components/ModalSucces';
+import { ModalConfirm } from '../../components/ModalConfirm'
 
 export const Perfil = () => {
-    const [userInformation, setUserInformations] = useState({
-        name: 'Maria Ozanilda Rodrigues Martins',
-        email: 'nilda.rodrigues@gmail.com',
-        cnpj: '48.523.384/0001-53',
-        companyName: 'Borracharia do Valdir',
-        cep: '59900000',
-        address: 'Rua Maria Jose Dantas',
-        number: '1415',
-        neighborhood: 'Arizona',
-        city: 'Pau dos Ferros',
-        state: 'Rio Grande do Norte'
-    })
+    const navigation = useNavigation()
+    const [enable, setEnable] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const formatCep = (value) => {
-        value = value.replace(/\D/g, "");
-        value = value.replace(/^(\d{5})(\d{3})$/, '$1-$2');
-        return value;
+    //Modais
+    const [modalErrors, setModalErrors] = useState(false);
+    const [modalSucess, setModalSucess] = useState(false);
+    const [modalConfirm, setModalConfirm] = useState(false);
+    const [titleModal, setTitleModal] = useState('Aviso');
+    const [mensagemModal, setMensagemModal] = useState('Preencha todos os campos obrigatórios.');
+    const [messageSucess, setMessageSucess] = useState('');
+
+    const route = useRoute();
+    // const { produto } = route.params;
+    // const [formData, setFormData] = useState({
+    //     id: produto.id,
+    //     nome: produto.nome,
+    //     cod_produto: produto.cod_produto,
+    //     descricao: produto.descricao,
+    //     marca: produto.marca,
+    //     valor_compra: produto.valor_compra,
+    //     valor_venda: produto.valor_venda
+    // });
+
+    // const handleInputChange = (name, value) => {
+    //     if (name === "valor_compra" || name === "valor_venda") {
+    //         if (value.includes(',') || value.includes('.')) {
+    //             value = value.replace(",", ".");
+    //         }
+    //     }
+    //     setFormData({ ...formData, [name]: value })
+    // }
+
+    const fnEditarProduto = async () => {
+        // setLoading(true)
+        // if (await useApi.editarProduto(formData) == 200) {
+        //     setMessageSucess('Produto editado com sucesso.');
+        //     setModalSucess(true);
+        //     setEnable(false);
+        //     setTimeout(() => {
+        //         navigation.navigate('Produtos', { produtoAtualizado: formData });
+        //     }, 3000);
+        // } else {
+        //     setTitleModal('Erro')
+        //     setMensagemModal('Erro ao editar produto.');
+        //     setModalErrors(true);
+        //     setTimeout(() => {
+        //         navigation.navigate('Produtos', { produtoAtualizado: formData });
+        //     }, 3000);
+        // }
+        // setLoading(false);
     }
 
-    const formatCnpj = (value) => {
-        value = value.replace(/\D/g, "");
-        value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2}).*/, "$1.$2.$3/$4-$5");
-        return value;
+    const handleSubmit = async () => {
+        // if (formData.nome != '' && formData.cod_produto != 0 && formData.marca != '' && formData.valor_compra > 0 && formData.valor_venda > 0) {
+        //     fnEditarProduto()
+        // }
+        // else {
+        //     setModalErrors(true);
+        // }
     }
 
-    const handleInputChange = (fieldName, value) => {
-        setUserInformations({
-            ...userInformation,
-            [fieldName]: value,
-        })
-    }
+    const handleDelete = async () => {
+        // setModalConfirm(false);
+        // setLoading(true)
+        // const id = formData.id;
+        // if (await useApi.deletarProduto(id) == 200) {
+        //     setMessageSucess('Produto deletado com sucesso.');
+        //     setModalSucess(true);
+        //     setTimeout(() => {
+        //         navigation.navigate('Produtos', { produtoDeletado: formData });
+        //     }, 3000);
+        // } else {
+        //     setTitleModal('Erro')
+        //     setMensagemModal('Erro ao deletar produto.');
+        //     setModalErrors(true);
+        // }
+        // setLoading(false);
 
-    const [isEditableUser, setIsEditableUser] = useState(false)
-    const [isEditableCompany, setIsEditableCompany] = useState(false)
-
-    const handleEditUser = () => {
-        setIsEditableUser(true);
-    }
+    };
 
     return (
-        <ScrollView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.header}>
+                <Text style={styles.titulo}>Perfil</Text>
+                {!enable &&
+                    <View style={styles.headerIcons}>
+                        <View style={{ marginRight: 5 }}>
+                            <ButtonEdit onPress={() => setEnable(true)} />
+                        </View>
+                    </View>
+                }
+            </View>
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+            >
+                {loading && <Loading />}
                 <View>
-                    <Text style={styles.headerText}>Meu Estoque</Text>
-                    <Text style={styles.subHeaderText}>Borracharia do Valdir</Text>
+                    <Text style={styles.itemNome}>Dados pessoais</Text>
+                    <InputApp
+                        title="Nome"
+                        editable={enable}
+                        // value={formData.nome}
+                        fullWidth
+                        borderRadius={10}
+                        marginBottom
+                        onChangeText={(text) => handleInputChange("nome", text)}
+                    />
+                    <InputApp
+                        title="Usuário"
+                        editable={enable}
+                        // value={formData.nome}
+                        fullWidth
+                        borderRadius={10}
+                        marginBottom
+                        onChangeText={(text) => handleInputChange("nome", text)}
+                    />
+                    <InputApp
+                        title="Email"
+                        editable={enable}
+                        // value={formData.cod_produto.toString()}
+                        fullWidth
+                        borderRadius={10}
+                        marginBottom
+                        onChangeText={(text) => handleInputChange("cod_produto", text)}
+                    />
+                    <InputApp
+                        title="Senha"
+                        editable={enable}
+                        secureTextEntry
+                        // value={formData.cod_produto.toString()}
+                        fullWidth
+                        borderRadius={10}
+                        marginBottom
+                        onChangeText={(text) => handleInputChange("cod_produto", text)}
+                    />
+                    <Text style={styles.itemNome}>Dados empresa</Text>
+                    <InputApp
+                        title="CNPJ"
+                        editable={enable}
+                        //value={formData.descricao}
+                        fullWidth
+                        borderRadius={10}
+                        marginBottom
+                        onChangeText={(text) => handleInputChange("descricao", text)}
+                    />
+                    <InputApp
+                        title="Nome Fantasia"
+                        editable={enable}
+                        // value={formData.marca}
+                        fullWidth
+                        borderRadius={10}
+                        marginBottom
+                        onChangeText={(text) => handleInputChange("marca", text)}
+                    />
+                    <InputApp
+                        title="Razão Social"
+                        editable={enable}
+                        // value={formData.valor_compra.toString()}
+                        fullWidth
+                        borderRadius={10}
+                        marginBottom
+                        onChangeText={(text) => handleInputChange("valor_compra", text)}
+                    />
+                    <InputApp
+                        title="CEP"
+                        editable={enable}
+                        //  value={formData.valor_venda.toString()}
+                        fullWidth
+                        borderRadius={10}
+                        marginBottom
+                        onChangeText={(text) => handleInputChange("valor_venda", text)}
+                    />
+                    <InputApp
+                        title="Cidade"
+                        editable={enable}
+                        //  value={formData.valor_venda.toString()}
+                        fullWidth
+                        borderRadius={10}
+                        marginBottom
+                        onChangeText={(text) => handleInputChange("valor_venda", text)}
+                    />
+                    <InputApp
+                        title="Estado"
+                        editable={enable}
+                        //  value={formData.valor_venda.toString()}
+                        fullWidth
+                        borderRadius={10}
+                        marginBottom
+                        onChangeText={(text) => handleInputChange("valor_venda", text)}
+                    />
+                    <InputApp
+                        title="Rua"
+                        editable={enable}
+                        //  value={formData.valor_venda.toString()}
+                        fullWidth
+                        borderRadius={10}
+                        marginBottom
+                        onChangeText={(text) => handleInputChange("valor_venda", text)}
+                    />
+                    <InputApp
+                        title="Nº"
+                        editable={enable}
+                        //  value={formData.valor_venda.toString()}
+                        fullWidth
+                        borderRadius={10}
+                        marginBottom
+                        onChangeText={(text) => handleInputChange("valor_venda", text)}
+                    />
+                    <InputApp
+                        title="Bairro"
+                        editable={enable}
+                        //  value={formData.valor_venda.toString()}
+                        fullWidth
+                        borderRadius={10}
+                        marginBottom
+                        onChangeText={(text) => handleInputChange("valor_venda", text)}
+                    />
+                    {enable &&
+                        <>
+                            <ButtonApp
+                                title="Salvar"
+                                color="#fff"
+                                backgroundColor="#4040ff"
+                                onPress={handleSubmit}
+                            />
+                            <ButtonApp
+                                title="Cancelar"
+                                color="#ff0000"
+                                onPress={() => setEnable(false)}
+                            />
+                        </>
+                    }
+                    <ModalErrors
+                        title={titleModal}
+                        message={mensagemModal}
+                        openModal={modalErrors}
+                        fnCloseModal={() => setModalErrors(!modalErrors)}
+                    />
+                    <ModalSucces
+                        title="Sucesso"
+                        message={messageSucess}
+                        openModal={modalSucess}
+                        fnCloseModal={() => setModalSucess(!modalSucess)}
+                    />
+                    <ModalConfirm
+                        title="Atenção"
+                        message="Tem certeza que deseja excluir?"
+                        openModal={modalConfirm}
+                        fnCloseModal={() => setModalConfirm(!modalConfirm)}
+                        fnConfirm={handleDelete}
+                    />
                 </View>
-            </View>
-            <View style={styles.containerUser}>
-                <View style={styles.section}>
-                    <View style={styles.headerSection}>
-                        <Text style={styles.sectionTitle}>Dados Pessoais</Text>
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Nome: </Text>
-                        <Text style={styles.value}>{userInformation.name}</Text>
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Email: </Text>
-                        <Text style={styles.value}>{userInformation.email}</Text>
-                    </View>
-                </View>
-                <View style={styles.section}>
-                    <View style={styles.headerSection}>
-                        <Text style={styles.sectionTitle}>Dados Empresa</Text>
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>CNPJ: </Text>
-                        <Text>{userInformation.cnpj}</Text>
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Nome: </Text>
-                        <Text style={styles.value}>{userInformation.companyName}</Text>
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>CEP: </Text>
-                        <Text style={styles.value}>{userInformation.cep}</Text>
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Endereço: </Text>
-                        <Text style={styles.value}>{userInformation.address}</Text>
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Número: </Text>
-                        <Text style={styles.value}>{userInformation.number}</Text>
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Bairro: </Text>
-                        <Text style={styles.value}>{userInformation.neighborhood}</Text>
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Cidade: </Text>
-                        <Text style={styles.value}>{userInformation.city}</Text>
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Estado: </Text>
-                        <Text style={styles.value}>{userInformation.state}</Text>
-                    </View>
-                </View>
-            </View>
-        </ScrollView>
-    )
-}
+            </ScrollView>
+        </View>
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 20,
+        marginTop: 50,
     },
     header: {
-        height: 80,
-        marginTop: 30,
+        flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'space-between',
-        flexDirection: 'row',
-        alignItems: 'center'
+        marginBottom: 16,
     },
-    headerText: {
-        fontSize: 28,
+    titulo: {
+        fontSize: 30,
         fontWeight: 'bold',
-        color: '#333333',
     },
-    subHeaderText: {
+    headerIcons: {
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    itemContainer: {
+        padding: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+        backgroundColor: '#fff',
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        elevation: 1,
+        borderRadius: 8,
+        marginVertical: 4,
+    },
+    itemNome: {
         fontSize: 20,
-        color: '#666666',
-    },
-    containerUser: {
-        flex: 1,
-        alignItems: 'center',
-        paddingHorizontal: 1,
-    },
-    section: {
-        marginVertical: 10,
-        width: '100%',
-    },
-    headerSection: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    sectionTitle: {
         fontWeight: 'bold',
-        marginBottom: 20,
-        fontSize: 20,
+        marginBottom: 10
     },
-    inputContainer: {
-        marginBottom: 10,
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 3
+    itemSub: {
+        fontSize: 16,
+        color: '#666',
     },
-    label: {
-        fontWeight: 'bold',
-        fontSize: 17
-    },
-    containerButtons: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    button: {
+    cleanFilterText: {
+        color: 'red',
+        alignSelf: 'flex-end',
         marginBottom: 5
     }
-})
+});

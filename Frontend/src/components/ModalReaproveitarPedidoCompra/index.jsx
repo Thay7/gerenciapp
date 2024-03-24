@@ -29,19 +29,19 @@ export const ModalReaproveitarPedidoCompra = ({ title, openModal, fnCloseModal, 
               <TouchableOpacity style={styles.itemContainer} key={index} onPress={() => handleSelectedItem(item)}>
                 <View style={styles.rowBetween}>
                   <Text style={styles.itemNome}>Nº Pedido:</Text>
-                  <Text style={styles.itemNome}>{item.numeroCompra}</Text>
+                  <Text style={styles.itemNome}>{item.numero_pedido_compra}</Text>
                 </View>
                 <View style={styles.rowBetween}>
                   <Text>Data e Hora:</Text>
-                  <Text>{item.dataHora}</Text>
+                  <Text>{item.data_hora}</Text>
                 </View>
                 <View style={styles.rowBetween}>
                   <Text>Total:</Text>
-                  <Text>{formatterbrl(item.valorTotal)}</Text>
+                  <Text>{formatterbrl(item.valor_total)}</Text>
                 </View>
                 <View style={[styles.rowBetween, { marginTop: 8 }]}>
                   <Text style={styles.itemNome}>Status:</Text>
-                  <Text style={[styles.itemNome, { color: item.status == 'Efetuado' ? '#4040ff' : 'green' }]}>{item.status}</Text>
+                  <Text style={[styles.itemNome, { color: item.recebido == false ? '#4040ff' : 'green' }]}>{item.recebido == false ? "Efetuado" : "Recebido"}</Text>
                 </View>
               </TouchableOpacity>
             ))}

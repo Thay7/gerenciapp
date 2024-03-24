@@ -1,6 +1,6 @@
-const db = require('../db'); // Importe a conexão
+const db = require('../db');
 
-const itensController = {
+const produtosController = {
   async listar(req, res) {
     try {
       const [rows, fields] = await db.query('SELECT * FROM itens WHERE tipo = "Produto"');
@@ -60,4 +60,4 @@ const itensController = {
   },
 };
 
-module.exports = itensController;
+module.exports = produtosController;

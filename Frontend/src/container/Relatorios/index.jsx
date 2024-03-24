@@ -3,6 +3,7 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { useApi } from '../../Api/useApi';
+import { ButtonBack } from '../../components/Buttons/ButtonBack';
 
 export const Relatorios = () => {
     const [vendasList, setVendasList] = useState([]);
@@ -94,6 +95,7 @@ export const Relatorios = () => {
         <ScrollView >
             <View style={styles.container}>
                 <View style={styles.header}>
+                    <ButtonBack navigate="Home" /> 
                     <Text style={styles.titulo}>Relatórios</Text>
                 </View>
                 <View style={{ marginBottom: 16 }}>
@@ -132,12 +134,12 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: 16,
+        marginBottom: 16
     },
     titulo: {
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: 'bold',
+        marginLeft: 10
     },
     headerIcons: {
         display: 'flex',

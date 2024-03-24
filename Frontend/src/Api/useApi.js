@@ -1,19 +1,19 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: `http://192.168.0.6:5000/api/`,
+    baseURL: `http://192.168.0.5:5000/api/`,
     timeout: 5000
 })
 
 export const useApi = {
-    //Itens
-    listarItens: async () => {
-        const response = await api.get('itens/listar')
+    //Produtos
+    listarProdutos: async () => {
+        const response = await api.get('produtos/listar')
         return response.data
     },
-    cadastrarItem: async (formData) => {
+    cadastrarProduto: async (formData) => {
         try {
-            const response = await api.post(`itens/cadastrar`, formData);
+            const response = await api.post(`produtos/cadastrar`, formData);
             if (response.status == 200) {
                 return 200;
             }
@@ -23,10 +23,10 @@ export const useApi = {
             return 500;
         }
     },
-    editarItem: async (formData) => {
+    editarProduto: async (formData) => {
         try {
             const id = formData.id;
-            const response = await api.put(`itens/editar/${id}`, formData);
+            const response = await api.put(`produtos/editar/${id}`, formData);
             if (response.status == 200) {
                 return 200;
             }
@@ -36,9 +36,51 @@ export const useApi = {
             return 500;
         }
     },
-    deletarItem: async (id) => {
+    deletarProduto: async (id) => {
         try {
-            const response = await api.delete(`itens/deletar/${id}`);
+            const response = await api.delete(`produtos/deletar/${id}`);
+            if (response.status == 200) {
+                return 200;
+            }
+            return 400;
+        } catch (error) {
+            console.error(error);
+            return 500;
+        }
+    },
+    //Servicos
+    listarServicos: async () => {
+        const response = await api.get('servicos/listar')
+        return response.data
+    },
+    cadastrarServico: async (formData) => {
+        try {
+            const response = await api.post(`servicos/cadastrar`, formData);
+            if (response.status == 200) {
+                return 200;
+            }
+            return 400;
+        } catch (error) {
+            console.error(error);
+            return 500;
+        }
+    },
+    editarServico: async (formData) => {
+        try {
+            const id = formData.id;
+            const response = await api.put(`servicos/editar/${id}`, formData);
+            if (response.status == 200) {
+                return 200;
+            }
+            return 400;
+        } catch (error) {
+            console.error(error);
+            return 500;
+        }
+    },
+    deletarServico: async (id) => {
+        try {
+            const response = await api.delete(`servicos/deletar/${id}`);
             if (response.status == 200) {
                 return 200;
             }
@@ -107,13 +149,84 @@ export const useApi = {
             return 500;
         }
     },
-    confirmarRetorno: async (numero_pedido_compra) => {
+    confirmarRecebimento: async (numero_pedido_compra) => {
         try {
-            console.log('entrou na api. nº pedido compra: ' + numero_pedido_compra)
-            const response = await api.put(`pedidosCompra/confirmarRetorno/${numero_pedido_compra}`)
+            const response = await api.put(`pedidosCompra/confirmarRecebimento/${numero_pedido_compra}`)
             if (response.status == 200) {
                 return 200;
             }
+        } catch (error) {
+            console.error(error);
+            return 500;
+        }
+    },
+    editarPedido: async (formData) => {
+        try {
+            const numero_pedido_compra = formData.numero_pedido_compra;
+            const response = await api.put(`pedidosCompra/editar/${numero_pedido_compra}`, formData);
+            if (response.status == 200) {
+                return 200;
+            }
+            return 400;
+        } catch (error) {
+            console.error(error);
+            return 500;
+        }
+    },
+    deletarPedido: async (formData) => {
+        try {
+            const numero_pedido_compra = formData.numero_pedido_compra;
+            const response = await api.delete(`pedidosCompra/deletar/${numero_pedido_compra}`);
+            if (response.status == 200) {
+                return 200;
+            }
+            return 400;
+        } catch (error) {
+            console.error(error);
+            return 500;
+        }
+    },
+    //Estoque
+    listarProdutosEstoque: async () => {
+        const response = await api.get('estoque/listarProdutos')
+        return response.data
+    },
+    listarEstoque: async () => {
+        const response = await api.get('estoque/listar')
+        return response.data
+    },
+    entradaEstoque: async (formData) => {
+        try {
+            const response = await api.post(`estoque/cadastrar`, formData);
+            if (response.status == 200) {
+                return 200;
+            }
+            return 400;
+        } catch (error) {
+            console.error(error);
+            return 500;
+        }
+    },
+    editarEstoque: async (formData) => {
+        try {
+            const id = formData.id;
+            const response = await api.put(`estoque/editar/${id}`, formData);
+            if (response.status == 200) {
+                return 200;
+            }
+            return 400;
+        } catch (error) {
+            console.error(error);
+            return 500;
+        }
+    },
+    deletarEstoque: async (id) => {
+        try {
+            const response = await api.delete(`itens/deletar/${id}`);
+            if (response.status == 200) {
+                return 200;
+            }
+            return 400;
         } catch (error) {
             console.error(error);
             return 500;

@@ -7,6 +7,7 @@ import { InputApp } from '../../../components/InputApp';
 import { formatterbrl } from '../../../utils/formatterbrl';
 import { useRoute } from "@react-navigation/native";
 import { ButtonApp } from '../../../components/Buttons/ButtonApp';
+import { ButtonBack } from '../../../components/Buttons/ButtonBack';
 
 export const DetalhesCadastro = () => {
     const [enable, setEnable] = useState(false);
@@ -25,14 +26,17 @@ export const DetalhesCadastro = () => {
     }, [])
 
     return (
-        <ScrollView >
-            <View style={styles.container}>
+        <View style={styles.container}>
+            <View style={styles.header}>
                 <View style={styles.header}>
+                    <ButtonBack navigate="ListaCadastros" />
                     <Text style={styles.titulo}>{namePage}</Text>
-                    {!enable &&
-                        <ButtonEdit onPress={() => setEnable(true)} />
-                    }
                 </View>
+                {!enable &&
+                    <ButtonEdit onPress={() => setEnable(true)} />
+                }
+            </View>
+            <ScrollView >
                 <View>
                     {item.cnpj ? (
                         <>
@@ -113,16 +117,23 @@ export const DetalhesCadastro = () => {
                         )
                     }
                     {enable &&
-                        <ButtonApp
-                            title="Salvar"
-                            color="#fff"
-                            backgroundColor="#4040ff"
-                            onPress={() => setEnable(false)}
-                        />
+                        <>
+                            <ButtonApp
+                                title="Salvar"
+                                color="#fff"
+                                backgroundColor="#4040ff"
+                                onPress={() => setEnable(false)}
+                            />
+                            <ButtonApp
+                                title="Cancelar"
+                                color="#FF0000"
+                                onPress={() => setEnable(false)}
+                            />
+                        </>
                     }
                 </View>
-            </View>
-        </ScrollView>
+            </ScrollView>
+        </View>
     );
 };
 
@@ -141,10 +152,7 @@ const styles = StyleSheet.create({
     titulo: {
         fontSize: 30,
         fontWeight: 'bold',
-    },
-    headerIcons: {
-        display: 'flex',
-        flexDirection: 'row',
+        marginLeft: 15
     },
     itemContainer: {
         padding: 16,

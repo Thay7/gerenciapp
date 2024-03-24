@@ -5,4 +5,4 @@ export const formatterbrl = (valor) => {
     });
 
     return formatter.format(valor)
-}
+};

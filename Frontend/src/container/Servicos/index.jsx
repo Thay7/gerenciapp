@@ -13,7 +13,7 @@ import { ModalSearch } from '../../components/ModalSearch';
 import { Loading } from '../../components/Loading'
 import { ButtonBack } from '../../components/Buttons/ButtonBack';
 
-export const Produtos = () => {
+export const Servicos = () => {
     const navigation = useNavigation()
     const route = useRoute();
 
@@ -46,7 +46,7 @@ export const Produtos = () => {
 
     const buscarProdutos = async () => {
         setLoading(true)
-        let json = await useApi.listarProdutos()
+        let json = await useApi.listarServicos()
         setProdutos(json)
         setLoading(false)
     }
@@ -85,7 +85,7 @@ export const Produtos = () => {
             <View style={styles.header}>
                 <View style={styles.header}>
                     <ButtonBack navigate="ListarProdutosServicos" />
-                    <Text style={styles.titulo}>Lista Produtos</Text>
+                    <Text style={styles.titulo}>Lista Serviços</Text>
                 </View>
                 <View style={styles.header}>
                     <View style={{ marginRight: 5 }}>

@@ -7,6 +7,7 @@ import { useApi } from '../../../Api/useApi';
 import { ModalErrors } from '../../../components/ModalErrors';
 import { ModalSucces } from '../../../components/ModalSucces';
 import { useRoute } from "@react-navigation/native";
+import { ButtonBack } from '../../../components/Buttons/ButtonBack';
 
 export const NovoCadastro = () => {
     const route = useRoute();
@@ -39,16 +40,16 @@ export const NovoCadastro = () => {
         }
         else {
             setModalErrors(true);
-
         }
     }
 
     return (
-        <ScrollView style={styles.container}>
-            <View>
-                <View style={styles.header}>
-                    <Text style={styles.titulo}>Cadastro de {item.nome}</Text>
-                </View>
+        <View style={styles.container}>
+            <View style={styles.header}>
+                <ButtonBack navigate="ListaCadastros" />
+                <Text style={styles.titulo}>Cadastro de {item.nome}</Text>
+            </View>
+            <ScrollView >
                 <View>
                     {item.nome == 'Fornecedores' ? (
                         <>
@@ -150,8 +151,9 @@ export const NovoCadastro = () => {
                     openModal={modalErrors}
                     fnCloseModal={() => setModalErrors(!modalErrors)}
                 />
-            </View>
-        </ScrollView>
+            </ScrollView>
+
+        </View>
     );
 };
 
@@ -164,12 +166,12 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
         marginBottom: 16,
     },
     titulo: {
         fontSize: 30,
         fontWeight: 'bold',
+        marginLeft: 15
     },
     itemContainer: {
         padding: 10,

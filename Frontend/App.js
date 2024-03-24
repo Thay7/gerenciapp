@@ -4,8 +4,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Image } from 'react-native';
 
 //Icons do Tab
-import ic_inicio from './src/icons/Home/ic_inicio.png'
-import ic_perfil from './src/icons/Home/ic_perfil.png'
+import ic_inicio from './src/icons/Home/ic_inicio.png';
+import ic_inicio_focused from './src/icons/Home/ic_inicio_focused.png'
+import ic_perfil from './src/icons/Home/ic_perfil.png';
+import ic_perfil_focused from './src/icons/Home/ic_perfil_focused.png'
 
 //Componentes
 import { Login } from './src/container/Login';
@@ -17,10 +19,12 @@ import { Vendas } from './src/container/Vendas';
 import { DetalhesVenda } from './src/container/Vendas/DetalhesVenda'
 import { NovaVenda } from './src/container/Vendas/NovaVenda';
 
-//Módulo Produtos
+//Módulo Produtos/Servicos
+import { ListarProdutosServicos } from './src/container/ListarProdutosServicos'
 import { Produtos } from './src/container/Produtos'
 import { DetalhesProduto } from './src/container/Produtos/DetalhesProduto';
 import { CadastroDeProdutos } from './src/container/Produtos/CadastroDeProdutos';
+import { Servicos } from './src/container/Servicos'
 
 //Módulo Estoque
 import { Estoque } from './src/container/Estoque';
@@ -63,23 +67,26 @@ export default function App() {
                 name="Início"
                 component={Home}
                 options={{
-                  headerShown: false, tabBarIcon: () => (
+                  tabBarShowLabel: false,
+                  headerShown: false,
+                  tabBarIcon: ({ focused }) => (
                     <Image
-                      source={ic_inicio}
+                      source={focused ? ic_inicio_focused : ic_inicio}
                       style={{ width: 30, height: 30 }}
                       resizeMode="contain"
                     />
-                  )
+                  ),
                 }}
               />
               <Tab.Screen
                 name="Perfil"
                 component={Perfil}
                 options={() => ({
+                  tabBarShowLabel: false,
                   headerShown: false,
-                  tabBarIcon: () => (
+                  tabBarIcon: ({ focused }) => (
                     <Image
-                      source={ic_perfil}
+                      source={focused ? ic_perfil_focused : ic_perfil}
                       style={{ width: 30, height: 30 }}
                       resizeMode="contain"
                     />
@@ -105,6 +112,11 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="ListarProdutosServicos"
+          component={ListarProdutosServicos}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="Produtos"
           component={Produtos}
           options={{ headerShown: false }}
@@ -116,6 +128,21 @@ export default function App() {
         />
         <Stack.Screen
           name="CadastroDeProdutos"
+          component={CadastroDeProdutos}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Servicos"
+          component={Servicos}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="DetalhesServicos"
+          component={DetalhesProduto}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="CadastroDeServicos"
           component={CadastroDeProdutos}
           options={{ headerShown: false }}
         />

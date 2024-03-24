@@ -57,7 +57,8 @@ const styles = StyleSheet.create({
     message: {
         fontSize: 20,
         alignSelf: 'center',
-        marginBottom: 20
+        marginBottom: 20,
+        textAlign: 'center'
     },
     closeButton: {
         position: 'absolute',

@@ -19,6 +19,7 @@ import { Loading } from '../../../components/Loading';
 
 //import icons
 import ic_remove from '../../../icons/ic_remove.png'
+import { ButtonBack } from '../../../components/Buttons/ButtonBack';
 
 export const NovoPedidoCompra = () => {
     //Step 1 - Itens
@@ -29,7 +30,7 @@ export const NovoPedidoCompra = () => {
     }, [])
 
     const buscarProdutosSelect = async () => {
-        let json = await useApi.listarItens()
+        let json = await useApi.listarProdutos()
         setOptionsItens(json)
     };;
 
@@ -311,102 +312,112 @@ export const NovoPedidoCompra = () => {
         setModalSucces(false);
     }
 
-    // Reaproveitar pedido compra
-    const [pedidosCompraList, setPedidosCompraLista] = useState(
+    // Modal reaproveitar pedido compra
+    const [pedidosCompraList, setPedidosCompraList] = useState(
         [
-            {
-                numeroCompra: '012023',
-                itens: [
-                    { id: 1, nome: 'Caixa Oléo Mobil', valor: '120', quantidade: '2' },
-                    { id: 2, nome: 'Caixa Oléo Dulub', valor: '110', quantidade: '2' },
-                    { id: 3, nome: 'Caixa Rolamento biz', valor: '110', quantidade: '2' },
-                    { id: 4, nome: 'Viseira', valor: '110', quantidade: '2' },
-                    { id: 5, nome: 'Luz Pisca - Biz', valor: '110', quantidade: '2' },
-                    { id: 6, nome: 'Cabo de Freio', valor: '110', quantidade: '2' },
-                    { id: 7, nome: 'Camara de ar 18', valor: '120', quantidade: '2' },
-                    { id: 8, nome: 'Patins de freio', valor: '120', quantidade: '2' },
-                    { id: 9, nome: 'Pneu moto', valor: '120', quantidade: '2' }
-                ],
-                formaDePagamento: 'Boleto',
-                numeroParcelas: '1',
-                valorTotal: '230',
-                dataHora: '10/09/2023 14:20',
-                status: 'Efetuado'
-            },
-            {
-                numeroCompra: '022023',
-                itens: [
-                    { id: 6, nome: 'Cabo de Freio', valor: '110', quantidade: '2' },
-                    { id: 9, nome: 'Pneu moto', valor: '120', quantidade: '2' }
-                ],
-                formaDePagamento: 'Pix',
-                numeroParcelas: '1',
-                valorTotal: '34',
-                dataHora: '10/09/2023 14:00',
-                status: 'Recebido'
-            },
-            {
-                numeroCompra: '032023',
-                itens: [
-                    { id: 8, nome: 'Patins de freio', valor: '120', quantidade: '2' },
-                    { id: 5, nome: 'Luz Pisca - Biz', valor: '110', quantidade: '2' },
-                ],
-                formaDePagamento: 'Pix',
-                numeroParcelas: '1',
-                valorTotal: '34',
-                dataHora: '10/09/2023 14:00',
-                status: 'Recebido'
-            },
-            {
-                numeroCompra: '042023',
-                itens: [
-                    { id: 4, nome: 'Viseira', valor: '110', quantidade: '2' },
-                    { id: 2, nome: 'Caixa Oléo Dulub', valor: '110', quantidade: '2' },
-                ],
-                formaDePagamento: 'Pix',
-                numeroParcelas: '1',
-                valorTotal: '34',
-                dataHora: '10/09/2023 14:00',
-                status: 'Recebido'
-            },
-            {
-                numeroCompra: '052023',
-                itens: [
-                    { nome: 'Cabo de Freio', valor: '50', quantidade: '2' },
-                    { id: 2, nome: 'Caixa Oléo Dulub', valor: '110', quantidade: '2' },
-                ],
-                formaDePagamento: 'Pix',
-                numeroParcelas: '1',
-                valorTotal: '34',
-                dataHora: '10/09/2023 14:00',
-                status: 'Recebido'
-            },
-            {
-                numeroCompra: '062023',
-                itens: [
-                    { id: 2, nome: 'Caixa Oléo Dulub', valor: '110', quantidade: '2' },
-                    { nome: 'Pneu Moto', valor: '100', quantidade: '2' }
-                ],
-                formaDePagamento: 'Pix',
-                numeroParcelas: '1',
-                valorTotal: '34',
-                dataHora: '10/09/2023 14:00',
-                status: 'Recebido'
-            },
-            {
-                numeroCompra: '072023',
-                itens: [
-                    { nome: 'Cabo de Freio', valor: '50', quantidade: '2' },
-                    { id: 2, nome: 'Caixa Oléo Dulub', valor: '110', quantidade: '2' },
-                ],
-                formaDePagamento: 'Pix',
-                numeroParcelas: '1',
-                valorTotal: '34',
-                dataHora: '10/09/2023 14:00',
-                status: 'Recebido'
-            },
+            // {
+            //     numeroCompra: '012023',
+            //     itens: [
+            //         { id: 1, nome: 'Caixa Oléo Mobil', valor: '120', quantidade: '2' },
+            //         { id: 2, nome: 'Caixa Oléo Dulub', valor: '110', quantidade: '2' },
+            //         { id: 3, nome: 'Caixa Rolamento biz', valor: '110', quantidade: '2' },
+            //         { id: 4, nome: 'Viseira', valor: '110', quantidade: '2' },
+            //         { id: 5, nome: 'Luz Pisca - Biz', valor: '110', quantidade: '2' },
+            //         { id: 6, nome: 'Cabo de Freio', valor: '110', quantidade: '2' },
+            //         { id: 7, nome: 'Camara de ar 18', valor: '120', quantidade: '2' },
+            //         { id: 8, nome: 'Patins de freio', valor: '120', quantidade: '2' },
+            //         { id: 9, nome: 'Pneu moto', valor: '120', quantidade: '2' }
+            //     ],
+            //     formaDePagamento: 'Boleto',
+            //     numeroParcelas: '1',
+            //     valorTotal: '230',
+            //     dataHora: '10/09/2023 14:20',
+            //     status: 'Efetuado'
+            // },
+            // {
+            //     numeroCompra: '022023',
+            //     itens: [
+            //         { id: 6, nome: 'Cabo de Freio', valor: '110', quantidade: '2' },
+            //         { id: 9, nome: 'Pneu moto', valor: '120', quantidade: '2' }
+            //     ],
+            //     formaDePagamento: 'Pix',
+            //     numeroParcelas: '1',
+            //     valorTotal: '34',
+            //     dataHora: '10/09/2023 14:00',
+            //     status: 'Recebido'
+            // },
+            // {
+            //     numeroCompra: '032023',
+            //     itens: [
+            //         { id: 8, nome: 'Patins de freio', valor: '120', quantidade: '2' },
+            //         { id: 5, nome: 'Luz Pisca - Biz', valor: '110', quantidade: '2' },
+            //     ],
+            //     formaDePagamento: 'Pix',
+            //     numeroParcelas: '1',
+            //     valorTotal: '34',
+            //     dataHora: '10/09/2023 14:00',
+            //     status: 'Recebido'
+            // },
+            // {
+            //     numeroCompra: '042023',
+            //     itens: [
+            //         { id: 4, nome: 'Viseira', valor: '110', quantidade: '2' },
+            //         { id: 2, nome: 'Caixa Oléo Dulub', valor: '110', quantidade: '2' },
+            //     ],
+            //     formaDePagamento: 'Pix',
+            //     numeroParcelas: '1',
+            //     valorTotal: '34',
+            //     dataHora: '10/09/2023 14:00',
+            //     status: 'Recebido'
+            // },
+            // {
+            //     numeroCompra: '052023',
+            //     itens: [
+            //         { nome: 'Cabo de Freio', valor: '50', quantidade: '2' },
+            //         { id: 2, nome: 'Caixa Oléo Dulub', valor: '110', quantidade: '2' },
+            //     ],
+            //     formaDePagamento: 'Pix',
+            //     numeroParcelas: '1',
+            //     valorTotal: '34',
+            //     dataHora: '10/09/2023 14:00',
+            //     status: 'Recebido'
+            // },
+            // {
+            //     numeroCompra: '062023',
+            //     itens: [
+            //         { id: 2, nome: 'Caixa Oléo Dulub', valor: '110', quantidade: '2' },
+            //         { nome: 'Pneu Moto', valor: '100', quantidade: '2' }
+            //     ],
+            //     formaDePagamento: 'Pix',
+            //     numeroParcelas: '1',
+            //     valorTotal: '34',
+            //     dataHora: '10/09/2023 14:00',
+            //     status: 'Recebido'
+            // },
+            // {
+            //     numeroCompra: '072023',
+            //     itens: [
+            //         { nome: 'Cabo de Freio', valor: '50', quantidade: '2' },
+            //         { id: 2, nome: 'Caixa Oléo Dulub', valor: '110', quantidade: '2' },
+            //     ],
+            //     formaDePagamento: 'Pix',
+            //     numeroParcelas: '1',
+            //     valorTotal: '34',
+            //     dataHora: '10/09/2023 14:00',
+            //     status: 'Recebido'
+            // },
         ]
     );
+
+    useEffect(() => {
+        fnListarPedidosCompras()
+    }, []);
+
+    const fnListarPedidosCompras = async () => {
+        let json = await useApi.listarPedidosCompras()
+        setPedidosCompraList(json)
+        console.log(json)
+    }
 
     const [openModalPedidoCompra, setOpenModalPedidoCompra] = useState(false);
     const [reaproveitarPedidoCompra, setReaproveitarPedidoCompra] = useState(false);
@@ -431,7 +442,8 @@ export const NovoPedidoCompra = () => {
         <ScrollView >
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <Text style={styles.titulo}>Nova Pedido Compra</Text>
+                    <ButtonBack navigate="PedidoDeCompra" />
+                    <Text style={styles.titulo}>Novo Pedido Compra</Text>
                 </View>
                 <ModalReaproveitarPedidoCompra
                     title="Selecionar pedido compra"
@@ -719,12 +731,12 @@ const styles = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     titulo: {
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: 'bold',
+        marginLeft: 10
     },
     itemContainer: {
         padding: 16,

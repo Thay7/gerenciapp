@@ -104,24 +104,7 @@ const pedidosCompraController = {
       res.status(500).json({ success: false, message: 'Erro ao cadastrar o pedido' });
     }
   },
-  async editar(req, res) {
-    try {
-      const { nome, cod_produto, descricao, marca, valor_compra, valor_venda } = req.body;
-      const { id } = req.params;
-      const query = `UPDATE itens 
-                      SET nome=?, cod_produto=?, descricao=?, marca=?, valor_compra=?, valor_venda=? 
-                      WHERE id=?
-                      AND tipo = "Produto"`;
-
-      await db.query(query, [nome, cod_produto, descricao, marca, valor_compra, valor_venda, id]);
-
-      res.status(200).json({ success: true, message: 'Produto editado com sucesso!' });
-    } catch (error) {
-      console.error('Erro ao editar produto:', error);
-      res.status(500).json({ success: false, message: 'Erro ao editar o produto' });
-    }
-  },
-  async confirmarRetorno(req, res) {
+  async confirmarRecebimento(req, res) {
     try {
       const { numero_pedido_compra } = req.params;
       console.log(numero_pedido_compra)
@@ -136,19 +119,52 @@ const pedidosCompraController = {
       res.status(500).json({ success: false, message: 'Erro ao editar o produto' });
     }
   },
+  async editar(req, res) {
+    try {
+      const { fornecedor, forma_pagamento, numero_parcelas, valor_total, data_hora, itens } = req.body;
+      const { numero_pedido_compra } = req.params;
+      console.log(numero_pedido_compra)
+      const updatePedido = `UPDATE pedidos_compra 
+                      SET forma_pagamento=?, numero_parcelas=?, valor_total=?, data_hora=?
+                      WHERE numero_pedido_compra=?`;
+      await db.query(updatePedido, [forma_pagamento, numero_parcelas, valor_total, data_hora, numero_pedido_compra]);
+
+      //Atualizando os itens da venda
+      for (const item of itens) {
+        const { nome, valor, quantidade, id } = item;
+        const insertItemQuery = `UPDATE itens_pedidos_compra 
+                                 SET nome=?,
+                                 valor=?,
+                                 quantidade=?
+                                 WHERE id=?`;
+
+        await db.query(insertItemQuery, [nome, valor, quantidade, id]);
+      }
+      res.status(200).json({ success: true, message: 'Pedido compra editado com sucesso!' });
+    } catch (error) {
+      console.error('Erro ao editar produto:', error);
+      res.status(500).json({ success: false, message: 'Erro ao editar o pedido compra' });
+    }
+  },
   async deletar(req, res) {
     try {
-      const { id } = req.params;
-      console.log(id + 'back')
+      const { numero_pedido_compra } = req.params;
+      const [rows, fields] = await db.query(`SELECT * FROM itens_pedidos_compra WHERE id_pedido_compra=?`, [numero_pedido_compra]);
 
-      const query = `DELETE FROM itens WHERE id=? AND tipo = "Produto"`;
+      for (const item of rows) {
+        const { id } = item;
+        const deleteItemQuery = `DELETE FROM itens_pedidos_compra
+                                 WHERE id=?`;
+        await db.query(deleteItemQuery, [id]);
+      }
 
-      await db.query(query, [id]);
+      const deletePedidoQuery = `DELETE FROM pedidos_compra WHERE id=?`;
+      await db.query(deletePedidoQuery, [numero_pedido_compra]);
 
-      res.status(200).json({ success: true, message: 'Produto editado com sucesso!' });
+      res.status(200).json({ success: true, message: 'Pedido deletadoo com sucesso!' });
     } catch (error) {
-      console.error('Erro ao deletar produto:', error);
-      res.status(500).json({ success: false, message: 'Erro ao deletar o produto' });
+      console.error('Erro ao deletar venda:', error);
+      res.status(500).json({ success: false, message: 'Erro ao deletar pedido' });
     }
   },
 };

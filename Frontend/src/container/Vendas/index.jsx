@@ -10,6 +10,8 @@ import { ButtonAdd } from '../../components/Buttons/ButtonAdd';
 import { ButtonSearch } from '../../components/Buttons/ButtonSearch';
 import { formatterbrl } from '../../utils/formatterbrl';
 import { Loading } from '../../components/Loading';
+import { ic_voltar } from '../../icons/ic_voltar.png'
+import { ButtonBack } from '../../components/Buttons/ButtonBack';
 
 export const Vendas = () => {
     const [vendasList, setVendasList] = useState([]);
@@ -74,24 +76,23 @@ export const Vendas = () => {
             const updatedOptions = vendasList.filter(item => item.id !== vendaDeletada.id);
             setVendasList(updatedOptions);
         }
-    }, [route.params?.novaVenda, route.params?.vendaAtualizada,route.params?.vendaDeletada]);
+    }, [route.params?.novaVenda, route.params?.vendaAtualizada, route.params?.vendaDeletada]);
 
     return (
-        <ScrollView >
-            <View style={styles.container}>
+        <View style={styles.container}>
+            <View style={styles.header}>
                 <View style={styles.header}>
+                    <ButtonBack navigate="Home" />
                     <Text style={styles.titulo}>Lista Vendas</Text>
-                    <View style={styles.headerIcons}>
-                        <View style={{ marginRight: 5 }}>
-                            <ButtonSearch
-                                onPress={() => setModalIsOpen(true)}
-                            />
-                        </View>
-                        <ButtonAdd
-                            onPress={() => navigation.navigate('NovaVenda')}
-                        />
-                    </View>
                 </View>
+                <View style={styles.header}>
+                    <View style={{ marginRight: 5 }}>
+                        <ButtonSearch onPress={() => setModalIsOpen(true)} />
+                    </View>
+                    <ButtonAdd onPress={() => navigation.navigate('NovaVenda')} />
+                </View>
+            </View>
+            <ScrollView >
                 {
                     (search.length > 0 || noResults) && (
                         <TouchableOpacity
@@ -162,16 +163,18 @@ export const Vendas = () => {
                         )
                     }
                 </View>
-            </View>
-            <ModalSearch
-                title="Pesquisar Venda"
-                list={vendasList}
-                openModal={modalIsOpen}
-                fnCloseModal={() => setModalIsOpen(!modalIsOpen)}
-                handleFilterSales={fnHandleFilter}
-                vendas
-            />
-        </ScrollView >
+                <ModalSearch
+                    title="Pesquisar Venda"
+                    list={vendasList}
+                    openModal={modalIsOpen}
+                    fnCloseModal={() => setModalIsOpen(!modalIsOpen)}
+                    handleFilterSales={fnHandleFilter}
+                    vendas
+                />
+            </ScrollView >
+
+        </View >
+
     );
 };
 
@@ -182,18 +185,16 @@ const styles = StyleSheet.create({
         marginTop: 50,
     },
     header: {
+        display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 16,
+        marginBottom: 8,
     },
     titulo: {
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: 'bold',
-    },
-    headerIcons: {
-        display: 'flex',
-        flexDirection: 'row',
+        marginLeft: 10
     },
     itemContainer: {
         padding: 16,

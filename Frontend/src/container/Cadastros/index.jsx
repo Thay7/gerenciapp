@@ -3,6 +3,7 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { useApi } from '../../Api/useApi';
+import { ButtonBack } from '../../components/Buttons/ButtonBack';
 
 export const Cadastros = () => {
     const [cadastrosList, setCadastrosList] = useState([]);
@@ -27,10 +28,10 @@ export const Cadastros = () => {
             {
                 nome: 'Usuários',
                 dados: [
-                    {id: 1, nome: 'Maria Ozanilda', usuario: 'nilda', email: 'mariaozanilda@gmail.com'},
-                    {id: 2, nome: 'Valdir', usuario: 'valdir',email: 'valdir@gmail.com'},
-                    {id: 3, nome: 'Guilherme Rodrigues', usuario: 'guilherme', email: 'guilhermerodrigues@gmail.com'},
-                    {id: 4, nome: 'Thaylynne', usuario: 'thay', email: 'thaylynne@gmail.com'},
+                    { id: 1, nome: 'Maria Ozanilda', usuario: 'nilda', email: 'mariaozanilda@gmail.com' },
+                    { id: 2, nome: 'Valdir', usuario: 'valdir', email: 'valdir@gmail.com' },
+                    { id: 3, nome: 'Guilherme Rodrigues', usuario: 'guilherme', email: 'guilhermerodrigues@gmail.com' },
+                    { id: 4, nome: 'Thaylynne', usuario: 'thay', email: 'thaylynne@gmail.com' },
 
                 ]
             }
@@ -40,11 +41,12 @@ export const Cadastros = () => {
     const navigation = useNavigation()
 
     return (
-        <ScrollView >
-            <View style={styles.container}>
-                <View style={styles.header}>
-                    <Text style={styles.titulo}>Cadastros</Text>
-                </View>
+        <View style={styles.container}>
+            <View style={styles.header}>
+                <ButtonBack navigate="Home" />
+                <Text style={styles.titulo}>Cadastros</Text>
+            </View>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={{ marginBottom: 16 }}>
                     {cadastrosList.map((item, index) => (
                         <TouchableOpacity style={styles.itemContainer} key={index} onPress={() => {
@@ -57,8 +59,8 @@ export const Cadastros = () => {
                     ))}
 
                 </View>
-            </View>
-        </ScrollView >
+            </ScrollView >
+        </View>
     );
 };
 
@@ -71,16 +73,12 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        marginBottom: 16,
+        marginBottom: 16
     },
     titulo: {
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: 'bold',
-    },
-    headerIcons: {
-        display: 'flex',
-        flexDirection: 'row',
+        marginLeft: 10
     },
     itemContainer: {
         padding: 16,

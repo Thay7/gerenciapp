@@ -7,7 +7,7 @@ export const InputSelectSimples = ({ title, selectedValue, onValueChange, option
         <View style={styles.container}>
             <View>
                 <Text style={styles.text}>
-                    {title} *
+                    {title} 
                 </Text>
             </View>
             <View style={styles.input}>
@@ -18,6 +18,7 @@ export const InputSelectSimples = ({ title, selectedValue, onValueChange, option
                     <Picker.Item
                         label="Selecione"
                         enabled={false}
+                        style={{color: 'gray'}}
                     />
                     {options.length === 0
                         ? (
@@ -32,7 +33,7 @@ export const InputSelectSimples = ({ title, selectedValue, onValueChange, option
                             options.map((item, index) => (
                                 <Picker.Item
                                     key={index}
-                                    label={item.nome_fantasia}
+                                    label={item.nome_fantasia != null ? item.nome_fantasia : item}
                                     value={item}
                                 />
                             ))

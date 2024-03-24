@@ -14,6 +14,7 @@ import { ModalConfirm } from '../../../components/ModalConfirm';
 import { ModalSucces } from '../../../components/ModalSucces';
 import { ModalErrors } from '../../../components/ModalErrors';
 import { Loading } from '../../../components/Loading';
+import { ButtonBack } from '../../../components/Buttons/ButtonBack';
 
 export const DetalhesVenda = () => {
     const route = useRoute();
@@ -135,7 +136,6 @@ export const DetalhesVenda = () => {
         }
     };
 
-
     const handleDelete = async () => {
         setModalConfirm(false);
         setLoading(true)
@@ -155,19 +155,22 @@ export const DetalhesVenda = () => {
     };
 
     return (
-        <ScrollView >
-            <View style={styles.container}>
+        <View style={styles.container}>
+            <View style={styles.header}>
                 <View style={styles.header}>
+                    <ButtonBack navigate="Vendas" />
                     <Text style={styles.titulo}>Detalhes Venda</Text>
-                    {!enable &&
-                        <View style={styles.headerIcons}>
-                            <View style={{ marginRight: 5 }}>
-                                <ButtonEdit onPress={() => setEnable(true)} />
-                            </View>
-                            <ButtonDelete onPress={() => setModalConfirm(true)} />
-                        </View>
-                    }
                 </View>
+                {!enable &&
+                    <View style={styles.header}>
+                        <View style={{ marginRight: 5 }}>
+                            <ButtonEdit onPress={() => setEnable(true)} />
+                        </View>
+                        <ButtonDelete onPress={() => setModalConfirm(true)} />
+                    </View>
+                }
+            </View>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 {loading && <Loading />}
                 <View style={[{ marginTop: 10, marginBottom: 10, marginHorizontal: 5 }, styles.rowBetween]}>
                     <View >
@@ -275,8 +278,8 @@ export const DetalhesVenda = () => {
                     fnCloseModal={() => setModalConfirm(!modalConfirm)}
                     fnConfirm={handleDelete}
                 />
-            </View>
-        </ScrollView>
+            </ScrollView >
+        </View >
     );
 };
 
@@ -287,18 +290,16 @@ const styles = StyleSheet.create({
         marginTop: 50,
     },
     header: {
+        display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 16,
+        marginBottom: 8,
     },
     titulo: {
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: 'bold',
-    },
-    headerIcons: {
-        display: 'flex',
-        flexDirection: 'row',
+        marginLeft: 10
     },
     itemContainer: {
         padding: 16,

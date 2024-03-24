@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+
 import { useApi } from '../../Api/useApi';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { ModalSearch } from '../../components/ModalSearch/index';
 import { ButtonAdd } from '../../components/Buttons/ButtonAdd';
 import { ButtonSearch } from '../../components/Buttons/ButtonSearch';
 import { ButtonImport } from '../../components/Buttons/ButtonImport';
+import { ButtonBack } from '../../components/Buttons/ButtonBack';
 
 export const Estoque = () => {
     const [estoqueList, setEstoqueList] = useState([]);
@@ -17,41 +18,21 @@ export const Estoque = () => {
     const [noResults, setNoResults] = useState(false);
 
     useEffect(() => {
-        listaEstoque()
-    }, []);
+        buscarEstoque()
+    }, [])
 
-    const listaEstoque = async () => {
-        setLoading(true)
-        //let json = await useApi.listarEstoque()
-        //setEstoqueList(json)
-        setEstoqueList([
-            { nome: 'Aro', referencia: '1686821', quantidade: 23 },
-            { nome: 'Pneu Moto', referencia: '1686822', quantidade: 15 },
-            { nome: 'Oléo X', referencia: '1686822', quantidade: 26 },
-            { nome: 'Retrovisor Biz', referencia: '1686821', quantidade: 3 },
-            { nome: 'Amortecedor Motocicleta (Par)', referencia: '1686821', quantidade: 8 },
-            { nome: 'Pneu Carro', referencia: '1686821', quantidade: 5 },
-            { nome: 'Pisca (Par)', referencia: '1686821', quantidade: 6 },
-            { nome: 'Punho Moto', referencia: '1686821', quantidade: 7 },
-            { nome: 'Interruptor Pisca', referencia: '1686821', quantidade: 9 },
-            { nome: 'Aro', referencia: '1686821', quantidade: 23 },
-            { nome: 'Pneu Moto', referencia: '1686822', quantidade: 15 },
-            { nome: 'Oléo X', referencia: '1686821', quantidade: 26 },
-            { nome: 'Retrovisor Biz', referencia: '1686821', quantidade: 3 },
-            { nome: 'Amortecedor Motocicleta (Par)', referencia: '1686821', quantidade: 8 },
-            { nome: 'Pneu Carro', referencia: '1686821', quantidade: 5 },
-            { nome: 'Pisca (Par)', referencia: '1686825', quantidade: 6 },
-            { nome: 'Punho Moto', referencia: '1686821', quantidade: 7 },
-            { nome: 'Interruptor Pisca', referencia: '1686821', quantidade: 9 },
-        ])
-        setLoading(false)
-    }
+    const buscarEstoque = async () => {
+        setLoading(true);
+        let json = await useApi.listarEstoque();
+        setEstoqueList(json);
+        setLoading(false);
+    };
 
     const fnHandleFilter = (name, reference) => {
         if (name || reference) {
             const filtered = estoqueList.filter(item =>
                 (!name || item.nome.toLowerCase().includes(name.trim().toLowerCase())) &&
-                (!reference || item.referencia.includes(reference.trim().toLowerCase()))
+                (!reference || item.cod_produto.includes(reference.trim().toLowerCase()))
             );
             setSearch(filtered);
             setModalIsOpen(!modalIsOpen);
@@ -71,21 +52,24 @@ export const Estoque = () => {
     const navigation = useNavigation()
 
     return (
-        <ScrollView >
-            <View style={styles.container}>
+        <View style={styles.container}>
+            <View style={styles.header}>
                 <View style={styles.header}>
+                    <ButtonBack navigate="Home" />
                     <Text style={styles.titulo}>Lista Estoque</Text>
-                    <View style={styles.headerIcons}>
-                        <ButtonSearch onPress={() => setModalIsOpen(true)} />
-                        <View style={{ marginLeft: 5 }}>
-                            <ButtonAdd
-                                onPress={() => {
-                                    navigation.navigate('EntradaEstoque')
-                                }} />
-                        </View>
-                        <View style={{ marginLeft: 5 }}><ButtonImport /></View>
-                    </View>
                 </View>
+                <View style={styles.header}>
+                    <ButtonSearch onPress={() => setModalIsOpen(true)} />
+                    <View style={{ marginLeft: 5 }}>
+                        <ButtonAdd
+                            onPress={() => {
+                                navigation.navigate('EntradaEstoque')
+                            }} />
+                    </View>
+                    <View style={{ marginLeft: 5 }}><ButtonImport /></View>
+                </View>
+            </View>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 {
                     (search.length > 0 || noResults) && (
                         <TouchableOpacity onPress={handleClearFilter}>
@@ -118,7 +102,7 @@ export const Estoque = () => {
                                                         navigation.navigate('DetalhesEstoque', { produto: item });
                                                     }}>
                                                     <Text style={styles.itemNome}>{item.nome}</Text>
-                                                    <Text>Referência: {item.referencia}</Text>
+                                                    <Text>Referência: {item.cod_produto}</Text>
                                                     <Text>Quantidade: {item.quantidade}</Text>
                                                 </TouchableOpacity>
                                             ))
@@ -130,7 +114,7 @@ export const Estoque = () => {
                                                     navigation.navigate('DetalhesEstoque', { produto: item });
                                                 }}>
                                                 <Text style={styles.itemNome}>{item.nome}</Text>
-                                                <Text>Referência: {item.referencia}</Text>
+                                                <Text>Referência: {item.cod_produto}</Text>
                                                 <Text>Quantidade: {item.quantidade}</Text>
                                             </TouchableOpacity>
                                         ))
@@ -138,16 +122,17 @@ export const Estoque = () => {
                         )
                     }
                 </View>
-            </View>
-            <ModalSearch
-                title="Pesquisar Produto"
-                list={estoqueList}
-                openModal={modalIsOpen}
-                fnCloseModal={() => setModalIsOpen(!modalIsOpen)}
-                handleFilterProducts={fnHandleFilter}
-                produtos
-            />
-        </ScrollView>
+                <ModalSearch
+                    title="Pesquisar Produto"
+                    list={estoqueList}
+                    openModal={modalIsOpen}
+                    fnCloseModal={() => setModalIsOpen(!modalIsOpen)}
+                    handleFilterProducts={fnHandleFilter}
+                    produtos
+                />
+            </ScrollView>
+
+        </View>
     );
 };
 
@@ -161,15 +146,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 16,
+        marginBottom: 8,
     },
     titulo: {
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: 'bold',
-    },
-    headerIcons: {
-        display: 'flex',
-        flexDirection: 'row'
+        marginLeft: 10
     },
     itemContainer: {
         padding: 16,

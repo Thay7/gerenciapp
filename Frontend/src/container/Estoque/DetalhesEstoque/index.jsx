@@ -1,23 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 
-//import { useApi } from '../../Api/useApi';
-import { ButtonEdit } from '../../../components/Buttons/ButtonEdit';
+import { useApi } from '../../../Api/useApi';
+import { formatterdate } from '../../../utils/formatterdate'
+import { Loading } from '../../../components/Loading';
 import { InputApp } from '../../../components/InputApp';
 import { useRoute } from "@react-navigation/native";
 import { ButtonApp } from '../../../components/Buttons/ButtonApp';
+import { ButtonBack } from '../../../components/Buttons/ButtonBack';
+import { ButtonEdit } from '../../../components/Buttons/ButtonEdit';
 import { ModalErrors } from '../../../components/ModalErrors';
+import { ModalSucces } from '../../../components/ModalSucces';
 
 export const DetalhesEstoque = () => {
     const [enable, setEnable] = useState(false);
-    const route = useRoute();
+    const [loading, setLoading] = useState(false);
+    const [modalSucess, setModalSucess] = useState(false);
+    const [messageError, setMessageError] = useState('');
 
+    const navigation = useNavigation()
+
+    const route = useRoute();
     const { produto } = route.params;
 
     const [objProdutoEstoque, setObjProdutoEstoque] = useState({
+        id: produto.id,
         nome: produto.nome,
-        referencia: produto.referencia,
+        cod_produto: produto.cod_produto,
         quantidade: produto.quantidade
     });
 
@@ -26,28 +37,63 @@ export const DetalhesEstoque = () => {
         setObjProdutoEstoque({ ...objProdutoEstoque, [name]: value })
     }
 
+    useEffect(() => {
+        const dataHoraAtual = new Date();
+        setObjProdutoEstoque(prevState => ({
+            ...prevState,
+            data_hora: formatterdate(dataHoraAtual)
+        }));
+    }, [fnEditarEstoque]);
+
+    const fnEditarEstoque = async () => {
+        setLoading(true)
+
+        if (await useApi.editarEstoque(objProdutoEstoque) == 200) {
+            setModalSucess(true);
+            setEnable(false);
+            setTimeout(() => {
+                navigation.navigate('Estoque', { estoqueAtualizado: objProdutoEstoque });
+            }, 3000);
+        } else {
+            setTitleModal('Erro')
+            setMessageError('Erro ao editar estoque.');
+            setModalErrors(true);
+            setTimeout(() => {
+                navigation.navigate('Estoque');
+            }, 3000);
+        }
+        setLoading(false);
+    };
+
     const handleSalve = () => {
-        if (objProdutoEstoque.nome != '' && objProdutoEstoque.referencia != '' && objProdutoEstoque.quantidade != '') {
-            console.log('todos preenchidos')
+        if (objProdutoEstoque.nome != '' && objProdutoEstoque.cod_produto != '' && objProdutoEstoque.quantidade != '') {
+            fnEditarEstoque();
         }
         else {
             setModalErrors(true);
+            setMessageError('Preencha todos os campos obrigatórios.');
         }
     };
 
     return (
-        <ScrollView >
-            <View style={styles.container}>
+        <View style={styles.container}>
+            <View style={styles.header}>
                 <View style={styles.header}>
+                    <ButtonBack navigate="Estoque" />
                     <Text style={styles.titulo}>Detalhes Estoque</Text>
+                </View>
+                <View style={styles.header}>
                     {!enable &&
                         <ButtonEdit onPress={() => setEnable(true)} />
                     }
                 </View>
+            </View>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 <View >
+                    {loading && <Loading />}
                     <InputApp
                         title="Nome *"
-                        editable={enable}
+                        editable={false}
                         value={objProdutoEstoque.nome}
                         fullWidth
                         borderRadius={10}
@@ -56,13 +102,13 @@ export const DetalhesEstoque = () => {
                     />
                     <InputApp
                         title="Referência *"
-                        editable={enable}
-                        value={objProdutoEstoque.referencia}
+                        editable={false}
+                        value={objProdutoEstoque.cod_produto.toString()}
                         fullWidth
                         borderRadius={10}
                         marginBottom
                         keyboardType="numeric"
-                        onChangeText={(text) => handleInputChange("referencia", text)}
+                        onChangeText={(text) => handleInputChange("cod_produto", text)}
                     />
                     <InputApp
                         title="Quantidade *"
@@ -75,22 +121,35 @@ export const DetalhesEstoque = () => {
                         onChangeText={(text) => handleInputChange("quantidade", text)}
                     />
                     {enable &&
-                        <ButtonApp
-                            title="Salvar"
-                            color="#fff"
-                            backgroundColor="#4040ff"
-                            onPress={() => handleSalve()}
-                        />
+                        <>
+                            <ButtonApp
+                                title="Salvar"
+                                color="#fff"
+                                backgroundColor="#4040ff"
+                                onPress={() => handleSalve()}
+                            />
+                            <ButtonApp
+                                title="Cancelar"
+                                color="#FF0000"
+                                onPress={() => setEnable(false)}
+                            />
+                        </>
                     }
                 </View>
                 <ModalErrors
                     title="Aviso"
-                    message="Preencha todos os campos obrigatórios."
+                    message={messageError}
                     openModal={modalErrors}
                     fnCloseModal={() => setModalErrors(!modalErrors)}
                 />
-            </View>
-        </ScrollView>
+                <ModalSucces
+                    title="Sucesso"
+                    message="Estoque editado com sucesso."
+                    openModal={modalSucess}
+                    fnCloseModal={() => setModalSucess(!modalSucess)}
+                />
+            </ScrollView>
+        </View>
     );
 };
 
@@ -107,12 +166,9 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     titulo: {
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: 'bold',
-    },
-    headerIcons: {
-        display: 'flex',
-        flexDirection: 'row',
+        marginLeft: 10
     },
     itemContainer: {
         padding: 16,

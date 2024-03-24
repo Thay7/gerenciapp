@@ -3,8 +3,6 @@ import { View, StyleSheet, Text } from 'react-native';
 import { HomeItem } from '../../components/Home/HomeItem';
 import { ScrollView } from 'react-native';
 
-import { formatterbrl } from '../../utils/formatterbrl'
-
 //Icons menus
 import ic_vendas from '../../icons/Home/ic_vendas.png';
 import ic_estoque from '../../icons/Home/ic_estoque.png';
@@ -12,14 +10,16 @@ import ic_produtos from '../../icons/Home/ic_produtos.png';
 import ic_pedido_de_compra from '../../icons/Home/ic_pedido_de_compra.png';
 import ic_cadastros from '../../icons/Home/ic_cadastros.png';
 import ic_dashboard from '../../icons/Home/ic_dashboard.png';
+
 import { ResumoDia } from '../../components/Home/ResumoDia';
+import { formatterbrl } from '../../utils/formatterbrl'
 
 export const Home = () => {
     const menus = [
         { name: 'Vendas', icon: ic_vendas, page: 'Vendas' },
         { name: 'Estoque', icon: ic_estoque, page: 'Estoque' },
         { name: 'Cadastros', icon: ic_cadastros, page: 'Cadastros' },
-        { name: 'Produtos', icon: ic_produtos, page: 'Produtos' },
+        { name: 'Produtos/Serviços', icon: ic_produtos, page: 'ListarProdutosServicos' },
         { name: 'Pedido De Compra', icon: ic_pedido_de_compra, page: 'PedidoDeCompra' },
         { name: 'Relatórios', icon: ic_dashboard, page: 'Relatorios' }
     ];
@@ -35,7 +35,7 @@ export const Home = () => {
         <ScrollView style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.headerText}>GerenciApp</Text>
-                <Text style={styles.subHeaderText}>Olá, Borracharia do Valdir!</Text>
+                <Text style={styles.subHeaderText}>Borracharia do Valdir</Text>
             </View>
             <View style={styles.contentBox}>
                 <ResumoDia

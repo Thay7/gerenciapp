@@ -7,7 +7,7 @@ export const InputSelectProductsEstoque = ({ title, selectedValue, onValueChange
         <View style={styles.container}>
             <View>
                 <Text style={styles.text}>
-                    {title} *
+                    {title}
                 </Text>
             </View>
             <View style={styles.input}>
@@ -17,9 +17,9 @@ export const InputSelectProductsEstoque = ({ title, selectedValue, onValueChange
                     enabled={options.length === 0 ? false : true}
                 >
                     <Picker.Item
-                        label="Selecione"
+                        label="Selecione o item"
                         enabled={false}
-                        style={styles.labelPicker2}
+                        style={{color: '#ccc'}}
                     />
                     {options.length === 0
                         ? (
@@ -34,7 +34,7 @@ export const InputSelectProductsEstoque = ({ title, selectedValue, onValueChange
                             options.map((item, index) => (
                                 <Picker.Item
                                     key={index}
-                                    label={`${item.nome} - ${formatterbrl(item.valor)} - Quantidade atual: ${item.quantidadeAtual}`}
+                                    label={`${item.nome} - Valor compra: ${formatterbrl(item.valor_compra)}`}
                                     value={item}
                                     style={styles.labelPicker}
                                 />
@@ -53,14 +53,12 @@ const styles = StyleSheet.create({
     },
     text: {
         marginBottom: 5,
-        fontSize: 16,
-        fontWeight: 'bold',
     },
     input: {
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 10,
-        marginBottom: 20,
+        marginBottom: 20
     },
     labelSeparator: {
         color: '#4040ff'

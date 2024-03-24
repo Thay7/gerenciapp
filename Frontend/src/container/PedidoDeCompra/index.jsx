@@ -9,6 +9,7 @@ import { ButtonAdd } from '../../components/Buttons/ButtonAdd';
 import { ButtonSearch } from '../../components/Buttons/ButtonSearch';
 import { formatterbrl } from '../../utils/formatterbrl';
 import { useRoute } from "@react-navigation/native";
+import { ButtonBack } from '../../components/Buttons/ButtonBack';
 
 export const PedidoDeCompra = () => {
     const [pedidosCompraList, setPedidosCompraList] = useState([]);
@@ -81,21 +82,24 @@ export const PedidoDeCompra = () => {
     }, [route.params?.novoPedidoCompra, route.params?.pedidoRecebido, route.params?.produtoDeletado]);
 
     return (
-        <ScrollView >
-            <View style={styles.container}>
+        <View style={styles.container}>
+            <View style={styles.header}>
                 <View style={styles.header}>
+                    <ButtonBack navigate="Home" />
                     <Text style={styles.titulo}>Pedido de Compra</Text>
-                    <View style={styles.headerIcons}>
-                        <View style={{ marginRight: 5 }}>
-                            <ButtonSearch
-                                onPress={() => setModalIsOpen(true)}
-                            />
-                        </View>
-                        <ButtonAdd
-                            onPress={() => navigation.navigate('NovoPedidoCompra')}
+                </View>
+                <View style={styles.header}>
+                    <View style={{ marginRight: 5 }}>
+                        <ButtonSearch
+                            onPress={() => setModalIsOpen(true)}
                         />
                     </View>
+                    <ButtonAdd
+                        onPress={() => navigation.navigate('NovoPedidoCompra')}
+                    />
                 </View>
+            </View>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 {
                     (search.length > 0 || noResults) && (
                         <TouchableOpacity
@@ -174,16 +178,16 @@ export const PedidoDeCompra = () => {
                         )
                     }
                 </View>
-            </View>
-            <ModalSearch
-                title="Pesquisar Pedido Compra"
-                list={pedidosCompraList}
-                openModal={modalIsOpen}
-                fnCloseModal={() => setModalIsOpen(!modalIsOpen)}
-                handleFilterSales={fnHandleFilter}
-                pedidocompra
-            />
-        </ScrollView >
+                <ModalSearch
+                    title="Pesquisar Pedido Compra"
+                    list={pedidosCompraList}
+                    openModal={modalIsOpen}
+                    fnCloseModal={() => setModalIsOpen(!modalIsOpen)}
+                    handleFilterSales={fnHandleFilter}
+                    pedidocompra
+                />
+            </ScrollView >
+        </View >
     );
 };
 
@@ -197,15 +201,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 16,
+        marginBottom: 8,
     },
     titulo: {
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: 'bold',
-    },
-    headerIcons: {
-        display: 'flex',
-        flexDirection: 'row',
+        marginLeft: 10
     },
     itemContainer: {
         padding: 16,

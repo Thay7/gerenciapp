@@ -5,6 +5,7 @@ import { InputSelectRelatorios } from '../../../components/InputSelectRelatorios
 import { formatterbrl } from '../../../utils/formatterbrl';
 import { ModalErrors } from '../../../components/ModalErrors';
 import { ButtonFilter } from '../../../components/Buttons/ButtonFilter';
+import { ButtonBack } from '../../../components/Buttons/ButtonBack';
 
 export const VendasPorMesAno = () => {
     const [anoSelecionado, setAnoSelecionado] = useState('');
@@ -71,14 +72,17 @@ export const VendasPorMesAno = () => {
         <ScrollView >
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <Text style={styles.titulo}>Relatório</Text>
+                    <View style={styles.header}>
+                        <ButtonBack navigate="Relatorios" />
+                        <Text style={styles.titulo}>Relatório</Text>
+                    </View>
                     {dadosRelatorio.length > 0 &&
                         <ButtonFilter
                             onpress={handleClickFilter}
                         />
                     }
                 </View>
-                {/* <Text style={styles.subTitulo}>Vendas por mês/ano</Text> */}
+                <Text style={styles.subTitulo}>Vendas por mês/ano</Text>
                 {!dadosRelatorio.length > 0 &&
                     <View style={{ marginTop: 20 }}>
                         <InputSelectRelatorios
@@ -140,6 +144,7 @@ const styles = StyleSheet.create({
     titulo: {
         fontSize: 30,
         fontWeight: 'bold',
+        marginLeft: 15
     },
     subTitulo: {
         fontSize: 20,

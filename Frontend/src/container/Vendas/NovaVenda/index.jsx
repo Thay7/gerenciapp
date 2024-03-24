@@ -2,15 +2,18 @@ import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Image, Modal } from 'react-native';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import { useNavigation } from '@react-navigation/native';
+import { Picker } from '@react-native-picker/picker';
 
 //import componentes personalizados 
 import { InputApp } from '../../../components/InputApp';
 import { InputSelectItens } from '../../../components/InputSelectItens';
 import { formatterbrl } from '../../../utils/formatterbrl';
 import { InputSelectPagamento } from '../../../components/InputSelectPagamento';
-import { useApi } from '../../../Api/useApi'
+import { useApi } from '../../../Api/useApi';
+import { ButtonBack } from '../../../components/Buttons/ButtonBack';
+
 //import icon
-import ic_remove from '../../../icons/ic_remove.png'
+import ic_remove from '../../../icons/ic_remove.png';
 import { ModalErrors } from '../../../components/ModalErrors';
 import { ModalSucces } from '../../../components/ModalSucces';
 import { Loading } from '../../../components/Loading';
@@ -25,7 +28,7 @@ export const NovaVenda = () => {
     }, [])
 
     const buscarItens = async () => {
-        let json = await useApi.listarItens()
+        let json = await useApi.listarProdutos()
         setOptionsItens(json)
     };;
 
@@ -246,10 +249,14 @@ export const NovaVenda = () => {
         }
     };
 
+    const opcoes = ['opcao 1', 'opcao 2', 'opcao 3', 'opcao 4', 'opcao 5', 'opcao 6',];
+
     return (
         <ScrollView >
             <View style={styles.container}>
                 <View style={styles.header}>
+                    <ButtonBack
+                        navigate="Vendas" />
                     <Text style={styles.titulo}>Nova Venda</Text>
                 </View>
                 <ProgressSteps
@@ -537,12 +544,12 @@ const styles = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     titulo: {
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: 'bold',
+        marginLeft: 10
     },
     itemContainer: {
         padding: 16,

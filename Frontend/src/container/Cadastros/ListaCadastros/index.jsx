@@ -10,6 +10,7 @@ import { ButtonAdd } from '../../../components/Buttons/ButtonAdd';
 import { ButtonImport } from '../../../components/Buttons/ButtonImport';
 import { ButtonSearch } from '../../../components/Buttons/ButtonSearch';
 import { ModalSearch } from '../../../components/ModalSearch';
+import { ButtonBack } from '../../../components/Buttons/ButtonBack';
 
 export const ListaCadastros = () => {
     const route = useRoute();
@@ -48,7 +49,7 @@ export const ListaCadastros = () => {
 
     // const buscarProdutos = async () => {
     //     setLoading(true)
-    //     let json = await useApi.listarItens()
+    //     let json = await useApi.listarProdutos()
     //     setProdutos(json)
     //     setLoading(false)
     // }
@@ -63,19 +64,22 @@ export const ListaCadastros = () => {
     }
 
     return (
-        <ScrollView >
-            <View style={styles.container}>
+        <View style={styles.container}>
+            <View style={styles.header}>
                 <View style={styles.header}>
+                    <ButtonBack navigate="Cadastros" />
                     <Text style={styles.titulo}>Lista {item.nome}</Text>
-                    <View style={styles.headerIcons}>
-                        <View style={{ marginRight: 5 }}>
-                            <ButtonSearch onPress={() => setModalIsOpen(true)} />
-                        </View>
-                        <View style={{ marginRight: 5 }}>
-                            <ButtonAdd onPress={() => navigation.navigate('NovoCadastro', { item: item })} />
-                        </View>
+                </View>
+                <View style={styles.header}>
+                    <View style={{ marginRight: 5 }}>
+                        <ButtonSearch onPress={() => setModalIsOpen(true)} />
+                    </View>
+                    <View style={{ marginRight: 5 }}>
+                        <ButtonAdd onPress={() => navigation.navigate('NovoCadastro', { item: item })} />
                     </View>
                 </View>
+            </View>
+            <ScrollView >
                 {
                     (search.length > 0 || noResults) && (
                         <TouchableOpacity
@@ -175,16 +179,18 @@ export const ListaCadastros = () => {
                                 )
                     )
                 }
-            </View >
-            <ModalSearch
-                title="Pesquisar Produto"
-                list={dados}
-                openModal={modalIsOpen}
-                fnCloseModal={() => setModalIsOpen(!modalIsOpen)}
-                handleFilterProducts={fnHandleFilter}
-                produtos
-            />
-        </ScrollView >
+                <ModalSearch
+                    title="Pesquisar Produto"
+                    list={dados}
+                    openModal={modalIsOpen}
+                    fnCloseModal={() => setModalIsOpen(!modalIsOpen)}
+                    handleFilterProducts={fnHandleFilter}
+                    produtos
+                />
+            </ScrollView >
+
+        </View >
+
     );
 };
 
@@ -198,11 +204,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 16,
+        marginBottom: 8,
     },
     titulo: {
         fontSize: 30,
         fontWeight: 'bold',
+        marginLeft: 15
     },
     itemContainer: {
         padding: 10,
@@ -219,10 +226,6 @@ const styles = StyleSheet.create({
     itemSub: {
         fontSize: 16,
         color: '#666',
-    },
-    headerIcons: {
-        display: 'flex',
-        flexDirection: 'row',
     },
     cleanFilterText: {
         color: 'red',

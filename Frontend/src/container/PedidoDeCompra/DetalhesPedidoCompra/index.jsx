@@ -14,6 +14,7 @@ import { ModalErrors } from '../../../components/ModalErrors';
 import { ModalSucces } from '../../../components/ModalSucces';
 import { ModalConfirm } from '../../../components/ModalConfirm';
 import { Loading } from '../../../components/Loading';
+import { ButtonBack } from '../../../components/Buttons/ButtonBack';
 
 export const DetalhesPedidoCompra = () => {
     const [enable, setEnable] = useState(false);
@@ -55,15 +56,32 @@ export const DetalhesPedidoCompra = () => {
 
     const handleOnValueChangePagamento = (value) => {
         setSelectedPagamento(value);
+        setObjPedidocompra({ ...objPedidocompra, forma_pagamento: value });
     };
 
-    const handleInputChange = (name, value) => {
-        setObjPedidocompra({ ...objPedidocompra, [name]: value })
+    const handleInputChange = (name, value, id_item) => {
+        if (name == 'quantidade' || name == 'valor') {
+            const itemAtualizado = objPedidocompra.itens.map(item => {
+                if (item.id_item === id_item) {
+
+                    // Atualiza o valor específico (quantidade ou valor) do item desejado
+                    return { ...item, [name]: value };
+                }
+                return item;
+            });
+
+            // Atualiza o estado com o array de itens atualizado
+            setObjPedidocompra({ ...objPedidocompra, itens: itemAtualizado });
+        } else {
+
+            // Se o nome não for 'quantidade' ou 'valor', atualiza normalmente
+            setObjPedidocompra({ ...objPedidocompra, [name]: value });
+        }
     };
 
     const fnConfirmarRecebimento = async () => {
         setLoading(true)
-        if (await useApi.confirmarRetorno(objPedidocompra.numero_pedido_compra) == 200) {
+        if (await useApi.confirmarRecebimento(objPedidocompra.numero_pedido_compra) == 200) {
             objPedidocompra.recebido = 1;
             setObjPedidocompra(objPedidocompra);
             setMessageSucess('Pedido compra recebido com sucesso.');
@@ -83,49 +101,86 @@ export const DetalhesPedidoCompra = () => {
         setLoading(false);
     };
 
+    //Calcular total da compra a cada nova ação nos itens
+    useEffect(() => {
+        let totalCompra = 0;
+        for (let i = 0; i < objPedidocompra.itens.length; i++) {
+            if (objPedidocompra.itens[i].hasOwnProperty('quantidade')) {
+                totalCompra += objPedidocompra.itens[i].valor * objPedidocompra.itens[i].quantidade;
+            }
+            else {
+                totalCompra += objPedidocompra.itens[i].valor;
+            }
+        };
+        setObjPedidocompra({ ...objPedidocompra, valor_total: totalCompra });
+    }, [objPedidocompra.itens]);
+
     const fnEditarPedido = async () => {
         setLoading(true)
-        if (await useApi.editarVenda(formData) == 200) {
-            setMessageSucess('Venda editada com sucesso.');
+        if (await useApi.editarPedido(objPedidocompra) == 200) {
+            setMessageSucess('Pedido editado com sucesso.');
             setModalSucess(true);
             setEnable(false);
             setTimeout(() => {
-                navigation.navigate('Vendas', { vendaAtualizada: objPedidocompra });
+                navigation.navigate('PedidoDeCompra', { pedidoAtualizado: objPedidocompra });
             }, 2000);
         } else {
             setTitleModal('Erro')
-            setMensagemModal('Erro ao editar venda.');
+            setMensagemModal('Erro ao editar pedido.');
             setModalErrors(true);
             setTimeout(() => {
-                navigation.navigate('Vendas')
+                navigation.navigate('PedidoDeCompra')
             }, 2000);
         }
         setLoading(false);
     };
 
     const handleSubmit = async () => {
-        if (formData.valor != '' && formData.quantidade != 0 && formData.forma_pagamento != '' && formData.valor_total > 0) {
-            fnEditarVenda()
+        if (objPedidocompra.valor != '' &&
+            objPedidocompra.quantidade != 0 &&
+            objPedidocompra.forma_pagamento != '' &&
+            objPedidocompra.valor_total > 0) {
+            fnEditarPedido()
         }
         else {
             setModalErrors(true);
         }
     };
 
+    const handleDelete = async () => {
+        setModalConfirm(false);
+        setLoading(true)
+        if (await useApi.deletarPedido(objPedidocompra) == 200) {
+            setMessageSucess('Pedido deletado com sucesso.');
+            setModalSucess(true);
+            setTimeout(() => {
+                navigation.navigate('PedidoDeCompra', { pedidoDeletado: objPedidocompra });
+            }, 3000);
+        } else {
+            setTitleModal('Erro')
+            setMensagemModal('Erro ao deletar pedido.');
+            setModalErrors(true);
+        }
+        setLoading(false);
+    };
+
     return (
-        <ScrollView >
-            <View style={styles.container}>
+        <View style={styles.container}>
+            <View style={styles.header}>
                 <View style={styles.header}>
-                    <Text style={styles.titulo}>Detalhes Pedido Compra</Text>
-                    {!enable &&
-                        <View style={styles.headerIcons}>
-                            <View style={{ marginRight: 5 }}>
-                                <ButtonEdit onPress={() => setEnable(true)} />
-                            </View>
-                            <ButtonDelete onPress={() => setModalConfirm(true)} />
-                        </View>
-                    }
+                    <ButtonBack navigate="PedidoDeCompra" />
+                    <Text style={styles.titulo}>Detalhes Pedido</Text>
                 </View>
+                {!enable &&
+                    <View style={styles.header}>
+                        <View style={{ marginRight: 5 }}>
+                            <ButtonEdit onPress={() => setEnable(true)} />
+                        </View>
+                        <ButtonDelete onPress={() => setModalConfirm(true)} />
+                    </View>
+                }
+            </View>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 {loading && <Loading />}
                 {objPedidocompra.recebido != 1 && !enable &&
                     <ButtonApp
@@ -163,19 +218,17 @@ export const DetalhesPedidoCompra = () => {
                                         keyboardType="numeric"
                                         onChangeText={(text) => handleInputChange("valor", text)}
                                     />
-                                    {item.quantidade &&
-                                        <InputApp
-                                            title="Quantidade"
-                                            editable={enable}
-                                            value={item.quantidade.toString()}
-                                            width={130}
-                                            fullWidth
-                                            borderRadius={10}
-                                            marginBottom
-                                            keyboardType="numeric"
-                                            onChangeText={(text) => handleInputChange("quantidade", text)}
-                                        />
-                                    }
+                                    <InputApp
+                                        title="Quantidade"
+                                        editable={enable}
+                                        value={item.quantidade.toString()}
+                                        width={130}
+                                        fullWidth
+                                        borderRadius={10}
+                                        marginBottom
+                                        keyboardType="numeric"
+                                        onChangeText={(text) => handleInputChange("quantidade", text)}
+                                    />
                                 </View>
                             </View>
                         ))}
@@ -231,7 +284,7 @@ export const DetalhesPedidoCompra = () => {
                         />
                         <InputApp
                             title="Nº Parcelas"
-                            editable={false}
+                            editable={enable}
                             value={objPedidocompra.numero_parcelas.toString()}
                             fullWidth
                             borderRadius={10}
@@ -255,7 +308,7 @@ export const DetalhesPedidoCompra = () => {
                                 title="Salvar"
                                 color="#fff"
                                 backgroundColor="#4040ff"
-                                onPress={() => setEnable(false)}
+                                onPress={handleSubmit}
                             />
                             <ButtonApp
                                 title="Cancelar"
@@ -276,16 +329,16 @@ export const DetalhesPedidoCompra = () => {
                         openModal={modalSucess}
                         fnCloseModal={() => setModalSucess(!modalSucess)}
                     />
-                    {/* <ModalConfirm
+                    <ModalConfirm
                         title="Atenção"
-                        message="Tem certeza que deseja excluir?"
+                        message="Tem certeza que deseja excluir o pedido de compra?"
                         openModal={modalConfirm}
                         fnCloseModal={() => setModalConfirm(!modalConfirm)}
                         fnConfirm={handleDelete}
-                    /> */}
+                    />
                 </View>
-            </View>
-        </ScrollView>
+            </ScrollView>
+        </View>
     );
 };
 
@@ -299,15 +352,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 16,
+        marginBottom: 8
     },
     titulo: {
         fontSize: 25,
         fontWeight: 'bold',
-    },
-    headerIcons: {
-        display: 'flex',
-        flexDirection: 'row',
+        marginLeft: 10
     },
     itemContainer: {
         padding: 16,
