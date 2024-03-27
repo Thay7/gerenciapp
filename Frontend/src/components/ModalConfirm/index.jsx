@@ -25,14 +25,14 @@ export const ModalConfirm = ({ title, message, openModal, fnCloseModal, fnConfir
                         <ButtonApp
                             title="Sim"
                             color="#fff"
-                            backgroundColor="red"
+                            backgroundColor="#4040ff"
                             width={100}
                             onPress={fnConfirm}
                         />
                         <ButtonApp
                             title="Não"
                             color="#fff"
-                            backgroundColor="#4040ff"
+                            backgroundColor="red"
                             width={100}
                             onPress={fnCloseModal}
                         />

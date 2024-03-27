@@ -3,7 +3,7 @@ const db = require('../db');
 const estoqueController = {
     async listarProdutos(req, res) {
         try {
-            const [rows, fields] = await db.query('SELECT * FROM itens WHERE id not in ( SELECT id_produto from estoque)');
+            const [rows, fields] = await db.query('SELECT * FROM itens WHERE id not in ( SELECT id_produto from estoque) AND tipo = "Produto"');
             res.json(rows);
             console.log(rows)
 

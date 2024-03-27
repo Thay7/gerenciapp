@@ -22,12 +22,12 @@ export const Servicos = () => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [noResults, setNoResults] = useState(false);
     const [search, setSearch] = useState([]);
-    const [produtos, setProdutos] = useState([]);
+    const [servicos, setServicos] = useState([]);
 
     const fnHandleFilter = (name, reference) => {
         if (name || reference) {
-            const filtered = produtos.filter(item =>
-                (!name || item.produto_nome.toLowerCase().includes(name.trim().toLowerCase())) &&
+            const filtered = servicos.filter(item =>
+                (!name || item.nome.toLowerCase().includes(name.trim().toLowerCase())) &&
                 (!reference || item.cod_produto.includes(reference.trim().toLowerCase()))
             );
             setSearch(filtered);
@@ -41,18 +41,18 @@ export const Servicos = () => {
     }
 
     useEffect(() => {
-        buscarProdutos()
+        buscarServicos()
     }, [])
 
-    const buscarProdutos = async () => {
+    const buscarServicos = async () => {
         setLoading(true)
         let json = await useApi.listarServicos()
-        setProdutos(json)
+        setServicos(json)
         setLoading(false)
     }
 
     const handleNewProduct = () => {
-        navigation.navigate('CadastroDeProdutos')
+        navigation.navigate('CadastroDeServicos')
     }
 
     const handleClearFilter = () => {
@@ -63,22 +63,22 @@ export const Servicos = () => {
     /*Ao adicionar, editar ou deletar um produto, será redirecionado para essa tela novamente.
     Esse useEffect atualiza a lista de produtos para exibir corretamente depois da alteração/deleção*/
     useEffect(() => {
-        if (route.params?.novoProduto) {
-            const novoProduto = route.params.novoProduto;
-            setProdutos([...produtos, novoProduto]);
+        if (route.params?.novoServico) {
+            const novoServico = route.params.novoServico;
+            setServicos([...servicos, novoServico]);
         }
 
-        if (route.params?.produtoAtualizado) {
-            const produtoAtualizado = route.params.produtoAtualizado;
-            setProdutos(produtos.map(produto => (produto.id === produtoAtualizado.id ? produtoAtualizado : produto)));
+        if (route.params?.servicoAtualizado) {
+            const servicoAtualizado = route.params.servicoAtualizado;
+            setServicos(servicos.map(servico => (servico.id === servicoAtualizado.id ? servicoAtualizado : servico)));
         }
 
-        if (route.params?.produtoDeletado) {
-            const produtoDeletado = route.params.produtoDeletado;
-            const updatedOptions = produtos.filter(item => item.id !== produtoDeletado.id);
-            setProdutos(updatedOptions);
+        if (route.params?.servicoDeletado) {
+            const servicoDeletado = route.params.servicoDeletado;
+            const updatedOptions = servicos.filter(item => item.id !== servicoDeletado.id);
+            setServicos(updatedOptions);
         }
-    }, [route.params?.novoProduto, route.params?.produtoAtualizado, route.params?.produtoDeletado]);
+    }, [route.params?.novoServico, route.params?.servicoAtualizado, route.params?.servicoDeletado]);
 
     return (
         <View style={styles.container}>
@@ -115,7 +115,7 @@ export const Servicos = () => {
                     )
                     :
                     (
-                        !produtos.length > 0 ?
+                        !servicos.length > 0 || noResults ?
                             (
                                 <View>
                                     <Text>Nenhum resultado para a busca!</Text>
@@ -128,13 +128,12 @@ export const Servicos = () => {
                                         <TouchableOpacity
                                             style={styles.itemContainer}
                                             onPress={() => {
-                                                navigation.navigate('DetalhesProduto', { produto: item });
+                                                navigation.navigate('DetalhesServicos', { servico: item });
                                             }}
                                             key={index}
                                         >
                                             <Text style={styles.itemNome}>{item.nome}</Text>
-                                            <Text style={styles.itemSub}>Referência: {item.cod_produto}</Text>
-                                            {item.produto_descricao &&
+                                            {item.descricao &&
                                                 <Text style={styles.itemSub}>Descrição: {item.descricao}</Text>
                                             }
                                             <Text style={styles.itemSub}>Valor: {formatterbrl(item.valor_venda)}</Text>
@@ -144,18 +143,17 @@ export const Servicos = () => {
                                     :
                                     (
                                         <View style={{ marginBottom: 16 }}>
-                                            {produtos.length > 0 &&
-                                                produtos.map((item, index) => (
+                                            {servicos.length > 0 &&
+                                                servicos.map((item, index) => (
                                                     <TouchableOpacity
                                                         style={styles.itemContainer}
                                                         onPress={() => {
-                                                            navigation.navigate('DetalhesProduto', { produto: item });
+                                                            navigation.navigate('DetalhesServicos', { servico: item });
                                                         }}
                                                         key={index}
                                                     >
                                                         <Text style={styles.itemNome}>{item.nome}</Text>
-                                                        <Text style={styles.itemSub}>Referência: {item.cod_produto}</Text>
-                                                        {item.produto_descricao &&
+                                                        {item.descricao &&
                                                             <Text style={styles.itemSub}>Descrição: {item.descricao}</Text>
                                                         }
                                                         <Text style={styles.itemSub}>Valor: {formatterbrl(item.valor_venda)}</Text>
@@ -168,12 +166,12 @@ export const Servicos = () => {
                     )
                 }
                 <ModalSearch
-                    title="Pesquisar Produto"
-                    list={produtos}
+                    title="Pesquisar Serviço"
+                    list={servicos}
                     openModal={modalIsOpen}
                     fnCloseModal={() => setModalIsOpen(!modalIsOpen)}
                     handleFilterProducts={fnHandleFilter}
-                    produtos
+                    servicos
                 />
             </ScrollView >
         </View >

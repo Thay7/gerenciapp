@@ -2,10 +2,11 @@ const db = require('../db');
 
 const produtosController = {
   async listar(req, res) {
+    console.log('back')
+
     try {
       const [rows, fields] = await db.query('SELECT * FROM itens WHERE tipo = "Produto"');
       res.json(rows); 
-      console.log(rows)
 
     } catch (error) {
       console.error('Erro ao listar produtos:', error);

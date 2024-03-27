@@ -123,7 +123,7 @@ export const Estoque = () => {
                     }
                 </View>
                 <ModalSearch
-                    title="Pesquisar Produto"
+                    title="Pesquisar Estoque"
                     list={estoqueList}
                     openModal={modalIsOpen}
                     fnCloseModal={() => setModalIsOpen(!modalIsOpen)}

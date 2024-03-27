@@ -47,7 +47,7 @@ export const DetalhesProduto = () => {
             }
         }
         setFormData({ ...formData, [name]: value })
-    }
+    };
 
     const fnEditarProduto = async () => {
         setLoading(true)
@@ -67,7 +67,7 @@ export const DetalhesProduto = () => {
             }, 3000);
         }
         setLoading(false);
-    }
+    };
 
     const handleSubmit = async () => {
         if (formData.nome != '' && formData.cod_produto != 0 && formData.marca != '' && formData.valor_compra > 0 && formData.valor_venda > 0) {
@@ -76,7 +76,7 @@ export const DetalhesProduto = () => {
         else {
             setModalErrors(true);
         }
-    }
+    };
 
     const handleDelete = async () => {
         setModalConfirm(false);
@@ -159,6 +159,7 @@ export const DetalhesProduto = () => {
                         fullWidth
                         borderRadius={10}
                         marginBottom
+                        keyboardType="numeric"
                         onChangeText={(text) => handleInputChange("valor_compra", text)}
                     />
                     <InputApp
@@ -168,6 +169,7 @@ export const DetalhesProduto = () => {
                         fullWidth
                         borderRadius={10}
                         marginBottom
+                        keyboardType="numeric"
                         onChangeText={(text) => handleInputChange("valor_venda", text)}
                     />
                     {enable &&

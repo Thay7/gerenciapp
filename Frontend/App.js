@@ -24,7 +24,9 @@ import { ListarProdutosServicos } from './src/container/ListarProdutosServicos'
 import { Produtos } from './src/container/Produtos'
 import { DetalhesProduto } from './src/container/Produtos/DetalhesProduto';
 import { CadastroDeProdutos } from './src/container/Produtos/CadastroDeProdutos';
-import { Servicos } from './src/container/Servicos'
+import { Servicos } from './src/container/Servicos';
+import { DetalhesServicos } from './src/container/Servicos/Detalhes';
+import { CadastroDeServicos } from './src/container/Servicos/Cadastro';
 
 //Módulo Estoque
 import { Estoque } from './src/container/Estoque';
@@ -138,12 +140,12 @@ export default function App() {
         />
         <Stack.Screen
           name="DetalhesServicos"
-          component={DetalhesProduto}
+          component={DetalhesServicos}
           options={{ headerShown: false }}
         />
         <Stack.Screen
           name="CadastroDeServicos"
-          component={CadastroDeProdutos}
+          component={CadastroDeServicos}
           options={{ headerShown: false }}
         />
         <Stack.Screen

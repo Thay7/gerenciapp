@@ -6,7 +6,7 @@ import { InputApp } from '../InputApp';
 import { ButtonApp } from '../Buttons/ButtonApp';
 import { ButtonClose } from '../Buttons/ButtonClose';
 
-export const ModalSearch = ({ title, openModal, fnCloseModal, handleFilterProducts, handleFilterSales, produtos, vendas, pedidocompra }) => {
+export const ModalSearch = ({ title, openModal, fnCloseModal, handleFilterProducts, handleFilterSales, produtos, servicos, vendas, pedidocompra }) => {
   //states para modal do tipo produtos
   const [searchName, setSearchName] = useState('');
   const [searchReference, setSearchReference] = useState('');
@@ -20,15 +20,23 @@ export const ModalSearch = ({ title, openModal, fnCloseModal, handleFilterProduc
   const [searchNumeroPedido, setSearchNumeroPedido] = useState('');
 
   const handleSearch = () => {
-    if (produtos) {
+    if (produtos || servicos) {
       //Função filtrar de produtos
       handleFilterProducts(searchName, searchReference);
     }
     if (vendas) {
-      //Função filtrar de produtos
+      //Função filtrar de vendas
       handleFilterSales(searchNumeroVenda, searchValor, searchDataHora);
     }
+    
     fnCloseModal();
+    setSearchName('');
+    setSearchReference('');
+    setSearchNumeroVenda('');
+    setSearchValor('');
+    setSearchDataHora(null);
+    setSearchNumeroPedido('');
+
   };
 
   if (!openModal) {
@@ -63,6 +71,19 @@ export const ModalSearch = ({ title, openModal, fnCloseModal, handleFilterProduc
                   title="Referência:"
                   value={searchReference}
                   onChangeText={(text) => setSearchReference(text)}
+                  marginBottom={true}
+                  borderRadius={10}
+                />
+              </>
+            )
+          }
+          {servicos &&
+            (
+              <>
+                <InputApp
+                  title="Nome:"
+                  value={searchName}
+                  onChangeText={(text) => setSearchName(text)}
                   marginBottom={true}
                   borderRadius={10}
                 />

@@ -15,7 +15,7 @@ import { ModalSucces } from '../../../components/ModalSucces';
 import { ModalConfirm } from '../../../components/ModalConfirm'
 import { ButtonBack } from '../../../components/Buttons/ButtonBack';
 
-export const DetalhesProduto = () => {
+export const DetalhesServicos = () => {
     const navigation = useNavigation()
     const [enable, setEnable] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -29,15 +29,12 @@ export const DetalhesProduto = () => {
     const [messageSucess, setMessageSucess] = useState('');
 
     const route = useRoute();
-    const { produto } = route.params;
+    const { servico } = route.params;
     const [formData, setFormData] = useState({
-        id: produto.id,
-        nome: produto.nome,
-        cod_produto: produto.cod_produto,
-        descricao: produto.descricao,
-        marca: produto.marca,
-        valor_compra: produto.valor_compra,
-        valor_venda: produto.valor_venda
+        id: servico.id,
+        nome: servico.nome,
+        descricao: servico.descricao,
+        valor_venda: servico.valor_venda
     });
 
     const handleInputChange = (name, value) => {
@@ -49,29 +46,29 @@ export const DetalhesProduto = () => {
         setFormData({ ...formData, [name]: value })
     }
 
-    const fnEditarProduto = async () => {
+    const fnEditarServico = async () => {
         setLoading(true)
-        if (await useApi.editarProduto(formData) == 200) {
-            setMessageSucess('Produto editado com sucesso.');
+        if (await useApi.editarServico(formData) == 200) {
+            setMessageSucess('Serviço editado com sucesso.');
             setModalSucess(true);
             setEnable(false);
             setTimeout(() => {
-                navigation.navigate('Produtos', { produtoAtualizado: formData });
+                navigation.navigate('Servicos', { servicoAtualizado: formData });
             }, 3000);
         } else {
             setTitleModal('Erro')
-            setMensagemModal('Erro ao editar produto.');
+            setMensagemModal('Erro ao editar serviço.');
             setModalErrors(true);
             setTimeout(() => {
-                navigation.navigate('Produtos', { produtoAtualizado: formData });
+                navigation.navigate('Servicos', { servicoAtualizado: formData });
             }, 3000);
         }
         setLoading(false);
     }
 
     const handleSubmit = async () => {
-        if (formData.nome != '' && formData.cod_produto != 0 && formData.marca != '' && formData.valor_compra > 0 && formData.valor_venda > 0) {
-            fnEditarProduto()
+        if (formData.nome != '' && formData.valor_venda > 0) {
+            fnEditarServico()
         }
         else {
             setModalErrors(true);
@@ -82,15 +79,15 @@ export const DetalhesProduto = () => {
         setModalConfirm(false);
         setLoading(true)
         const id = formData.id;
-        if (await useApi.deletarProduto(id) == 200) {
-            setMessageSucess('Produto deletado com sucesso.');
+        if (await useApi.deletarServico(id) == 200) {
+            setMessageSucess('Serviço deletado com sucesso.');
             setModalSucess(true);
             setTimeout(() => {
-                navigation.navigate('Produtos', { produtoDeletado: formData });
+                navigation.navigate('Servicos', { servicoDeletado: formData });
             }, 3000);
         } else {
             setTitleModal('Erro')
-            setMensagemModal('Erro ao deletar produto.');
+            setMensagemModal('Erro ao deletar serviço.');
             setModalErrors(true);
         }
         setLoading(false);
@@ -101,8 +98,8 @@ export const DetalhesProduto = () => {
         <View style={styles.container}>
             <View style={styles.header}>
                 <View style={styles.header}>
-                    <ButtonBack navigate="Produtos" />
-                    <Text style={styles.titulo}>Detalhes Produto</Text>
+                    <ButtonBack navigate="Servicos" />
+                    <Text style={styles.titulo}>Detalhes Serviço</Text>
                 </View>
                 {!enable &&
                     <View style={styles.header}>
@@ -126,15 +123,6 @@ export const DetalhesProduto = () => {
                         onChangeText={(text) => handleInputChange("nome", text)}
                     />
                     <InputApp
-                        title="Código Produto"
-                        editable={enable}
-                        value={formData.cod_produto.toString()}
-                        fullWidth
-                        borderRadius={10}
-                        marginBottom
-                        onChangeText={(text) => handleInputChange("cod_produto", text)}
-                    />
-                    <InputApp
                         title="Descrição"
                         editable={enable}
                         value={formData.descricao}
@@ -144,30 +132,13 @@ export const DetalhesProduto = () => {
                         onChangeText={(text) => handleInputChange("descricao", text)}
                     />
                     <InputApp
-                        title="Marca"
-                        editable={enable}
-                        value={formData.marca}
-                        fullWidth
-                        borderRadius={10}
-                        marginBottom
-                        onChangeText={(text) => handleInputChange("marca", text)}
-                    />
-                    <InputApp
-                        title="Valor Compra"
-                        editable={enable}
-                        value={formData.valor_compra.toString()}
-                        fullWidth
-                        borderRadius={10}
-                        marginBottom
-                        onChangeText={(text) => handleInputChange("valor_compra", text)}
-                    />
-                    <InputApp
                         title="Valor Venda"
                         editable={enable}
                         value={formData.valor_venda.toString()}
                         fullWidth
                         borderRadius={10}
                         marginBottom
+                        keyboardType="numeric"
                         onChangeText={(text) => handleInputChange("valor_venda", text)}
                     />
                     {enable &&

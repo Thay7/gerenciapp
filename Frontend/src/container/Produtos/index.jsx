@@ -27,7 +27,7 @@ export const Produtos = () => {
     const fnHandleFilter = (name, reference) => {
         if (name || reference) {
             const filtered = produtos.filter(item =>
-                (!name || item.produto_nome.toLowerCase().includes(name.trim().toLowerCase())) &&
+                (!name || item.nome.toLowerCase().includes(name.trim().toLowerCase())) &&
                 (!reference || item.cod_produto.includes(reference.trim().toLowerCase()))
             );
             setSearch(filtered);
@@ -115,7 +115,7 @@ export const Produtos = () => {
                     )
                     :
                     (
-                        !produtos.length > 0 ?
+                        !produtos.length > 0 || noResults ?
                             (
                                 <View>
                                     <Text>Nenhum resultado para a busca!</Text>
@@ -134,7 +134,7 @@ export const Produtos = () => {
                                         >
                                             <Text style={styles.itemNome}>{item.nome}</Text>
                                             <Text style={styles.itemSub}>Referência: {item.cod_produto}</Text>
-                                            {item.produto_descricao &&
+                                            {item.descricao &&
                                                 <Text style={styles.itemSub}>Descrição: {item.descricao}</Text>
                                             }
                                             <Text style={styles.itemSub}>Valor: {formatterbrl(item.valor_venda)}</Text>
@@ -155,7 +155,7 @@ export const Produtos = () => {
                                                     >
                                                         <Text style={styles.itemNome}>{item.nome}</Text>
                                                         <Text style={styles.itemSub}>Referência: {item.cod_produto}</Text>
-                                                        {item.produto_descricao &&
+                                                        {item.descricao &&
                                                             <Text style={styles.itemSub}>Descrição: {item.descricao}</Text>
                                                         }
                                                         <Text style={styles.itemSub}>Valor: {formatterbrl(item.valor_venda)}</Text>

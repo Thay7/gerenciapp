@@ -10,16 +10,13 @@ import { Loading } from '../../../components/Loading';
 import { useNavigation } from '@react-navigation/native';
 import { ButtonBack } from '../../../components/Buttons/ButtonBack';
 
-export const CadastroDeProdutos = () => {
+export const CadastroDeServicos = () => {
     const navigation = useNavigation()
     const [formData, setFormData] = useState({
         nome: '',
-        cod_produto: 0,
         descricao: '',
-        marca: '',
-        valor_compra: 0,
         valor_venda: 0,
-        tipo: 'Produto'
+        tipo: 'Servico'
     });
 
     const [modalErrors, setModalErrors] = useState(false);
@@ -37,28 +34,27 @@ export const CadastroDeProdutos = () => {
         setFormData({ ...formData, [name]: value })
     }
 
-    const cadastraNovoProduto = async () => {
+    const cadastraNovoServico = async () => {
         setLoading(true)
-        if (await useApi.cadastrarProduto(formData) == 200) {
+        if (await useApi.cadastrarServico(formData) == 200) {
             setModalSucess(true);
             setTimeout(() => {
-                navigation.navigate('Produtos', { novoProduto: formData });
+                navigation.navigate('Servicos', { novoServico: formData });
             }, 3000);
         } else {
             setTitleModal('Erro')
-            setMensagemModal('Erro ao cadastrar produto. Entre em contato com o suporte.');
+            setMensagemModal('Erro ao cadastrar serviço. Entre em contato com o suporte.');
             setModalErrors(true);
             setTimeout(() => {
-                navigation.navigate('Produtos');
+                navigation.navigate('Servicos');
             }, 3000);
         }
         setLoading(false);
     }
 
     const handleSubmit = async () => {
-        if (formData.nome != '' && formData.cod_produto != 0 && formData.marca != '' && formData.valor_compra > 0 && formData.valor_venda > 0) {
-            console.log(formData)
-            cadastraNovoProduto()
+        if (formData.nome != '' && formData.valor_venda > 0) {
+            cadastraNovoServico()
         }
         else {
             setModalErrors(true);
@@ -68,8 +64,8 @@ export const CadastroDeProdutos = () => {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <ButtonBack navigate="Produtos"/> 
-                <Text style={styles.titulo}>Cadastro de Produto</Text>
+                <ButtonBack navigate="Servicos"/> 
+                <Text style={styles.titulo}>Cadastro de Serviço</Text>
             </View>
             <ScrollView >
                 {loading && <Loading />}
@@ -83,37 +79,11 @@ export const CadastroDeProdutos = () => {
                         borderRadius={10}
                     />
                     <InputApp
-                        title="Código produto *"
-                        fullWidth
-                        value={formData.cod_produto}
-                        onChangeText={(text) => handleInputChange("cod_produto", text)}
-                        marginBottom={true}
-                        borderRadius={10}
-                        keyboardType="numeric"
-                    />
-                    <InputApp
                         title="Descrição"
                         fullWidth
                         multiline={true}
                         value={formData.descricao}
                         onChangeText={(text) => handleInputChange("descricao", text)}
-                        marginBottom={true}
-                        borderRadius={10}
-                    />
-                    <InputApp
-                        title="Marca *"
-                        fullWidth
-                        value={formData.marca}
-                        onChangeText={(text) => handleInputChange("marca", text)}
-                        marginBottom={true}
-                        borderRadius={10}
-                    />
-                    <InputApp
-                        title="Valor Compra *"
-                        fullWidth
-                        value={formData.valor_compra}
-                        onChangeText={(text) => handleInputChange("valor_compra", text)}
-                        keyboardType="numeric"
                         marginBottom={true}
                         borderRadius={10}
                     />
@@ -141,7 +111,7 @@ export const CadastroDeProdutos = () => {
                 />
                 <ModalSucces
                     title="Sucesso"
-                    message="Produto cadastrado com sucesso!"
+                    message="Serviço cadastrado com sucesso!"
                     openModal={modalSucess}
                     fnCloseModal={() => setModalSucess(!modalSucess)}
                 />
