@@ -8,7 +8,6 @@ const estoqueController = {
             console.log(rows)
 
         } catch (error) {
-            console.error('Erro ao listar produtos:', error);
             res.status(500).send('Erro ao listar itens');
         }
     },
@@ -18,7 +17,6 @@ const estoqueController = {
             res.json(rows);
 
         } catch (error) {
-            console.error('Erro ao listar estoque:', error);
             res.status(500).send('Erro ao listar estoque');
         }
     },
@@ -32,7 +30,6 @@ const estoqueController = {
 
             res.status(200).json({ success: true, message: 'Entrada de estoque cadastrada com sucesso!' });
         } catch (error) {
-            console.error('Erro ao cadastrar produto:', error);
             res.status(500).json({ success: false, message: 'Erro ao cadastrar estoque' });
         }
     },
@@ -46,29 +43,11 @@ const estoqueController = {
                       WHERE id_produto=?`;
             await db.query(query, [quantidade, data_hora, id]);
 
-            console.error(query);
-
-
             res.status(200).json({ success: true, message: 'Estoque editado com sucesso!' });
         } catch (error) {
             res.status(500).json({ success: false, message: 'Erro ao editar estoque' });
         }
-    },
-    // async deletar(req, res) {
-    //     try {
-    //         const { id } = req.params;
-    //         console.log(id + 'back')
-
-    //         const query = `DELETE FROM itens WHERE id=? AND tipo = "Produto"`;
-
-    //         await db.query(query, [id]);
-
-    //         res.status(200).json({ success: true, message: 'Produto editado com sucesso!' });
-    //     } catch (error) {
-    //         console.error('Erro ao deletar produto:', error);
-    //         res.status(500).json({ success: false, message: 'Erro ao deletar o produto' });
-    //     }
-    // },
+    }
 };
 
 module.exports = estoqueController;
