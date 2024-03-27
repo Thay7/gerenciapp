@@ -1,9 +1,19 @@
 const db = require('../db');
 
 const estoqueController = {
-    async listarProdutos(req, res) {
+    async listarProdutosSemEstoque(req, res) {
         try {
             const [rows, fields] = await db.query('SELECT * FROM itens WHERE id not in ( SELECT id_produto from estoque) AND tipo = "Produto"');
+            res.json(rows);
+            console.log(rows)
+
+        } catch (error) {
+            res.status(500).send('Erro ao listar itens');
+        }
+    },
+    async listarProdutosEmEstoque(req, res) {
+        try {
+            const [rows, fields] = await db.query('SELECT * FROM itens WHERE id in ( SELECT id_produto from estoque where quantidade > 0) AND tipo = "Produto"');
             res.json(rows);
             console.log(rows)
 
