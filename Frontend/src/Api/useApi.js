@@ -187,8 +187,12 @@ export const useApi = {
         }
     },
     //Estoque
-    listarProdutosEstoque: async () => {
-        const response = await api.get('estoque/listarProdutos')
+    listarProdutosSemEstoque: async () => {
+        const response = await api.get('estoque/listarProdutosSemEstoque')
+        return response.data
+    },
+    listarProdutosEmEstoque: async () => {
+        const response = await api.get('estoque/listarProdutosEmEstoque')
         return response.data
     },
     listarEstoque: async () => {

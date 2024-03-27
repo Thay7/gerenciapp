@@ -21,7 +21,7 @@ export const EntradaEstoque = () => {
     }, []);
 
     const buscarProdutos = async () => {
-        let json = await useApi.listarProdutosEstoque();
+        let json = await useApi.listarProdutosSemEstoque();
         setOptionsItens(json);
     };
 

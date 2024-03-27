@@ -28,7 +28,7 @@ export const NovaVenda = () => {
     }, [])
 
     const buscarItens = async () => {
-        let json = await useApi.listarProdutos()
+        let json = await useApi.listarProdutosEmEstoque()
         setOptionsItens(json)
     };;
 
