@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     titulo: {
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: 'bold',
         marginLeft: 15
     },

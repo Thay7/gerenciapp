@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: `http://192.168.0.8:5000/api/`,
+    baseURL: `http://192.168.0.4:5000/api/`,
     timeout: 5000
 })
 
@@ -19,7 +19,6 @@ export const useApi = {
             }
             return 400;
         } catch (error) {
-            console.error(error);
             return 500;
         }
     },
@@ -61,7 +60,6 @@ export const useApi = {
             }
             return 400;
         } catch (error) {
-            console.error(error);
             return 500;
         }
     },
@@ -74,7 +72,6 @@ export const useApi = {
             }
             return 400;
         } catch (error) {
-            console.error(error);
             return 500;
         }
     },
@@ -86,7 +83,6 @@ export const useApi = {
             }
             return 400;
         } catch (error) {
-            console.error(error);
             return 500;
         }
     },
@@ -145,7 +141,6 @@ export const useApi = {
                 return 200;
             }
         } catch (error) {
-            console.error(error);
             return 500;
         }
     },
@@ -195,6 +190,14 @@ export const useApi = {
         const response = await api.get('estoque/listarProdutosEmEstoque')
         return response.data
     },
+    verificaQuantidadeItem: async (formData) => {
+        try {
+            const response = await api.post(`estoque/verificaQuantidadeItem`, formData);
+            return response.status;
+        } catch (error) {
+            return 500;
+        }
+    },
     listarEstoque: async () => {
         const response = await api.get('estoque/listar')
         return response.data
@@ -207,7 +210,6 @@ export const useApi = {
             }
             return 400;
         } catch (error) {
-            console.error(error);
             return 500;
         }
     },
@@ -220,7 +222,6 @@ export const useApi = {
             }
             return 400;
         } catch (error) {
-            console.error(error);
             return 500;
         }
     },
@@ -232,7 +233,6 @@ export const useApi = {
             }
             return 400;
         } catch (error) {
-            console.error(error);
             return 500;
         }
     },

@@ -15,10 +15,27 @@ const estoqueController = {
         try {
             const [rows, fields] = await db.query('SELECT * FROM itens WHERE id in ( SELECT id_produto from estoque where quantidade > 0) AND tipo = "Produto"');
             res.json(rows);
-            console.log(rows)
-
         } catch (error) {
             res.status(500).send('Erro ao listar itens');
+        }
+    },
+    async verificaQuantidadeItem(req, res) {
+        try {
+            const formData = req.body;
+
+            for (const item of formData) {
+                const { id } = item;
+                const { quantidade } = item;
+
+                const [rows, fields] = await db.query(`SELECT * FROM estoque WHERE id_produto=?`, [id]);
+
+                //Se quantidade do item na venda for maior que a quantidade no estoque dispara o erro
+                if (quantidade > rows[0].quantidade)
+                    throw new Error(500);
+            }
+            res.status(200).json({ success: true });
+        } catch (error) {
+            res.status(500).send('Erro ao listar estoque dos itens');;
         }
     },
     async listar(req, res) {

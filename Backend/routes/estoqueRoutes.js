@@ -4,9 +4,9 @@ const estoqueController = require('../controllers/estoqueController');
 
 router.get('/listarProdutosSemEstoque', estoqueController.listarProdutosSemEstoque);
 router.get('/listarProdutosEmEstoque', estoqueController.listarProdutosEmEstoque);
+router.post('/verificaQuantidadeItem', estoqueController.verificaQuantidadeItem);
 router.get('/listar', estoqueController.listar);
 router.post('/cadastrar', estoqueController.cadastrar);
 router.put('/editar/:id', estoqueController.editar);
-// router.delete('/deletar/:id', estoqueController.deletar);
 
 module.exports = router;

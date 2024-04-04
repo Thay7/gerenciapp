@@ -107,8 +107,10 @@ export const NovaVenda = () => {
     //Validações antes de ir para o step 2
     const [errorsStep1, setErrorsStep1] = useState(false);
     const [modalErrorsStep1, setModalErrorsStep1] = useState(false);
+    const [messageModalErrorStep1, setMessageModalErrorStep1] = useState('');
 
-    const handleOnNextStep1 = () => {
+    const handleOnNextStep1 = async () => {
+        //Validacao de quantidade dos itens na venda
         let error = 0;
 
         for (let i = 0; i < itensVenda.length; i++) {
@@ -122,10 +124,14 @@ export const NovaVenda = () => {
         if (error > 0) {
             setErrorsStep1(true);
             setModalErrorsStep1(true);
+            setMessageModalErrorStep1('Quantidade precisa ser maior que 0.');
         }
-        else {
-            setErrorsStep1(false);
-            setModalErrorsStep1(false);
+
+        //Validacao de quantidade dos itens no estoque
+        if (await useApi.verificaQuantidadeItem(itensVenda) == 500) {
+            setErrorsStep1(true);
+            setModalErrorsStep1(true);
+            setMessageModalErrorStep1('Quantidade insuficiente para venda. Verifique os itens no estoque.');
         }
     };
 
@@ -342,7 +348,7 @@ export const NovaVenda = () => {
                         </View>
                         <ModalErrors
                             title="Erro"
-                            message="Quantidade precisa ser maior que 0."
+                            message={messageModalErrorStep1}
                             openModal={modalErrorsStep1}
                             fnCloseModal={() => setModalErrorsStep1(!modalErrorsStep1)}
                         />
