@@ -241,7 +241,7 @@ export const useApi = {
         const response = await api.get('fornecedores/listar')
         return response.data;
     },
-    //Relatorios
+    //Relatorios - Vendas
     listarAnosDisponiveisVenda: async () => {
         const response = await api.get('relatorios/listarAnosDisponiveisVenda')
         return response.data;
@@ -250,14 +250,29 @@ export const useApi = {
         const response = await api.get('relatorios/listarMesesDisponiveisVenda')
         return response.data;
     },
-    //Vendas por mes/ano
     listarDadosRelatorioVendasMesAno: async (formData) => {
         const response = await api.post('relatorios/listarDadosRelatorioVendasMesAno', formData)
         return response.data;
     },
-    //Itens mais vendidos
     listarDadosRelatorioItensMaisVendidos: async (formData) => {
         const response = await api.post('relatorios/listarDadosRelatorioItensMaisVendidos', formData)
         return response.data;
-    }
+    },
+    //Relatorios - Pedidos compra
+    listarAnosDisponiveisPedidosCompra: async () => {
+        const response = await api.get('relatorios/listarAnosDisponiveisPedidosCompra')
+        return response.data;
+    },
+    listarMesesDisponiveisPedidosCompra: async () => {
+        const response = await api.get('relatorios/listarMesesDisponiveisPedidosCompra')
+        return response.data;
+    },
+    listarDadosRelatorioHistoricoPedidosCompra: async (formData) => {
+        const response = await api.post('relatorios/listarDadosRelatorioHistoricoPedidosCompra', formData)
+        return response.data;
+    },
+    listarDadosRelatorioComprasFornecedor: async (formData) => {
+        const response = await api.post('relatorios/listarDadosRelatorioComprasFornecedor', formData)
+        return response.data;
+    },
 }

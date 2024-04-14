@@ -1,34 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { ButtonApp } from '../../../components/Buttons/ButtonApp';
-import { InputSelectRelatorios } from '../../../components/InputSelectRelatorios';
 import { formatterbrl } from '../../../utils/formatterbrl';
 import { ModalErrors } from '../../../components/ModalErrors';
 import { ButtonFilter } from '../../../components/Buttons/ButtonFilter';
 import { ButtonBack } from '../../../components/Buttons/ButtonBack';
 import { useApi } from '../../../Api/useApi';
 import { Loading } from '../../../components/Loading';
+import { InputSelectSimples } from '../../../components/InputSelectSimples';
 
-export const ItensMaisVendidos = () => {
-    const [anoSelecionado, setAnoSelecionado] = useState('');
-    const [mesSelecionado, setMesSelecionado] = useState('');
+export const ComprasPorFornecedor = () => {
+    const [fornecedorSelecionado, setFornecedorSelecionado] = useState('');
 
     const [formData, setFormData] = useState();
-    const [meses, setMeses] = useState('');
-    const [anos, setAnos] = useState('');
+    const [fornecedores, setFornecedores] = useState([]);
 
     const [dadosRelatorio, setDadosRelatorio] = useState([]);
-    const [itemMaisVendido, setItemMaisVendido] = useState('');
     const [modalErrors, setModalErrors] = useState(false);
     const [msgError, setMsgError] = useState('');
     const [loading, setLoading] = useState(false);
 
     const handlePesquisar = async () => {
-        if (anoSelecionado != '') {
+        if (fornecedorSelecionado != '') {
             setLoading(true)
-            let jsonDadosRelatorio = await useApi.listarDadosRelatorioItensMaisVendidos(formData)
-            setDadosRelatorio(jsonDadosRelatorio.itens);
-            setItemMaisVendido(jsonDadosRelatorio.itemMaisVendido);
+            let jsonDadosRelatorio = await useApi.listarDadosRelatorioComprasFornecedor(formData)
+
+            if (!jsonDadosRelatorio.length > 0) {
+                setMsgError('Não há dados para o fornecedor selecionado.');
+                setModalErrors(true);
+            }
+            else {
+                setDadosRelatorio(jsonDadosRelatorio);
+            }
             setLoading(false)
         }
         else {
@@ -39,28 +42,22 @@ export const ItensMaisVendidos = () => {
 
     const handleClickFilter = () => {
         setDadosRelatorio([]);
-        setAnoSelecionado('');
-        setMesSelecionado('');
+        setFornecedorSelecionado('');
     };
 
     useEffect(() => {
-        populaSelectsMesAno();
+        populaSelectFornecedores();
     }, [])
 
-    const populaSelectsMesAno = async () => {
-        let jsonAnos = await useApi.listarAnosDisponiveisVenda()
-        setAnos(jsonAnos)
-
-        let jsonMeses = await useApi.listarMesesDisponiveisVenda()
-        setMeses(jsonMeses)
+    const populaSelectFornecedores = async () => {
+        let jsonFornecedores = await useApi.listarFornecedores()
+        setFornecedores(jsonFornecedores)
     };
 
     useEffect(() => {
-        if (anoSelecionado != '')
-            setFormData({ ...formData, ano: anoSelecionado })
-        if (mesSelecionado != '')
-            setFormData({ ...formData, mes: mesSelecionado })
-    }, [anoSelecionado, mesSelecionado])
+        if (fornecedorSelecionado != '')
+            setFormData({ idFornecedor: fornecedorSelecionado.id })
+    }, [fornecedorSelecionado])
 
     return (
         <View style={styles.container}>
@@ -75,19 +72,14 @@ export const ItensMaisVendidos = () => {
                     </View>
                 }
             </View>
-            <Text style={styles.relatorioNome}>Itens mais vendidos</Text>
+            <Text style={styles.relatorioNome}>Compras pro Fornecedor</Text>
             {dadosRelatorio.length == 0 ? (
                 <View style={{ marginTop: 20 }}>
-                    <InputSelectRelatorios
-                        title="Ano"
-                        options={anos}
-                        selectedValue={anoSelecionado}
-                        onValueChange={(value) => setAnoSelecionado(value)} />
-                    <InputSelectRelatorios
-                        title="Mês"
-                        options={meses}
-                        selectedValue={mesSelecionado}
-                        onValueChange={(value) => setMesSelecionado(value)} />
+                    <InputSelectSimples
+                        title="Fornecedor"
+                        options={fornecedores}
+                        selectedValue={fornecedorSelecionado}
+                        onValueChange={(value) => setFornecedorSelecionado(value)} />
                     <ButtonApp
                         title="Pesquisar"
                         color="#FFF"
@@ -109,27 +101,31 @@ export const ItensMaisVendidos = () => {
                         (
                             <View style={{ marginTop: 25 }}>
                                 <View style={styles.rowBetween}>
-                                    <Text style={styles.itemNome}>Mês/Ano</Text>
-                                    <Text style={styles.subTitulo}>{mesSelecionado} {anoSelecionado}</Text>
-                                </View>
-                                <View style={styles.rowBetween}>
-                                    <Text style={styles.itemNome}>Item mais vendido</Text>
-                                    <Text style={styles.subTitulo}>{itemMaisVendido}</Text>
+                                    <Text style={styles.itemNome}>Fornecedor</Text>
+                                    <Text style={styles.subTitulo}>{fornecedorSelecionado.razao_social}</Text>
                                 </View>
                                 <View style={styles.line}></View>
                                 <ScrollView showsVerticalScrollIndicator={false}>
-                                    <View >
-                                        <View style={[styles.rowBetween, { marginHorizontal: 2 }]}>
-                                            <Text style={styles.itemNome}>Item</Text>
-                                            <Text style={styles.itemNome}>Quantidade</Text>
-                                        </View>
-                                        {dadosRelatorio.map((item, index) => (
-                                            <View style={[styles.rowBetween, styles.itemContainer]} key={index}>
-                                                <Text style={styles.subTitulo}>{item.nome}</Text>
-                                                <Text style={styles.subTitulo}>{item.quantidade}</Text>
+                                    {dadosRelatorio.map((item, index) => (
+                                        <View style={styles.itemContainer} key={index}>
+                                            <View style={styles.rowBetween}>
+                                                <Text style={styles.itemNome}>Número pedido:</Text>
+                                                <Text style={styles.subTitulo}>{item.numero_pedido_compra}</Text>
                                             </View>
-                                        ))}
-                                    </View>
+                                            <View style={styles.rowBetween}>
+                                                <Text style={styles.itemNome}>Forma de pagamento:</Text>
+                                                <Text style={styles.subTitulo}>{item.forma_pagamento}</Text>
+                                            </View>
+                                            <View style={styles.rowBetween}>
+                                                <Text style={styles.itemNome}>Valor:</Text>
+                                                <Text style={styles.subTitulo}>{formatterbrl(item.valor_total)}</Text>
+                                            </View>
+                                            <View style={styles.rowBetween}>
+                                                <Text style={styles.itemNome}>Data/Hora:</Text>
+                                                <Text style={styles.subTitulo}>{item.data_hora}</Text>
+                                            </View>
+                                        </View>
+                                    ))}
                                 </ScrollView>
                             </View>
                         )

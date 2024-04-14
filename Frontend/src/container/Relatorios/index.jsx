@@ -33,25 +33,12 @@ export const Relatorios = () => {
         setPedidosCompraList([
             {
                 nome: 'Histórico pedidos de compra',
-                dados: [
-                    { id: 1, nomeFantasia: 'AutoPeças Master', razaoSocial: 'Master Autopeças Ltda', cnpj: '12.345.678/0001-90', contato: '(84) 9 9999-9991' },
-                    { id: 2, nomeFantasia: 'MecânicaParts', razaoSocial: 'Mecânica Parts Distribuidora de Peças Automotivas EIRELI', cnpj: '98.765.432/0001-21', contato: '(84) 9 9999-9992' },
-                ]
+                pagina: 'HistoricoPedidosCompra'
             },
             {
                 nome: 'Compras por fornecedor',
-                dados: [
-                    { id: 1, nomeFantasia: 'AutoPeças Master', razaoSocial: 'Master Autopeças Ltda', cnpj: '12.345.678/0001-90', contato: '(84) 9 9999-9991' },
-                    { id: 2, nomeFantasia: 'MecânicaParts', razaoSocial: 'Mecânica Parts Distribuidora de Peças Automotivas EIRELI', cnpj: '98.765.432/0001-21', contato: '(84) 9 9999-9992' },
-                ]
-            },
-            {
-                nome: 'Orçamento por fornecedor',
-                dados: [
-                    { id: 1, nomeFantasia: 'AutoPeças Master', razaoSocial: 'Master Autopeças Ltda', cnpj: '12.345.678/0001-90', contato: '(84) 9 9999-9991' },
-                    { id: 2, nomeFantasia: 'MecânicaParts', razaoSocial: 'Mecânica Parts Distribuidora de Peças Automotivas EIRELI', cnpj: '98.765.432/0001-21', contato: '(84) 9 9999-9992' },
-                ]
-            },
+                pagina: 'ComprasPorFornecedor'
+            }
         ]);
 
         setLoading(false)

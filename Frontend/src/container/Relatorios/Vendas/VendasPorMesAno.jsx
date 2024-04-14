@@ -7,6 +7,7 @@ import { ModalErrors } from '../../../components/ModalErrors';
 import { ButtonFilter } from '../../../components/Buttons/ButtonFilter';
 import { ButtonBack } from '../../../components/Buttons/ButtonBack';
 import { useApi } from '../../../Api/useApi';
+import { Loading } from '../../../components/Loading';
 
 export const VendasPorMesAno = () => {
     const [anoSelecionado, setAnoSelecionado] = useState('');
@@ -21,21 +22,20 @@ export const VendasPorMesAno = () => {
     const [dadosRelatorio, setDadosRelatorio] = useState([]);
     const [modalErrors, setModalErrors] = useState(false);
     const [msgError, setMsgError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handlePesquisar = async () => {
         if (anoSelecionado != '') {
-            setFormData({
-                ano: anoSelecionado,
-                mes: mesSelecionado
-            });
+            setLoading(true)
             let jsonDadosRelatorio = await useApi.listarDadosRelatorioVendasMesAno(formData)
             setDadosRelatorio(jsonDadosRelatorio.vendas);
             setValorTotalVendas(jsonDadosRelatorio.totalVendas);
+            setLoading(false)
         }
         else {
             setMsgError('Por favor, selecione o ano.');
             setModalErrors(true);
-        }
+        };
     };
 
     const handleClickFilter = () => {
@@ -56,6 +56,13 @@ export const VendasPorMesAno = () => {
         let jsonMeses = await useApi.listarMesesDisponiveisVenda()
         setMeses(jsonMeses)
     };
+
+    useEffect(() => {
+        if (anoSelecionado != '')
+            setFormData({ ...formData, ano: anoSelecionado })
+        if (mesSelecionado != '')
+            setFormData({ ...formData, mes: mesSelecionado })
+    }, [anoSelecionado, mesSelecionado])
 
     return (
         <View style={styles.container}>
@@ -93,39 +100,48 @@ export const VendasPorMesAno = () => {
             )
                 :
                 (
-                    <View style={{ marginTop: 25 }}>
-                        <View style={styles.rowBetween}>
-                            <Text style={styles.itemNome}>Mês/Ano</Text>
-                            <Text style={styles.subTitulo}>{mesSelecionado}/{anoSelecionado}</Text>
-                        </View>
-                        <View style={styles.rowBetween}>
-                            <Text style={styles.itemNome}>Total vendas</Text>
-                            <Text style={styles.subTitulo}>{formatterbrl(valorTotalVendas)}</Text>
-                        </View>
-                        <View style={styles.line}></View>
-                        <ScrollView showsVerticalScrollIndicator={false}>
-                            {dadosRelatorio.map((item, index) => (
-                                <View style={styles.itemContainer}>
-                                    <View style={styles.rowBetween}>
-                                        <Text style={styles.itemNome}>Número venda:</Text>
-                                        <Text style={styles.subTitulo}>{item.numero_venda}</Text>
-                                    </View>
-                                    <View style={styles.rowBetween}>
-                                        <Text style={styles.itemNome}>Forma de pagamento:</Text>
-                                        <Text style={styles.subTitulo}>{item.forma_pagamento}</Text>
-                                    </View>
-                                    <View style={styles.rowBetween}>
-                                        <Text style={styles.itemNome}>Valor:</Text>
-                                        <Text style={styles.subTitulo}>{formatterbrl(item.valor_total)}</Text>
-                                    </View>
-                                    <View style={styles.rowBetween}>
-                                        <Text style={styles.itemNome}>Data/Hora:</Text>
-                                        <Text style={styles.subTitulo}>{item.data_hora}</Text>
-                                    </View>
+                    loading == true ?
+                        (
+                            <View >
+                                <Loading />
+                            </View>
+                        )
+                        :
+                        (
+                            <View style={{ marginTop: 25 }}>
+                                <View style={styles.rowBetween}>
+                                    <Text style={styles.itemNome}>Mês/Ano</Text>
+                                    <Text style={styles.subTitulo}>{mesSelecionado} {anoSelecionado}</Text>
                                 </View>
-                            ))}
-                        </ScrollView>
-                    </View>
+                                <View style={styles.rowBetween}>
+                                    <Text style={styles.itemNome}>Total vendas</Text>
+                                    <Text style={styles.subTitulo}>{formatterbrl(valorTotalVendas)}</Text>
+                                </View>
+                                <View style={styles.line}></View>
+                                <ScrollView showsVerticalScrollIndicator={false}>
+                                        {dadosRelatorio.map((item, index) => (
+                                            <View style={styles.itemContainer} key={index}>
+                                                <View style={styles.rowBetween}>
+                                                    <Text style={styles.itemNome}>Número venda:</Text>
+                                                    <Text style={styles.subTitulo}>{item.numero_venda}</Text>
+                                                </View>
+                                                <View style={styles.rowBetween}>
+                                                    <Text style={styles.itemNome}>Forma de pagamento:</Text>
+                                                    <Text style={styles.subTitulo}>{item.forma_pagamento}</Text>
+                                                </View>
+                                                <View style={styles.rowBetween}>
+                                                    <Text style={styles.itemNome}>Valor:</Text>
+                                                    <Text style={styles.subTitulo}>{formatterbrl(item.valor_total)}</Text>
+                                                </View>
+                                                <View style={styles.rowBetween}>
+                                                    <Text style={styles.itemNome}>Data/Hora:</Text>
+                                                    <Text style={styles.subTitulo}>{item.data_hora}</Text>
+                                                </View>
+                                            </View>
+                                        ))}
+                                </ScrollView>
+                            </View>
+                        )
                 )}
             <ModalErrors
                 title="Aviso"
@@ -141,7 +157,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 20,
-        marginTop: 50,
+        marginTop: 50
     },
     header: {
         flexDirection: 'row',
