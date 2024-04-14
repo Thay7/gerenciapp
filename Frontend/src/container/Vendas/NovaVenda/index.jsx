@@ -28,7 +28,7 @@ export const NovaVenda = () => {
     }, [])
 
     const buscarItens = async () => {
-        let json = await useApi.listarProdutosEmEstoque()
+        let json = await useApi.listarItensParaVenda()
         setOptionsItens(json)
     };;
 
@@ -254,8 +254,6 @@ export const NovaVenda = () => {
             handleNovaVenda();
         }
     };
-
-    const opcoes = ['opcao 1', 'opcao 2', 'opcao 3', 'opcao 4', 'opcao 5', 'opcao 6',];
 
     return (
         <ScrollView >

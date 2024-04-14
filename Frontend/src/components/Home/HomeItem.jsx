@@ -47,13 +47,13 @@ export const HomeItem = ({ menus }) => {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 10,
-        flexDirection: 'row', // Organiza os boxes em uma única linha horizontal
-        justifyContent: 'space-between', // Adiciona espaço entre as duas colunas
+        flexDirection: 'row', 
+        justifyContent: 'space-between'
     },
     column: {
-        flexDirection: 'column', // Organiza os boxes em uma única coluna vertical
-        flex: 1, // Divide o espaço igualmente entre as colunas
-        paddingHorizontal: 5, // Adiciona espaço entre os boxes em cada coluna
+        flexDirection: 'column',
+        flex: 1,
+        paddingHorizontal: 5
     },
     box: {
         backgroundColor: '#fffafa',

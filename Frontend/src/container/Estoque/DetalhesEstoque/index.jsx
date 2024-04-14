@@ -112,7 +112,7 @@ export const DetalhesEstoque = () => {
                     />
                     <InputApp
                         title="Quantidade *"
-                        editable={enable}
+                        editable={false}
                         value={objProdutoEstoque.quantidade.toString()}
                         fullWidth
                         borderRadius={10}

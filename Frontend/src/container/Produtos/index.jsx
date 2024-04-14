@@ -97,7 +97,7 @@ export const Produtos = () => {
                     <ButtonImport />
                 </View>
             </View>
-            <ScrollView >
+            <ScrollView showsVerticalScrollIndicator={false}>
                 {
                     (search.length > 0 || noResults) && (
                         <TouchableOpacity
@@ -161,7 +161,6 @@ export const Produtos = () => {
                                                         <Text style={styles.itemSub}>Valor: {formatterbrl(item.valor_venda)}</Text>
                                                     </TouchableOpacity>
                                                 ))}
-
                                         </View>
                                     )
                             )

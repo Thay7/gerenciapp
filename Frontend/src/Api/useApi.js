@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: `http://192.168.0.4:5000/api/`,
+    baseURL: `http://192.168.0.6:5000/api/`,
     timeout: 5000
 })
 
@@ -129,6 +129,10 @@ export const useApi = {
             return 500;
         }
     },
+    listarItensParaVenda: async () => {
+        const response = await api.get('vendas/listarItensParaVenda')
+        return response.data
+    },
     //Pedidos compra
     listarPedidosCompras: async () => {
         const response = await api.get('pedidosCompra/listar')
@@ -186,10 +190,6 @@ export const useApi = {
         const response = await api.get('estoque/listarProdutosSemEstoque')
         return response.data
     },
-    listarProdutosEmEstoque: async () => {
-        const response = await api.get('estoque/listarProdutosEmEstoque')
-        return response.data
-    },
     verificaQuantidadeItem: async (formData) => {
         try {
             const response = await api.post(`estoque/verificaQuantidadeItem`, formData);
@@ -241,4 +241,23 @@ export const useApi = {
         const response = await api.get('fornecedores/listar')
         return response.data;
     },
+    //Relatorios
+    listarAnosDisponiveisVenda: async () => {
+        const response = await api.get('relatorios/listarAnosDisponiveisVenda')
+        return response.data;
+    },
+    listarMesesDisponiveisVenda: async () => {
+        const response = await api.get('relatorios/listarMesesDisponiveisVenda')
+        return response.data;
+    },
+    //Vendas por mes/ano
+    listarDadosRelatorioVendasMesAno: async (formData) => {
+        const response = await api.post('relatorios/listarDadosRelatorioVendasMesAno', formData)
+        return response.data;
+    },
+    //Itens mais vendidos
+    listarDadosRelatorioItensMaisVendidos: async (formData) => {
+        const response = await api.post('relatorios/listarDadosRelatorioItensMaisVendidos', formData)
+        return response.data;
+    }
 }

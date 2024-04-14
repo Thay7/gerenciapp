@@ -8,17 +8,16 @@ import { ButtonFilter } from '../../../components/Buttons/ButtonFilter';
 import { ButtonBack } from '../../../components/Buttons/ButtonBack';
 import { useApi } from '../../../Api/useApi';
 
-export const VendasPorMesAno = () => {
+export const ItensMaisVendidos = () => {
     const [anoSelecionado, setAnoSelecionado] = useState('');
     const [mesSelecionado, setMesSelecionado] = useState('');
 
     const [formData, setFormData] = useState();
-    const [valorTotalVendas, setValorTotalVendas] = useState(0);
-
     const [meses, setMeses] = useState('');
     const [anos, setAnos] = useState('');
 
     const [dadosRelatorio, setDadosRelatorio] = useState([]);
+    const [itemMaisVendido, setItemMaisVendido] = useState('');
     const [modalErrors, setModalErrors] = useState(false);
     const [msgError, setMsgError] = useState('');
 
@@ -28,9 +27,9 @@ export const VendasPorMesAno = () => {
                 ano: anoSelecionado,
                 mes: mesSelecionado
             });
-            let jsonDadosRelatorio = await useApi.listarDadosRelatorioVendasMesAno(formData)
-            setDadosRelatorio(jsonDadosRelatorio.vendas);
-            setValorTotalVendas(jsonDadosRelatorio.totalVendas);
+            let jsonDadosRelatorio = await useApi.listarDadosRelatorioItensMaisVendidos(formData)
+            setDadosRelatorio(jsonDadosRelatorio.itens);
+            setItemMaisVendido(jsonDadosRelatorio.itemMaisVendido);
         }
         else {
             setMsgError('Por favor, selecione o ano.');
@@ -40,7 +39,6 @@ export const VendasPorMesAno = () => {
 
     const handleClickFilter = () => {
         setDadosRelatorio([]);
-        setValorTotalVendas(0);
         setAnoSelecionado('');
         setMesSelecionado('');
     };
@@ -70,7 +68,7 @@ export const VendasPorMesAno = () => {
                     </View>
                 }
             </View>
-            <Text style={styles.relatorioNome}>Vendas por mês/ano</Text>
+            <Text style={styles.relatorioNome}>Itens mais vendidos</Text>
             {dadosRelatorio.length == 0 ? (
                 <View style={{ marginTop: 20 }}>
                     <InputSelectRelatorios
@@ -99,31 +97,23 @@ export const VendasPorMesAno = () => {
                             <Text style={styles.subTitulo}>{mesSelecionado}/{anoSelecionado}</Text>
                         </View>
                         <View style={styles.rowBetween}>
-                            <Text style={styles.itemNome}>Total vendas</Text>
-                            <Text style={styles.subTitulo}>{formatterbrl(valorTotalVendas)}</Text>
+                            <Text style={styles.itemNome}>Item mais vendido</Text>
+                            <Text style={styles.subTitulo}>{itemMaisVendido}</Text>
                         </View>
                         <View style={styles.line}></View>
                         <ScrollView showsVerticalScrollIndicator={false}>
-                            {dadosRelatorio.map((item, index) => (
-                                <View style={styles.itemContainer}>
-                                    <View style={styles.rowBetween}>
-                                        <Text style={styles.itemNome}>Número venda:</Text>
-                                        <Text style={styles.subTitulo}>{item.numero_venda}</Text>
-                                    </View>
-                                    <View style={styles.rowBetween}>
-                                        <Text style={styles.itemNome}>Forma de pagamento:</Text>
-                                        <Text style={styles.subTitulo}>{item.forma_pagamento}</Text>
-                                    </View>
-                                    <View style={styles.rowBetween}>
-                                        <Text style={styles.itemNome}>Valor:</Text>
-                                        <Text style={styles.subTitulo}>{formatterbrl(item.valor_total)}</Text>
-                                    </View>
-                                    <View style={styles.rowBetween}>
-                                        <Text style={styles.itemNome}>Data/Hora:</Text>
-                                        <Text style={styles.subTitulo}>{item.data_hora}</Text>
-                                    </View>
+                            <View >
+                                <View style={[styles.rowBetween, { marginHorizontal: 2 }]}>
+                                    <Text style={styles.itemNome}>Item</Text>
+                                    <Text style={styles.itemNome}>Quantidade</Text>
                                 </View>
-                            ))}
+                                {dadosRelatorio.map((item, index) => (
+                                    <View style={[styles.rowBetween, styles.itemContainer]} key={index}>
+                                        <Text style={styles.subTitulo}>{item.nome}</Text>
+                                        <Text style={styles.subTitulo}>{item.quantidade}</Text>
+                                    </View>
+                                ))}
+                            </View>
                         </ScrollView>
                     </View>
                 )}
@@ -142,6 +132,7 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingHorizontal: 20,
         marginTop: 50,
+
     },
     header: {
         flexDirection: 'row',
@@ -195,4 +186,4 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginVertical: 4
     }
-})
+});

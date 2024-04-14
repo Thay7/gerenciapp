@@ -146,6 +146,18 @@ const vendasController = {
       res.status(500).json({ success: false, message: 'Erro ao deletar venda' });
     }
   },
+  async listarItensParaVenda(req, res) {
+    try {
+        const [rows, fields] = await db.query(`
+        SELECT * FROM itens 
+        WHERE id in ( SELECT id_produto from estoque where quantidade > 0) AND tipo = "Produto"
+        UNION
+        SELECT * FROM itens WHERE id not in ( SELECT id_produto from estoque where quantidade > 0)`);
+        res.json(rows);
+    } catch (error) {
+        res.status(500).send('Erro ao listar itens');
+    }
+}
 };
 
 module.exports = vendasController;

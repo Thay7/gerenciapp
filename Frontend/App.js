@@ -5,9 +5,9 @@ import { Image } from 'react-native';
 
 //Icons do Tab
 import ic_inicio from './src/icons/Home/ic_inicio.png';
-import ic_inicio_focused from './src/icons/Home/ic_inicio_focused.png'
+import ic_inicio_focused from './src/icons/Home/ic_inicio_focused.png';
 import ic_perfil from './src/icons/Home/ic_perfil.png';
-import ic_perfil_focused from './src/icons/Home/ic_perfil_focused.png'
+import ic_perfil_focused from './src/icons/Home/ic_perfil_focused.png';
 
 //Componentes
 import { Login } from './src/container/Login';
@@ -16,12 +16,12 @@ import { Perfil } from './src/container/Perfil';
 
 //Módulo Vendas
 import { Vendas } from './src/container/Vendas';
-import { DetalhesVenda } from './src/container/Vendas/DetalhesVenda'
+import { DetalhesVenda } from './src/container/Vendas/DetalhesVenda';
 import { NovaVenda } from './src/container/Vendas/NovaVenda';
 
 //Módulo Produtos/Servicos
-import { ListarProdutosServicos } from './src/container/ListarProdutosServicos'
-import { Produtos } from './src/container/Produtos'
+import { ListarProdutosServicos } from './src/container/ListarProdutosServicos';
+import { Produtos } from './src/container/Produtos';
 import { DetalhesProduto } from './src/container/Produtos/DetalhesProduto';
 import { CadastroDeProdutos } from './src/container/Produtos/CadastroDeProdutos';
 import { Servicos } from './src/container/Servicos';
@@ -34,19 +34,20 @@ import { DetalhesEstoque } from './src/container/Estoque/DetalhesEstoque';
 import { EntradaEstoque } from './src/container/Estoque/EntradaEstoque';
 
 //Módulo Pedido Compra
-import { PedidoDeCompra } from './src/container/PedidoDeCompra'
+import { PedidoDeCompra } from './src/container/PedidoDeCompra';
 import { NovoPedidoCompra } from './src/container/PedidoDeCompra/NovoPedidoCompra';
 import { DetalhesPedidoCompra } from './src/container/PedidoDeCompra/DetalhesPedidoCompra';
 
 //Módulo Cadastros
 import { Cadastros } from './src/container/Cadastros';
-import { ListaCadastros } from './src/container/Cadastros/ListaCadastros'
+import { ListaCadastros } from './src/container/Cadastros/ListaCadastros';
 import { NovoCadastro } from './src/container/Cadastros/NovoCadastro';
-import { DetalhesCadastro } from './src/container/Cadastros/DetalhesCadastro'
+import { DetalhesCadastro } from './src/container/Cadastros/DetalhesCadastro';
 
 //Módulo Relatorios
-import { Relatorios } from './src/container/Relatorios'
-import { VendasPorMesAno } from './src/container/Relatorios/Vendas/VendasPorMesAno'
+import { Relatorios } from './src/container/Relatorios';
+import { VendasPorMesAno } from './src/container/Relatorios/Vendas/VendasPorMesAno';
+import { ItensMaisVendidos } from './src/container/Relatorios/Vendas/ItensMaisVendidos';
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -206,6 +207,11 @@ export default function App() {
         <Stack.Screen
           name="VendasPorMesAno"
           component={VendasPorMesAno}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ItensMaisVendidos"
+          component={ItensMaisVendidos}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
