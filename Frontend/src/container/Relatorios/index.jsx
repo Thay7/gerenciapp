@@ -1,24 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-import { useApi } from '../../Api/useApi';
+
 import { ButtonBack } from '../../components/Buttons/ButtonBack';
 
 export const Relatorios = () => {
     const [vendasList, setVendasList] = useState([]);
     const [pedidoComprasList, setPedidosCompraList] = useState([]);
 
-    const [loading, setLoading] = useState(false);
-
     useEffect(() => {
         listaCadastros()
     }, []);
 
     const listaCadastros = async () => {
-        setLoading(true)
-        //let json = await useApi.listarEstoque()
-        //setEstoqueList(json)
         setVendasList([
             {
                 nome: 'Vendas por Mês/Ano',
@@ -40,9 +35,8 @@ export const Relatorios = () => {
                 pagina: 'ComprasPorFornecedor'
             }
         ]);
+    };
 
-        setLoading(false)
-    }
     const navigation = useNavigation()
 
     return (

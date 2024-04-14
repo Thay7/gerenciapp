@@ -32,6 +32,7 @@ import { CadastroDeServicos } from './src/container/Servicos/Cadastro';
 import { Estoque } from './src/container/Estoque';
 import { DetalhesEstoque } from './src/container/Estoque/DetalhesEstoque';
 import { EntradaEstoque } from './src/container/Estoque/EntradaEstoque';
+import { EntradaEstoqueXml } from './src/container/Estoque/EntradaEstoqueXml';
 
 //Módulo Pedido Compra
 import { PedidoDeCompra } from './src/container/PedidoDeCompra';
@@ -164,6 +165,11 @@ export default function App() {
         <Stack.Screen
           name="EntradaEstoque"
           component={EntradaEstoque}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="EntradaEstoqueXml"
+          component={EntradaEstoqueXml}
           options={{ headerShown: false }}
         />
         <Stack.Screen
