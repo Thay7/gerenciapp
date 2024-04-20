@@ -57,7 +57,7 @@ export const PedidoDeCompra = () => {
     const navigation = useNavigation()
 
     /*Ao adicionar, editar ou deletar um pedido de compra, será redirecionado para essa tela novamente.
-    Esse useEffect atualiza a lista de produtos para exibir corretamente depois da alteração/deleção*/
+    Esse useEffect atualiza a lista de pedidos compra para exibir corretamente depois da alteração/deleção*/
     useEffect(() => {
         if (route.params?.novoPedidoCompra) {
             const novoPedido = route.params.novoPedidoCompra;

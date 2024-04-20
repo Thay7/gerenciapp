@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: `http://192.168.0.6:5000/api/`,
+    baseURL: `http://192.168.0.5:5000/api/`,
     timeout: 5000
 })
 
@@ -148,9 +148,10 @@ export const useApi = {
             return 500;
         }
     },
-    confirmarRecebimento: async (numero_pedido_compra) => {
+    confirmarRecebimento: async (formData) => {
         try {
-            const response = await api.put(`pedidosCompra/confirmarRecebimento/${numero_pedido_compra}`)
+            console.log(formData)
+            const response = await api.put(`pedidosCompra/confirmarRecebimento`, formData)
             if (response.status == 200) {
                 return 200;
             }

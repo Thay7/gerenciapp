@@ -81,7 +81,7 @@ export const DetalhesPedidoCompra = () => {
 
     const fnConfirmarRecebimento = async () => {
         setLoading(true)
-        if (await useApi.confirmarRecebimento(objPedidocompra.numero_pedido_compra) == 200) {
+        if (await useApi.confirmarRecebimento(objPedidocompra) == 200) {
             objPedidocompra.recebido = 1;
             setObjPedidocompra(objPedidocompra);
             setMessageSucess('Pedido compra recebido com sucesso.');

@@ -152,7 +152,7 @@ const vendasController = {
         SELECT * FROM itens 
         WHERE id in ( SELECT id_produto from estoque where quantidade > 0) AND tipo = "Produto"
         UNION
-        SELECT * FROM itens WHERE id not in ( SELECT id_produto from estoque where quantidade > 0)`);
+        SELECT * FROM itens WHERE tipo = "Servico"`);
         res.json(rows);
     } catch (error) {
         res.status(500).send('Erro ao listar itens');

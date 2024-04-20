@@ -32,14 +32,12 @@ export const NovoCadastro = () => {
     }
 
     const handleSubmit = async () => {
-        console.log(formData.produto_nome);
-        console.log(formData.produto_valorCompra);
-        console.log(formData.produto_valorVenda);
-        if (formData.produto_nome != '' && formData.produto_valorCompra > 0 && formData.produto_valorVenda > 0) {
-            console.log('nome valor compra e valor venda ta preenchido');
-        }
-        else {
-            setModalErrors(true);
+        if (item.nome == "Usuários") {
+            if (formData.produto_nome != '' && formData.produto_valorCompra > 0 && formData.produto_valorVenda > 0) {
+            }
+            else {
+                setModalErrors(true);
+            }
         }
     }
 
@@ -54,7 +52,7 @@ export const NovoCadastro = () => {
                     {item.nome == 'Fornecedores' ? (
                         <>
                             <InputApp
-                                title="Nome fantasia"
+                                title="Nome fantasia *"
                                 fullWidth
                                 value={formData.nome}
                                 onChangeText={(text) => handleInputChange("produto_nome", text)}
@@ -62,7 +60,7 @@ export const NovoCadastro = () => {
                                 borderRadius={10}
                             />
                             <InputApp
-                                title="Razão social"
+                                title="Razão social *"
                                 fullWidth
                                 multiline={true}
                                 value={formData.descricao}
@@ -71,7 +69,7 @@ export const NovoCadastro = () => {
                                 borderRadius={10}
                             />
                             <InputApp
-                                title="CNPJ"
+                                title="CNPJ *"
                                 fullWidth
                                 value={formData.marca}
                                 onChangeText={(text) => handleInputChange("produto_marca", text)}
@@ -79,7 +77,7 @@ export const NovoCadastro = () => {
                                 borderRadius={10}
                             />
                             <InputApp
-                                title="Contato"
+                                title="Contato *"
                                 fullWidth
                                 value={formData.valorCompra}
                                 onChangeText={(text) => handleInputChange("produto_valorCompra", text)}

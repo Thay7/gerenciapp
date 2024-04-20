@@ -465,7 +465,6 @@ export const NovaVenda = () => {
                     >
                         <Text style={styles.itemNome}>Resumo Itens</Text>
                         <View >
-                            {/* <Text style={styles.itemNome}>Itens</Text> */}
                             {itensVenda.map((item, i) => (
                                 item.tipo == "Produto" ?
                                     (

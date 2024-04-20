@@ -92,7 +92,7 @@ export const Vendas = () => {
                     <ButtonAdd onPress={() => navigation.navigate('NovaVenda')} />
                 </View>
             </View>
-            <ScrollView >
+            <ScrollView showsVerticalScrollIndicator={false}>
                 {
                     (search.length > 0 || noResults) && (
                         <TouchableOpacity

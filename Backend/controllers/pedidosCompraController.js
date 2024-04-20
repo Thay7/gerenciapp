@@ -1,4 +1,5 @@
 const db = require('../db'); // Importe a conexão
+const formatterdate = require('../utils/formatterdate');
 
 const pedidosCompraController = {
   //Lista os produtos disponiveis para o select
@@ -16,7 +17,10 @@ const pedidosCompraController = {
   },
   async listar(req, res) {
     try {
-      const [rows, fields] = await db.query(`SELECT p.*, ip.id as item_id, i.nome, ip.valor, ip.quantidade, f.cnpj, f.nome_fantasia, f.razao_social, f.contato 
+      const [rows, fields] = await db.query(
+        `SELECT p.*, ip.id as item_id, i.nome, ip.valor, 
+        ip.quantidade, f.cnpj, f.nome_fantasia,
+        f.razao_social, f.contato, i.id as id_item
         FROM pedidos_compra p 
         INNER JOIN itens_pedidos_compra ip on ip.id_pedido_compra = p.id 
         INNER JOIN fornecedores f on p.id_fornecedor = f.id
@@ -27,7 +31,7 @@ const pedidosCompraController = {
 
         if (foundSale) {
           foundSale.itens.push({
-            id: row.item_id,
+            id: row.id_item,
             nome: row.nome,
             valor: row.valor,
             quantidade: row.quantidade
@@ -37,7 +41,7 @@ const pedidosCompraController = {
             numero_pedido_compra: row.numero_pedido_compra,
             itens: [
               {
-                id: row.item_id,
+                id: row.id_item,
                 nome: row.nome,
                 valor: row.valor,
                 quantidade: row.quantidade
@@ -106,14 +110,36 @@ const pedidosCompraController = {
   },
   async confirmarRecebimento(req, res) {
     try {
-      const { numero_pedido_compra } = req.params;
-      console.log(numero_pedido_compra)
+      const { numero_pedido_compra, itens } = req.body;
       const query = `UPDATE pedidos_compra 
                       SET recebido=?
                       WHERE numero_pedido_compra=?`;
 
       await db.query(query, [1, numero_pedido_compra]);
 
+      //Iteração sobre o array de itens inserindo no estoque
+      for (const item of itens) {
+        const { id, quantidade } = item;
+        const dataHoraAtual = formatterdate(new Date());
+
+        const [rows, fields] = await db.query(`SELECT * FROM estoque WHERE id_produto=?`, [id]);
+
+        if (rows.length > 0) {
+          const novaQuantidade = rows[0].quantidade + quantidade;
+          const updateItemEstoque = `
+            UPDATE estoque 
+            SET quantidade=?,
+            data_hora=?
+            WHERE id_produto=?`;
+
+          await db.query(updateItemEstoque, [novaQuantidade, dataHoraAtual, id]);
+        }
+        else {
+          const insertItemQuery = `INSERT INTO estoque (id_produto, quantidade, data_hora)
+          VALUES (?, ?, ?)`;
+          await db.query(insertItemQuery, [id, quantidade, dataHoraAtual]);
+        };
+      }
       res.status(200).json({ success: true, message: 'Pedido compra recebido com sucesso!' });
     } catch (error) {
       res.status(500).json({ success: false, message: 'Erro ao editar o produto' });

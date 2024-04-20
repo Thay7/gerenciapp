@@ -198,17 +198,19 @@ export const DetalhesVenda = () => {
                                     keyboardType="numeric"
                                     onChangeText={(text) => handleInputChange("valor", text, item.id_item)}
                                 />
-                                <InputApp
-                                    title="Quantidade"
-                                    editable={enable}
-                                    value={item.quantidade.toString()}
-                                    width={130}
-                                    fullWidth
-                                    borderRadius={10}
-                                    marginBottom
-                                    keyboardType="numeric"
-                                    onChangeText={(text) => handleInputChange("quantidade", text, item.id_item)}
-                                />
+                                {item.quantidade != null &&
+                                    <InputApp
+                                        title="Quantidade"
+                                        editable={enable}
+                                        value={item.quantidade != null ? item.quantidade.toString() : item.quantidade}
+                                        width={130}
+                                        fullWidth
+                                        borderRadius={10}
+                                        marginBottom
+                                        keyboardType="numeric"
+                                        onChangeText={(text) => handleInputChange("quantidade", text, item.id_item)}
+                                    />
+                                }
                             </View>
                         </View>
                     ))}
@@ -236,7 +238,7 @@ export const DetalhesVenda = () => {
                     <InputApp
                         title="Valor Total"
                         editable={enable}
-                        value={formData.valor_total.toString()}
+                        value={venda.valor_total.toString()}
                         fullWidth
                         borderRadius={10}
                         marginBottom
