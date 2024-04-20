@@ -76,64 +76,67 @@ export const ItensMaisVendidos = () => {
                 }
             </View>
             <Text style={styles.relatorioNome}>Itens mais vendidos</Text>
-            {dadosRelatorio.length == 0 ? (
-                <View style={{ marginTop: 20 }}>
-                    <InputSelectRelatorios
-                        title="Ano"
-                        options={anos}
-                        selectedValue={anoSelecionado}
-                        onValueChange={(value) => setAnoSelecionado(value)} />
-                    <InputSelectRelatorios
-                        title="Mês"
-                        options={meses}
-                        selectedValue={mesSelecionado}
-                        onValueChange={(value) => setMesSelecionado(value)} />
-                    <ButtonApp
-                        title="Pesquisar"
-                        color="#FFF"
-                        backgroundColor="#4040ff"
-                        onPress={handlePesquisar}
-                    />
+            {dadosRelatorio.length > 0 &&
+                <View style={{ marginTop: 10 }}>
+                    <View style={styles.rowBetween}>
+                        <Text style={styles.itemNome}>Mês/Ano</Text>
+                        <Text style={styles.subTitulo}>{mesSelecionado} {anoSelecionado}</Text>
+                    </View>
+                    <View style={styles.rowBetween}>
+                        <Text style={styles.itemNome}>Item mais vendido</Text>
+                        <Text style={styles.subTitulo}>{itemMaisVendido}</Text>
+                    </View>
+                    <View style={styles.line}></View>
                 </View>
-            )
-                :
-                (
+            }
+            <ScrollView showsVerticalScrollIndicator={false}>
+                {dadosRelatorio.length == 0 ? (
+                    <View style={{ marginTop: 20 }}>
+                        <InputSelectRelatorios
+                            title="Ano"
+                            options={anos}
+                            selectedValue={anoSelecionado}
+                            onValueChange={(value) => setAnoSelecionado(value)} />
+                        <InputSelectRelatorios
+                            title="Mês"
+                            options={meses}
+                            selectedValue={mesSelecionado}
+                            onValueChange={(value) => setMesSelecionado(value)} />
+                        <ButtonApp
+                            title="Pesquisar"
+                            color="#FFF"
+                            backgroundColor="#4040ff"
+                            onPress={handlePesquisar}
+                        />
+                    </View>
+                )
+                    :
+                    (
 
-                    loading == true ?
-                        (
-                            <View >
-                                <Loading />
-                            </View>
-                        )
-                        :
-                        (
-                            <View style={{ marginTop: 25 }}>
-                                <View style={styles.rowBetween}>
-                                    <Text style={styles.itemNome}>Mês/Ano</Text>
-                                    <Text style={styles.subTitulo}>{mesSelecionado} {anoSelecionado}</Text>
+                        loading == true ?
+                            (
+                                <View >
+                                    <Loading />
                                 </View>
-                                <View style={styles.rowBetween}>
-                                    <Text style={styles.itemNome}>Item mais vendido</Text>
-                                    <Text style={styles.subTitulo}>{itemMaisVendido}</Text>
-                                </View>
-                                <View style={styles.line}></View>
-                                <ScrollView showsVerticalScrollIndicator={false}>
-                                    <View >
-                                        <View style={[styles.rowBetween, { marginHorizontal: 2 }]}>
-                                            <Text style={styles.itemNome}>Item</Text>
-                                            <Text style={styles.itemNome}>Quantidade</Text>
-                                        </View>
-                                        {dadosRelatorio.map((item, index) => (
-                                            <View style={[styles.rowBetween, styles.itemContainer]} key={index}>
-                                                <Text style={styles.subTitulo}>{item.nome}</Text>
-                                                <Text style={styles.subTitulo}>{item.quantidade}</Text>
-                                            </View>
-                                        ))}
+                            )
+                            :
+                            (
+                                <View >
+                                    <View style={[styles.rowBetween, { marginHorizontal: 2 }]}>
+                                        <Text style={styles.itemNome}>Item</Text>
+                                        <Text style={styles.itemNome}>Quantidade</Text>
                                     </View>
-                                </ScrollView>
-                            </View>
-                        )
-                )}
+                                    {dadosRelatorio.map((item, index) => (
+                                        <View style={[styles.rowBetween, styles.itemContainer]} key={index}>
+                                            <Text style={styles.subTitulo}>{item.nome}</Text>
+                                            <Text style={styles.subTitulo}>{item.quantidade}</Text>
+                                        </View>
+                                        
+                                    ))}
+                                </View>
+                            )
+                    )}
+            </ScrollView>
             <ModalErrors
                 title="Aviso"
                 message={msgError}

@@ -73,39 +73,44 @@ export const ComprasPorFornecedor = () => {
                 }
             </View>
             <Text style={styles.relatorioNome}>Compras pro Fornecedor</Text>
-            {dadosRelatorio.length == 0 ? (
-                <View style={{ marginTop: 20 }}>
-                    <InputSelectSimples
-                        title="Fornecedor"
-                        options={fornecedores}
-                        selectedValue={fornecedorSelecionado}
-                        onValueChange={(value) => setFornecedorSelecionado(value)} />
-                    <ButtonApp
-                        title="Pesquisar"
-                        color="#FFF"
-                        backgroundColor="#4040ff"
-                        onPress={handlePesquisar}
-                    />
-                </View>
-            )
-                :
-                (
+            {dadosRelatorio.length > 0 &&
+                <>
+                    <View style={[styles.rowBetween, { marginTop: 10 }]}>
+                        <Text style={styles.itemNome}>Fornecedor</Text>
+                        <Text style={styles.subTitulo}>{fornecedorSelecionado.razao_social}</Text>
+                    </View>
+                    <View style={styles.line}></View>
+                </>
+            }
+            <ScrollView showsVerticalScrollIndicator={false}>
 
-                    loading == true ?
-                        (
-                            <View >
-                                <Loading />
-                            </View>
-                        )
-                        :
-                        (
-                            <View style={{ marginTop: 25 }}>
-                                <View style={styles.rowBetween}>
-                                    <Text style={styles.itemNome}>Fornecedor</Text>
-                                    <Text style={styles.subTitulo}>{fornecedorSelecionado.razao_social}</Text>
+                {dadosRelatorio.length == 0 ? (
+                    <View style={{ marginTop: 20 }}>
+                        <InputSelectSimples
+                            title="Fornecedor"
+                            options={fornecedores}
+                            selectedValue={fornecedorSelecionado}
+                            onValueChange={(value) => setFornecedorSelecionado(value)} />
+                        <ButtonApp
+                            title="Pesquisar"
+                            color="#FFF"
+                            backgroundColor="#4040ff"
+                            onPress={handlePesquisar}
+                        />
+                    </View>
+                )
+                    :
+                    (
+
+                        loading == true ?
+                            (
+                                <View >
+                                    <Loading />
                                 </View>
-                                <View style={styles.line}></View>
-                                <ScrollView showsVerticalScrollIndicator={false}>
+                            )
+                            :
+                            (
+                                <View>
                                     {dadosRelatorio.map((item, index) => (
                                         <View style={styles.itemContainer} key={index}>
                                             <View style={styles.rowBetween}>
@@ -126,10 +131,10 @@ export const ComprasPorFornecedor = () => {
                                             </View>
                                         </View>
                                     ))}
-                                </ScrollView>
-                            </View>
-                        )
-                )}
+                                </View>
+                            )
+                    )}
+            </ScrollView>
             <ModalErrors
                 title="Aviso"
                 message={msgError}

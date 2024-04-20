@@ -37,6 +37,7 @@ export const HistoricoPedidosCompra = () => {
     };
 
     const handleClickFilter = () => {
+        populaSelectsMesAno();
         setDadosRelatorio([]);
         setAnoSelecionado('');
         setMesSelecionado('');
@@ -75,68 +76,73 @@ export const HistoricoPedidosCompra = () => {
                 }
             </View>
             <Text style={styles.relatorioNome}>Historico Pedidos Compra</Text>
-            {dadosRelatorio.length == 0 ? (
-                <View style={{ marginTop: 20 }}>
-                    <InputSelectRelatorios
-                        title="Ano"
-                        options={anos}
-                        selectedValue={anoSelecionado}
-                        onValueChange={(value) => setAnoSelecionado(value)} />
-                    <InputSelectRelatorios
-                        title="Mês"
-                        options={meses}
-                        selectedValue={mesSelecionado}
-                        onValueChange={(value) => setMesSelecionado(value)} />
-                    <ButtonApp
-                        title="Pesquisar"
-                        color="#FFF"
-                        backgroundColor="#4040ff"
-                        onPress={handlePesquisar}
-                    />
-                </View>
-            )
-                :
-                (
+            {dadosRelatorio.length > 0 &&
+                <>
+                    <View style={[styles.rowBetween, { marginTop: 10 }]}>
+                        <Text style={styles.itemNome}>Mês/Ano</Text>
+                        <Text style={styles.subTitulo}>{mesSelecionado} {anoSelecionado}</Text>
+                    </View>
+                    <View style={styles.line}></View>
+                </>
+            }
+            <ScrollView showsVerticalScrollIndicator={false}>
 
-                    loading == true ?
-                        (
-                            <View >
-                                <Loading />
-                            </View>
-                        )
-                        :
-                        (
-                            <View style={{ marginTop: 25 }}>
-                                <View style={styles.rowBetween}>
-                                    <Text style={styles.itemNome}>Mês/Ano</Text>
-                                    <Text style={styles.subTitulo}>{mesSelecionado} {anoSelecionado}</Text>
+                {dadosRelatorio.length == 0 ? (
+                    <View style={{ marginTop: 20 }}>
+                        <InputSelectRelatorios
+                            title="Ano"
+                            options={anos}
+                            selectedValue={anoSelecionado}
+                            onValueChange={(value) => setAnoSelecionado(value)} />
+                        <InputSelectRelatorios
+                            title="Mês"
+                            options={meses}
+                            selectedValue={mesSelecionado}
+                            onValueChange={(value) => setMesSelecionado(value)} />
+                        <ButtonApp
+                            title="Pesquisar"
+                            color="#FFF"
+                            backgroundColor="#4040ff"
+                            onPress={handlePesquisar}
+                        />
+                    </View>
+                )
+                    :
+                    (
+
+                        loading == true ?
+                            (
+                                <View >
+                                    <Loading />
                                 </View>
-                                <View style={styles.line}></View>
-                                <ScrollView showsVerticalScrollIndicator={false}>
-                                        {dadosRelatorio.map((item, index) => (
-                                            <View style={styles.itemContainer} key={index}>
-                                                <View style={styles.rowBetween}>
-                                                    <Text style={styles.itemNome}>Número pedido:</Text>
-                                                    <Text style={styles.subTitulo}>{item.numero_pedido_compra}</Text>
-                                                </View>
-                                                <View style={styles.rowBetween}>
-                                                    <Text style={styles.itemNome}>Forma de pagamento:</Text>
-                                                    <Text style={styles.subTitulo}>{item.forma_pagamento}</Text>
-                                                </View>
-                                                <View style={styles.rowBetween}>
-                                                    <Text style={styles.itemNome}>Valor:</Text>
-                                                    <Text style={styles.subTitulo}>{formatterbrl(item.valor_total)}</Text>
-                                                </View>
-                                                <View style={styles.rowBetween}>
-                                                    <Text style={styles.itemNome}>Data/Hora:</Text>
-                                                    <Text style={styles.subTitulo}>{item.data_hora}</Text>
-                                                </View>
+                            )
+                            :
+                            (
+                                <View >
+                                    {dadosRelatorio.map((item, index) => (
+                                        <View style={styles.itemContainer} key={index}>
+                                            <View style={styles.rowBetween}>
+                                                <Text style={styles.itemNome}>Número pedido:</Text>
+                                                <Text style={styles.subTitulo}>{item.numero_pedido_compra}</Text>
                                             </View>
-                                        ))}
-                                </ScrollView>
-                            </View>
-                        )
-                )}
+                                            <View style={styles.rowBetween}>
+                                                <Text style={styles.itemNome}>Forma de pagamento:</Text>
+                                                <Text style={styles.subTitulo}>{item.forma_pagamento}</Text>
+                                            </View>
+                                            <View style={styles.rowBetween}>
+                                                <Text style={styles.itemNome}>Valor:</Text>
+                                                <Text style={styles.subTitulo}>{formatterbrl(item.valor_total)}</Text>
+                                            </View>
+                                            <View style={styles.rowBetween}>
+                                                <Text style={styles.itemNome}>Data/Hora:</Text>
+                                                <Text style={styles.subTitulo}>{item.data_hora}</Text>
+                                            </View>
+                                        </View>
+                                    ))}
+                                </View>
+                            )
+                    )}
+            </ScrollView>
             <ModalErrors
                 title="Aviso"
                 message={msgError}

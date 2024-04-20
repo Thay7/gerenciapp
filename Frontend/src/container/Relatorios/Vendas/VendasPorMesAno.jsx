@@ -29,6 +29,7 @@ export const VendasPorMesAno = () => {
             setLoading(true)
             let jsonDadosRelatorio = await useApi.listarDadosRelatorioVendasMesAno(formData)
             setDadosRelatorio(jsonDadosRelatorio.vendas);
+            console.log(jsonDadosRelatorio.vendas);
             setValorTotalVendas(jsonDadosRelatorio.totalVendas);
             setLoading(false)
         }
@@ -78,77 +79,81 @@ export const VendasPorMesAno = () => {
                 }
             </View>
             <Text style={styles.relatorioNome}>Vendas por mês/ano</Text>
-            {dadosRelatorio.length == 0 ? (
-                <View style={{ marginTop: 20 }}>
-                    <InputSelectRelatorios
-                        title="Ano"
-                        options={anos}
-                        selectedValue={anoSelecionado}
-                        onValueChange={(value) => setAnoSelecionado(value)} />
-                    <InputSelectRelatorios
-                        title="Mês"
-                        options={meses}
-                        selectedValue={mesSelecionado}
-                        onValueChange={(value) => setMesSelecionado(value)} />
-                    <ButtonApp
-                        title="Pesquisar"
-                        color="#FFF"
-                        backgroundColor="#4040ff"
-                        onPress={handlePesquisar}
-                    />
+            {dadosRelatorio.length > 0 &&
+                <View style={{ marginTop: 10 }}>
+                    <View style={styles.rowBetween}>
+                        <Text style={styles.itemNome}>Mês/Ano</Text>
+                        <Text style={styles.subTitulo}>{mesSelecionado} {anoSelecionado}</Text>
+                    </View>
+                    <View style={styles.rowBetween}>
+                        <Text style={styles.itemNome}>Total vendas</Text>
+                        <Text style={styles.subTitulo}>{formatterbrl(valorTotalVendas)}</Text>
+                    </View>
+                    <View style={styles.line}></View>
                 </View>
-            )
-                :
-                (
-                    loading == true ?
-                        (
-                            <View >
-                                <Loading />
-                            </View>
-                        )
-                        :
-                        (
-                            <View style={{ marginTop: 25 }}>
-                                <View style={styles.rowBetween}>
-                                    <Text style={styles.itemNome}>Mês/Ano</Text>
-                                    <Text style={styles.subTitulo}>{mesSelecionado} {anoSelecionado}</Text>
+            }
+            <ScrollView showsVerticalScrollIndicator={false}>
+                {dadosRelatorio.length == 0 ? (
+                    <View style={{ marginTop: 20 }}>
+                        <InputSelectRelatorios
+                            title="Ano"
+                            options={anos}
+                            selectedValue={anoSelecionado}
+                            onValueChange={(value) => setAnoSelecionado(value)} />
+                        <InputSelectRelatorios
+                            title="Mês"
+                            options={meses}
+                            selectedValue={mesSelecionado}
+                            onValueChange={(value) => setMesSelecionado(value)} />
+                        <ButtonApp
+                            title="Pesquisar"
+                            color="#FFF"
+                            backgroundColor="#4040ff"
+                            onPress={handlePesquisar}
+                        />
+                    </View>
+                )
+                    :
+                    (
+                        loading == true ?
+                            (
+                                <View >
+                                    <Loading />
                                 </View>
-                                <View style={styles.rowBetween}>
-                                    <Text style={styles.itemNome}>Total vendas</Text>
-                                    <Text style={styles.subTitulo}>{formatterbrl(valorTotalVendas)}</Text>
-                                </View>
-                                <View style={styles.line}></View>
-                                <ScrollView showsVerticalScrollIndicator={false}>
-                                        {dadosRelatorio.map((item, index) => (
-                                            <View style={styles.itemContainer} key={index}>
-                                                <View style={styles.rowBetween}>
-                                                    <Text style={styles.itemNome}>Número venda:</Text>
-                                                    <Text style={styles.subTitulo}>{item.numero_venda}</Text>
-                                                </View>
-                                                <View style={styles.rowBetween}>
-                                                    <Text style={styles.itemNome}>Forma de pagamento:</Text>
-                                                    <Text style={styles.subTitulo}>{item.forma_pagamento}</Text>
-                                                </View>
-                                                <View style={styles.rowBetween}>
-                                                    <Text style={styles.itemNome}>Valor:</Text>
-                                                    <Text style={styles.subTitulo}>{formatterbrl(item.valor_total)}</Text>
-                                                </View>
-                                                <View style={styles.rowBetween}>
-                                                    <Text style={styles.itemNome}>Data/Hora:</Text>
-                                                    <Text style={styles.subTitulo}>{item.data_hora}</Text>
-                                                </View>
+                            )
+                            :
+                            (
+                                <View>
+                                    {dadosRelatorio.map((item, index) => (
+                                        <View style={styles.itemContainer} key={index}>
+                                            <View style={styles.rowBetween}>
+                                                <Text style={styles.itemNome}>Número venda:</Text>
+                                                <Text style={styles.subTitulo}>{item.numero_venda}</Text>
                                             </View>
-                                        ))}
-                                </ScrollView>
-                            </View>
-                        )
-                )}
-            <ModalErrors
-                title="Aviso"
-                message={msgError}
-                openModal={modalErrors}
-                fnCloseModal={() => setModalErrors(!modalErrors)}
-            />
+                                            <View style={styles.rowBetween}>
+                                                <Text style={styles.itemNome}>Forma de pagamento:</Text>
+                                                <Text style={styles.subTitulo}>{item.forma_pagamento}</Text>
+                                            </View>
+                                            <View style={styles.rowBetween}>
+                                                <Text style={styles.itemNome}>Valor:</Text>
+                                                <Text style={styles.subTitulo}>{formatterbrl(item.valor_total)}</Text>
+                                            </View>
+                                            <View style={styles.rowBetween}>
+                                                <Text style={styles.itemNome}>Data/Hora:</Text>
+                                                <Text style={styles.subTitulo}>{item.data_hora}</Text>
+                                            </View>
+                                        </View>
+                                    ))}
+                                </View>
+                            )
+                    )}
+                <ModalErrors
+                    title="Aviso"
+                    message={msgError}
+                    openModal={modalErrors}
+                    fnCloseModal={() => setModalErrors(!modalErrors)}
+                />
+            </ScrollView>
         </View>
     );
 };
