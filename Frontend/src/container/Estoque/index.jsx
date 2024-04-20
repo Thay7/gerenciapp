@@ -66,9 +66,6 @@ export const Estoque = () => {
                                 navigation.navigate('EntradaEstoque')
                             }} />
                     </View>
-                    <View style={{ marginLeft: 5 }}><ButtonImport onPress={() => {
-                        navigation.navigate('EntradaEstoqueXml')
-                    }} /></View>
                 </View>
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -148,7 +145,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 8,
+        marginBottom: 8
     },
     titulo: {
         fontSize: 25,

@@ -94,7 +94,6 @@ export const Servicos = () => {
                     <View style={{ marginRight: 5 }}>
                         <ButtonAdd onPress={handleNewProduct} />
                     </View>
-                    <ButtonImport />
                 </View>
             </View>
             <ScrollView >
