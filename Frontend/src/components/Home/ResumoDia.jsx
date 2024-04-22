@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 
-export const ResumoDia = ({ labelsAndValues }) => {
-    const [labelsAndValuesBox, setLabelsAndValuesBox] = useState([]);
-
-    useEffect(() => {
-        setLabelsAndValuesBox(labelsAndValues);
-    }, [])
-
+export const ResumoDia = ({ data }) => {
     return (
         <View style={styles.box}>
-            {labelsAndValuesBox.map((item, i) => (
+            {data.map((item, i) => (
                 <View style={styles.contentBox} key={i}>
                     <Text style={styles.label}>{item.label}</Text>
                     <Text style={styles.value}>{item.value}</Text>

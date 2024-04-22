@@ -6,6 +6,11 @@ const api = axios.create({
 })
 
 export const useApi = {
+    //Home
+    listarResumoDia: async () => {
+        const response = await api.get('home/listarResumoDia')
+        return response.data
+    },
     //Produtos
     listarProdutos: async () => {
         const response = await api.get('produtos/listar')

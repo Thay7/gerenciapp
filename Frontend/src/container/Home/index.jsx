@@ -1,7 +1,6 @@
-import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Text, ScrollView, RefreshControl } from 'react-native';
 import { HomeItem } from '../../components/Home/HomeItem';
-import { ScrollView } from 'react-native';
 
 //Icons menus
 import ic_vendas from '../../icons/Home/ic_vendas.png';
@@ -11,8 +10,9 @@ import ic_pedido_de_compra from '../../icons/Home/ic_pedido_de_compra.png';
 import ic_cadastros from '../../icons/Home/ic_cadastros.png';
 import ic_dashboard from '../../icons/Home/ic_dashboard.png';
 
+//
 import { ResumoDia } from '../../components/Home/ResumoDia';
-import { formatterbrl } from '../../utils/formatterbrl'
+import { useApi } from '../../Api/useApi';
 
 export const Home = () => {
     const menus = [
@@ -24,29 +24,43 @@ export const Home = () => {
         { name: 'Relatórios', icon: ic_dashboard, page: 'Relatorios' }
     ];
 
-    const labelsAndValues = [
-        { label: 'Vendas do dia:', value: 25 },
-        { label: 'Entrada Caixa:', value: formatterbrl(726) },
-        { label: 'Saída Caixa:', value: formatterbrl(1349) },
-        { label: 'Produto mais vendido:', value: 'Oléo Mobil' },
-    ];
+    const [resumoData, setResumoData] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
+
+    useEffect(() => {
+        buscarResumoDia();
+    }, [])
+
+    const buscarResumoDia = async () => {
+        setRefreshing(true);
+        let data = await useApi.listarResumoDia();
+        setResumoData(data);
+        setRefreshing(false);
+    };
+
+    const onRefresh = () => {
+        buscarResumoDia();
+    };
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container}
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                    colors={['#3F51B5']} // Cores do indicador de carregamento
+                    progressBackgroundColor="#fff" // Cor de fundo do indicador de carregamento
+                />
+            }
+        >
             <View style={styles.header}>
                 <Text style={styles.headerText}>GerenciApp</Text>
                 <Text style={styles.subHeaderText}>Borracharia do Valdir</Text>
             </View>
             <View style={styles.contentBox}>
-                <ResumoDia
-                    labelsAndValues={labelsAndValues}
-                />
+                <ResumoDia data={resumoData} />
             </View>
-            <View>
-                <HomeItem
-                    menus={menus}
-                />
-            </View>
+            <HomeItem menus={menus} />
         </ScrollView>
     );
 };

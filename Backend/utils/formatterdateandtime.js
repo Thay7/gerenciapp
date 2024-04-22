@@ -1,6 +1,6 @@
-export const formatterdate = () => {
+ const formatterdateandtime = () => {
     const dataAtual = new Date();
-    const dataHoraFormatada = dataAtual.toLocaleString('pt-BR', {
+    const dataFormatada = dataAtual.toLocaleString('pt-BR', {
         timeZone: 'America/Sao_Paulo',
         day: '2-digit',
         month: '2-digit',
@@ -9,5 +9,7 @@ export const formatterdate = () => {
         minute: '2-digit',
         second: '2-digit',
     });
-    return dataHoraFormatada;
+    return dataFormatada;
 };
+
+module.exports = formatterdateandtime;

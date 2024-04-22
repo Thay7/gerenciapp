@@ -1,5 +1,5 @@
 const db = require('../db'); // Importe a conexão
-const formatterdate = require('../utils/formatterdate');
+const formatterdateandtime = require('../utils/formatterdateandtime');
 
 const pedidosCompraController = {
   //Lista os produtos disponiveis para o select
@@ -120,7 +120,7 @@ const pedidosCompraController = {
       //Iteração sobre o array de itens inserindo no estoque
       for (const item of itens) {
         const { id, quantidade } = item;
-        const dataHoraAtual = formatterdate(new Date());
+        const dataHoraAtual = formatterdateandtime(new Date());
 
         const [rows, fields] = await db.query(`SELECT * FROM estoque WHERE id_produto=?`, [id]);
 

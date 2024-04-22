@@ -1,14 +1,10 @@
- const formatterdate = () => {
+const formatterdate = () => {
     const dataAtual = new Date();
-    const dataFormatada = dataAtual.toLocaleString('pt-BR', {
-        timeZone: 'America/Sao_Paulo',
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-    });
+    const diaAtual = dataAtual.getDate();
+    const mesAtual = String(dataAtual.getMonth() + 1).padStart(2, '0');
+    const anoAtual = dataAtual.getFullYear();
+
+    const dataFormatada = `${diaAtual}/${mesAtual}/${anoAtual}`;
     return dataFormatada;
 };
 
