@@ -1,15 +1,24 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: `http://192.168.0.5:5000/api/`,
+    baseURL: `http://192.168.0.7:5000/api/`,
     timeout: 5000
 })
 
 export const useApi = {
+    //Login
+    login: async (formData) => {
+        const response = await api.post(`login/login`, formData)
+        return response;
+    },
     //Home
     listarResumoDia: async () => {
         const response = await api.get('home/listarResumoDia')
-        return response.data
+        if (response.status == 200) {
+            return response.data
+        } else {
+            return 500;
+        }
     },
     //Produtos
     listarProdutos: async () => {
@@ -155,7 +164,6 @@ export const useApi = {
     },
     confirmarRecebimento: async (formData) => {
         try {
-            console.log(formData)
             const response = await api.put(`pedidosCompra/confirmarRecebimento`, formData)
             if (response.status == 200) {
                 return 200;
@@ -281,4 +289,71 @@ export const useApi = {
         const response = await api.post('relatorios/listarDadosRelatorioComprasFornecedor', formData)
         return response.data;
     },
+    //Cadastros
+    listarCadastros: async () => {
+        const response = await api.get('cadastros/listarCadastros')
+        return response.data
+    },
+    editarUsuario: async (formData) => {
+        try {
+            const id = formData.id;
+            const response = await api.put(`cadastros/editarUsuario/${id}`, formData);
+            if (response.status == 200)
+                return 200;
+        } catch (error) {
+            return 500;
+        }
+    },
+    editarFornecedor: async (formData) => {
+        try {
+            const id = formData.id;
+            const response = await api.put(`cadastros/editarFornecedor/${id}`, formData);
+            if (response.status == 200)
+                return 200;
+        } catch (error) {
+            return 500;
+        }
+    },
+    cadastrarUsuario: async (formData) => {
+        try {
+            const response = await api.post(`cadastros/cadastrarUsuario`, formData);
+            if (response.status == 200)
+                return 200;
+            return 400;
+        } catch (error) {
+            return 500;
+        }
+    },
+    cadastrarFornecedor: async (formData) => {
+        try {
+            const response = await api.post(`cadastros/cadastrarFornecedor`, formData);
+            if (response.status == 200)
+                return 200;
+            return 400;
+        } catch (error) {
+            return 500;
+        }
+    },
+    deletarUsuario: async (id) => {
+        try {
+            const response = await api.delete(`cadastros/deletarUsuario/${id}`);
+            if (response.status == 200) {
+                return 200;
+            }
+            return 400;
+        } catch (error) {
+            return 500;
+        }
+    },
+    deletarFornecedor: async (id) => {
+        try {
+            const response = await api.delete(`cadastros/deletarFornecedor/${id}`);
+            if (response.status == 200) {
+                return 200;
+            }
+            return 400;
+        } catch (error) {
+            return 500;
+        }
+    }
 }

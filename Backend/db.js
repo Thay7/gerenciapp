@@ -1,4 +1,7 @@
 const mysql = require('mysql2');
+const crypto = require('crypto');
+
+const chaveSecreta = crypto.randomBytes(32).toString('hex');
 
 const pool = mysql.createPool({
   host: '127.0.0.1',
@@ -16,6 +19,7 @@ pool.getConnection((err, connection) => {
     return;
   }
   console.log('Conexão bem-sucedida ao banco de dados!');
+  connection.release();
 });
 
-module.exports = pool.promise();
+module.exports = { db: pool.promise(), chaveSecreta };

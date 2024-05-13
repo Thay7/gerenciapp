@@ -1,45 +1,108 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { InputApp } from '../../../components/InputApp';
-import { ButtonApp } from '../../../components/Buttons/ButtonApp';
+import { useNavigation } from '@react-navigation/native';
+
 import { useApi } from '../../../Api/useApi';
 import { ModalErrors } from '../../../components/ModalErrors';
 import { ModalSucces } from '../../../components/ModalSucces';
-import { useRoute } from "@react-navigation/native";
+import { InputApp } from '../../../components/InputApp';
 import { ButtonBack } from '../../../components/Buttons/ButtonBack';
+import { ButtonApp } from '../../../components/Buttons/ButtonApp';
+import { useRoute } from "@react-navigation/native";
 
 export const NovoCadastro = () => {
     const route = useRoute();
+    const navigation = useNavigation()
     const { item } = route.params;
 
-    const [formData, setFormData] = useState({
-        produto_nome: '',
-        produto_descricao: '',
-        produto_marca: '',
-        produto_valorCompra: 0,
-        produto_valorVenda: 0
-    })
+    const [formDataUsuario, setFormDataUsuario] = useState({
+        nome: '',
+        usuario: '',
+        email: '',
+        senha: '',
+        confirmarSenha: ''
+    });
+
+    const [formDataFornecedor, setFormDataFornecedor] = useState({
+        nome_fantasia: '',
+        razao_social: '',
+        cnpj: '',
+        contato: ''
+    });
 
     const [modalErrors, setModalErrors] = useState(false);
+    const [modalSucess, setModalSucess] = useState(false);
+    const [messageModalErrors, setMessageModalErrors] = useState('');
+    const [messageModalSucess, setMessageModalSucess] = useState('');
+    const [loading, setLoading] = useState();
+
     const handleInputChange = (name, value) => {
-        if (name === "produto_valorCompra" || name === "produto_valorVenda") {
-            if (value.includes(',') || value.includes('.')) {
-                value = value.replace(",", ".");
-            }
-        }
-        setFormData({ ...formData, [name]: value })
-    }
+        if (item.nome == "Usuários")
+            setFormDataUsuario({ ...formDataUsuario, [name]: value })
+        else
+            setFormDataFornecedor({ ...formDataFornecedor, [name]: value })
+    };
 
     const handleSubmit = async () => {
+        setLoading(true);
+
         if (item.nome == "Usuários") {
-            if (formData.produto_nome != '' && formData.produto_valorCompra > 0 && formData.produto_valorVenda > 0) {
+            if (formDataUsuario.nome != '' && formDataUsuario.usuario != '' &&
+                formDataUsuario.email != '' && formDataUsuario.senha != '' &&
+                formDataUsuario.confirmarSenha != '') {
+
+                if (formDataUsuario.senha != formDataUsuario.confirmarSenha) {
+                    setModalErrors(true);
+                    setMessageModalErrors('Senhas não coincidem.');
+                }
+                else {
+                    if (await useApi.cadastrarUsuario(formDataUsuario) == 200) {
+                        setModalSucess(true);
+                        setMessageModalSucess('Usuário cadastrado com sucesso!');
+                        setTimeout(() => {
+                            navigation.navigate('ListaCadastros', {
+                                novoUsuario: formDataUsuario
+                            });
+                        }, 3000);
+                    } else {
+                        setModalErrors(true);
+                        setTimeout(() => {
+                            navigation.navigate('ListaCadastros');
+                        }, 3000);
+                    }
+                }
+
             }
             else {
                 setModalErrors(true);
+                setMessageModalErrors('Preencha todos os campos obrigatórios.');
             }
         }
-    }
+        else if (item.nome == "Fornecedores") {
+
+            if (formDataFornecedor.nome_fantasia != '' && formDataFornecedor.razao_social != '' &&
+                formDataFornecedor.cnpj != '' && formDataFornecedor.contato != '') {
+
+                if (await useApi.cadastrarFornecedor(formDataFornecedor) == 200) {
+                    setModalSucess(true);
+                    setMessageModalSucess('Fornecedor cadastrado com sucesso!');
+                    setTimeout(() => {
+                        navigation.navigate('ListaCadastros', {
+                            novoFornecedor: formDataFornecedor
+                        });
+                    }, 3000);
+                } else {
+                    setModalErrors(true);
+                    setTimeout(() => {
+                        navigation.navigate('ListaCadastros');
+                    }, 3000);
+                }
+
+            }
+        }
+        setLoading(false);
+    };
 
     return (
         <View style={styles.container}>
@@ -54,8 +117,8 @@ export const NovoCadastro = () => {
                             <InputApp
                                 title="Nome fantasia *"
                                 fullWidth
-                                value={formData.nome}
-                                onChangeText={(text) => handleInputChange("produto_nome", text)}
+                                value={formDataFornecedor.nome_fantasia}
+                                onChangeText={(text) => handleInputChange("nome_fantasia", text)}
                                 marginBottom={true}
                                 borderRadius={10}
                             />
@@ -63,24 +126,25 @@ export const NovoCadastro = () => {
                                 title="Razão social *"
                                 fullWidth
                                 multiline={true}
-                                value={formData.descricao}
-                                onChangeText={(text) => handleInputChange("produto_descricao", text)}
+                                value={formDataFornecedor.razao_social}
+                                onChangeText={(text) => handleInputChange("razao_social", text)}
                                 marginBottom={true}
                                 borderRadius={10}
                             />
                             <InputApp
                                 title="CNPJ *"
                                 fullWidth
-                                value={formData.marca}
-                                onChangeText={(text) => handleInputChange("produto_marca", text)}
+                                value={formDataFornecedor.cnpj}
+                                onChangeText={(text) => handleInputChange("cnpj", text)}
+                                keyboardType="numeric"
                                 marginBottom={true}
                                 borderRadius={10}
                             />
                             <InputApp
                                 title="Contato *"
                                 fullWidth
-                                value={formData.valorCompra}
-                                onChangeText={(text) => handleInputChange("produto_valorCompra", text)}
+                                value={formDataFornecedor.contato}
+                                onChangeText={(text) => handleInputChange("contato", text)}
                                 keyboardType="numeric"
                                 marginBottom={true}
                                 borderRadius={10}
@@ -91,45 +155,45 @@ export const NovoCadastro = () => {
                         (
                             <>
                                 <InputApp
-                                    title="Nome"
+                                    title="Nome *"
                                     fullWidth
-                                    value={formData.nome}
-                                    onChangeText={(text) => handleInputChange("produto_nome", text)}
+                                    value={formDataUsuario.nome}
+                                    onChangeText={(text) => handleInputChange("nome", text)}
                                     marginBottom={true}
                                     borderRadius={10}
                                 />
                                 <InputApp
-                                    title="Usuário"
+                                    title="Usuário *"
                                     fullWidth
                                     multiline={true}
-                                    value={formData.descricao}
-                                    onChangeText={(text) => handleInputChange("produto_descricao", text)}
+                                    value={formDataUsuario.usuario}
+                                    onChangeText={(text) => handleInputChange("usuario", text)}
                                     marginBottom={true}
                                     borderRadius={10}
                                 />
                                 <InputApp
-                                    title="Email"
+                                    title="Email *"
                                     fullWidth
-                                    value={formData.marca}
-                                    onChangeText={(text) => handleInputChange("produto_marca", text)}
+                                    value={formDataUsuario.email}
+                                    onChangeText={(text) => handleInputChange("email", text)}
                                     marginBottom={true}
                                     borderRadius={10}
                                 />
                                 <InputApp
-                                    title="Senha"
+                                    title="Senha *"
                                     fullWidth
-                                    value={formData.valorCompra}
-                                    onChangeText={(text) => handleInputChange("produto_valorCompra", text)}
-                                    keyboardType="numeric"
+                                    value={formDataUsuario.senha}
+                                    onChangeText={(text) => handleInputChange("senha", text)}
+                                    secureTextEntry={true}
                                     marginBottom={true}
                                     borderRadius={10}
                                 />
                                 <InputApp
-                                    title="Confirmar senha"
+                                    title="Confirmar senha *"
                                     fullWidth
-                                    value={formData.valorCompra}
-                                    onChangeText={(text) => handleInputChange("produto_valorCompra", text)}
-                                    keyboardType="numeric"
+                                    value={formDataUsuario.confirmarSenha}
+                                    onChangeText={(text) => handleInputChange("confirmarSenha", text)}
+                                    secureTextEntry={true}
                                     marginBottom={true}
                                     borderRadius={10}
                                 />
@@ -145,9 +209,15 @@ export const NovoCadastro = () => {
                 </View>
                 <ModalErrors
                     title="Aviso"
-                    message="Preencha todos os campos obrigatórios."
+                    message={messageModalErrors}
                     openModal={modalErrors}
                     fnCloseModal={() => setModalErrors(!modalErrors)}
+                />
+                <ModalSucces
+                    title="Sucesso"
+                    message={messageModalSucess}
+                    openModal={modalSucess}
+                    fnCloseModal={() => setModalSucess(!modalSucess)}
                 />
             </ScrollView>
 
@@ -167,7 +237,7 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     titulo: {
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: 'bold',
         marginLeft: 15
     },

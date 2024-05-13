@@ -1,4 +1,4 @@
-const db = require('../db'); // Importe a conexão
+const { db, chaveSecreta } = require('../db');
 
 const vendasController = {
   async listar(req, res) {
@@ -97,11 +97,8 @@ const vendasController = {
   },
   async editar(req, res) {
     try {
-      console.log('bateu no back')
       const { data_hora, forma_pagamento, numero_parcelas, valor_total, itens } = req.body;
       const { id } = req.params;
-
-      console.log(id)
 
       const updateVenda = `UPDATE vendas 
                       SET data_hora=?, forma_pagamento=?, numero_parcelas=?, valor_total=?

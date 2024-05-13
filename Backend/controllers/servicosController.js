@@ -1,4 +1,4 @@
-const db = require('../db');
+const { db, chaveSecreta } = require('../db');
 
 const servicosController = {
   async listar(req, res) {

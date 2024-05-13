@@ -4,24 +4,22 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { useRoute } from "@react-navigation/native";
 
-//import { useApi } from '../../Api/useApi';
-
 import { ButtonAdd } from '../../../components/Buttons/ButtonAdd';
-import { ButtonImport } from '../../../components/Buttons/ButtonImport';
 import { ButtonSearch } from '../../../components/Buttons/ButtonSearch';
 import { ModalSearch } from '../../../components/ModalSearch';
 import { ButtonBack } from '../../../components/Buttons/ButtonBack';
 
 export const ListaCadastros = () => {
     const route = useRoute();
+    const navigation = useNavigation();
     const { item } = route.params;
-    const navigation = useNavigation()
+
     const [loading, setLoading] = useState(false);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [noResults, setNoResults] = useState(false);
     const [search, setSearch] = useState([]);
-
     const [dados, setDados] = useState([]);
+    const [nome, setNome] = useState();
 
     const fnHandleFilter = (name, reference) => {
         if (name || reference) {
@@ -40,35 +38,60 @@ export const ListaCadastros = () => {
     }
 
     useEffect(() => {
-        setDados(item.dados)
-    }, [])
+        setDados(item.dados);
+        setNome(item.nome);
+    }, []);
 
-    // useEffect(() => {
-    //     buscarProdutos()
-    // }, [])
+    /*Ao adicionar, editar ou deletar um usuario/fornecedor, será redirecionado para essa tela novamente.
+    Esse useEffect atualiza a lista de usuarios/fornecedors para exibir corretamente depois da alteração/deleção*/
+    useEffect(() => {
+        //Fornecedor
+        if (route.params?.novoFornecedor) {
+            const novoFornecedor = route.params?.novoFornecedor;
+            setDados([...dados, novoFornecedor]);
+        }
+        if (route.params?.fornecedorAtualizado) {
+            const fornecedorAtualizado = route.params?.fornecedorAtualizado;
+            setDados(dados.map(fornecedor => (fornecedor.id === fornecedorAtualizado.id ? fornecedorAtualizado : fornecedor)));
+            setNome('Usuários');
+        }
 
-    // const buscarProdutos = async () => {
-    //     setLoading(true)
-    //     let json = await useApi.listarProdutos()
-    //     setProdutos(json)
-    //     setLoading(false)
-    // }
+        if (route.params?.fornecedorDeletado) {
+            const fornecedorDeletado = route.params.fornecedorDeletado;
+            const updatedData = dados.filter(item => item.id !== fornecedorDeletado.id);
+            setDados(updatedData);
+        }
 
-    const handleNewProduct = () => {
-        navigation.navigate('CadastroDeProdutos')
-    }
+        //Usuário
+        if (route.params?.novoUsuario) {
+            const novoUsuario = route.params.novoUsuario;
+            setDados([...dados, novoUsuario]);
+        }
+
+        if (route.params?.usuarioAtualizado) {
+            const usuarioAtualizado = route.params?.usuarioAtualizado;
+            setDados(dados.map(usuario => (usuario.id === usuarioAtualizado.id ? usuarioAtualizado : usuario)));
+            setNome('Fornecedores');
+        }
+
+        if (route.params?.usuarioDeletado) {
+            const usuarioDeletado = route.params.usuarioDeletado;
+            const updatedData = dados.filter(item => item.id !== usuarioDeletado.id);
+            setDados(updatedData);
+        }
+    }, [route.params?.novoFornecedor, route.params?.fornecedorAtualizado, route.params?.fornecedorDeletado, route.params?.novoUsuario, route.params?.usuarioAtualizado, route.params?.usuarioDeletado]);
 
     const handleClearFilter = () => {
         setSearch([]);
         setNoResults(false);
-    }
+    };
 
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <View style={styles.header}>
                     <ButtonBack navigate="Cadastros" />
-                    <Text style={styles.titulo}>Lista {item.nome}</Text>
+                    <Text style={styles.titulo}>Lista {nome}</Text>
                 </View>
                 <View style={styles.header}>
                     <View style={{ marginRight: 5 }}>
@@ -104,7 +127,7 @@ export const ListaCadastros = () => {
                                 </View>
                             )
                             :
-                            item.nome == 'Fornecedores' ?
+                            nome == 'Fornecedores' ?
                                 (
                                     search.length > 0 ? (
                                         search.map((item, index) => (
@@ -115,7 +138,8 @@ export const ListaCadastros = () => {
                                                 }}
                                                 key={index}
                                             >
-                                                <Text style={styles.itemNome}>{item.nomeFantasia}</Text>
+                                                <Text style={styles.itemNome}>{item.nome_fantasia}</Text>
+                                                <Text style={styles.itemNome}>{item.razao_social}</Text>
                                                 <Text style={styles.itemSub}>CNPJ: {item.cnpj}</Text>
                                                 <Text style={styles.itemSub}>Contato: {item.contato}</Text>
                                             </TouchableOpacity>
@@ -132,7 +156,8 @@ export const ListaCadastros = () => {
                                                         }}
                                                         key={index}
                                                     >
-                                                        <Text style={styles.itemNome}>{item.nomeFantasia}</Text>
+                                                        <Text style={styles.itemNome}>{item.nome_fantasia}</Text>
+                                                        <Text style={styles.itemNome}>{item.razao_social}</Text>
                                                         <Text style={styles.itemSub}>CNPJ: {item.cnpj}</Text>
                                                         <Text style={styles.itemSub}>Contato: {item.contato}</Text>
                                                     </TouchableOpacity>
@@ -180,7 +205,7 @@ export const ListaCadastros = () => {
                     )
                 }
                 <ModalSearch
-                    title="Pesquisar Produto"
+                    title={`Pesquisar ${nome}`}
                     list={dados}
                     openModal={modalIsOpen}
                     fnCloseModal={() => setModalIsOpen(!modalIsOpen)}

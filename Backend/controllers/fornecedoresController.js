@@ -1,11 +1,10 @@
-const db = require('../db'); // Importe a conexão
+const { db, chaveSecreta } = require('../db'); // Importe a conexão
 
 const fornecedoresController = {
     async listar(req, res) {
         try {
             const [rows, fields] = await db.query('SELECT * FROM fornecedores');
             res.json(rows);
-            console.log(rows)
         } catch (error) {
             console.error('Erro ao listar produtos:', error);
             res.status(500).send('Erro ao listar itens');

@@ -1,4 +1,4 @@
-const db = require('../db'); // Importe a conexão
+const { db, chaveSecreta } = require('../db'); // Importe a conexão
 const formatterdateandtime = require('../utils/formatterdateandtime');
 
 const pedidosCompraController = {
@@ -7,8 +7,6 @@ const pedidosCompraController = {
     try {
       const [rows, fields] = await db.query('SELECT * FROM itens WHERE tipo = "Produto"');
       res.json(rows);
-      console.log(rows);
-
     } catch (error) {
 
       console.error('Erro ao listar produtos:', error);
@@ -149,7 +147,6 @@ const pedidosCompraController = {
     try {
       const { fornecedor, forma_pagamento, numero_parcelas, valor_total, data_hora, itens } = req.body;
       const { numero_pedido_compra } = req.params;
-      console.log(numero_pedido_compra)
       const updatePedido = `UPDATE pedidos_compra 
                       SET forma_pagamento=?, numero_parcelas=?, valor_total=?, data_hora=?
                       WHERE numero_pedido_compra=?`;

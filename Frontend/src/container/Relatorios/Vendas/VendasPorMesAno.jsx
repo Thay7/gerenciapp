@@ -29,7 +29,6 @@ export const VendasPorMesAno = () => {
             setLoading(true)
             let jsonDadosRelatorio = await useApi.listarDadosRelatorioVendasMesAno(formData)
             setDadosRelatorio(jsonDadosRelatorio.vendas);
-            console.log(jsonDadosRelatorio.vendas);
             setValorTotalVendas(jsonDadosRelatorio.totalVendas);
             setLoading(false)
         }

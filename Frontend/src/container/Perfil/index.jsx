@@ -120,7 +120,7 @@ export const Perfil = () => {
                         // value={formData.nome}
                         fullWidth
                         borderRadius={10}
-                        marginBottom
+                        marginBottom={false}
                         onChangeText={(text) => handleInputChange("nome", text)}
                     />
                     <InputApp
@@ -129,7 +129,7 @@ export const Perfil = () => {
                         // value={formData.nome}
                         fullWidth
                         borderRadius={10}
-                        marginBottom
+                        marginBottom={false}
                         onChangeText={(text) => handleInputChange("nome", text)}
                     />
                     <InputApp
@@ -138,7 +138,7 @@ export const Perfil = () => {
                         // value={formData.cod_produto.toString()}
                         fullWidth
                         borderRadius={10}
-                        marginBottom
+                        marginBottom={false}
                         onChangeText={(text) => handleInputChange("cod_produto", text)}
                     />
                     <InputApp
@@ -148,17 +148,17 @@ export const Perfil = () => {
                         // value={formData.cod_produto.toString()}
                         fullWidth
                         borderRadius={10}
-                        marginBottom
+                        marginBottom={false}
                         onChangeText={(text) => handleInputChange("cod_produto", text)}
                     />
-                    <Text style={styles.itemNome}>Dados empresa</Text>
+                    <Text style={[styles.itemNome, { marginTop: 10 }]}>Dados empresa</Text>
                     <InputApp
                         title="CNPJ"
                         editable={enable}
                         //value={formData.descricao}
                         fullWidth
                         borderRadius={10}
-                        marginBottom
+                        marginBottom={false}
                         onChangeText={(text) => handleInputChange("descricao", text)}
                     />
                     <InputApp
@@ -167,7 +167,7 @@ export const Perfil = () => {
                         // value={formData.marca}
                         fullWidth
                         borderRadius={10}
-                        marginBottom
+                        marginBottom={false}
                         onChangeText={(text) => handleInputChange("marca", text)}
                     />
                     <InputApp
@@ -176,7 +176,7 @@ export const Perfil = () => {
                         // value={formData.valor_compra.toString()}
                         fullWidth
                         borderRadius={10}
-                        marginBottom
+                        marginBottom={false}
                         onChangeText={(text) => handleInputChange("valor_compra", text)}
                     />
                     <InputApp
@@ -185,7 +185,7 @@ export const Perfil = () => {
                         //  value={formData.valor_venda.toString()}
                         fullWidth
                         borderRadius={10}
-                        marginBottom
+                        marginBottom={false}
                         onChangeText={(text) => handleInputChange("valor_venda", text)}
                     />
                     <InputApp
@@ -194,7 +194,7 @@ export const Perfil = () => {
                         //  value={formData.valor_venda.toString()}
                         fullWidth
                         borderRadius={10}
-                        marginBottom
+                        marginBottom={false}
                         onChangeText={(text) => handleInputChange("valor_venda", text)}
                     />
                     <InputApp
@@ -203,7 +203,7 @@ export const Perfil = () => {
                         //  value={formData.valor_venda.toString()}
                         fullWidth
                         borderRadius={10}
-                        marginBottom
+                        marginBottom={false}
                         onChangeText={(text) => handleInputChange("valor_venda", text)}
                     />
                     <InputApp
@@ -212,7 +212,7 @@ export const Perfil = () => {
                         //  value={formData.valor_venda.toString()}
                         fullWidth
                         borderRadius={10}
-                        marginBottom
+                        marginBottom={false}
                         onChangeText={(text) => handleInputChange("valor_venda", text)}
                     />
                     <InputApp
@@ -221,7 +221,7 @@ export const Perfil = () => {
                         //  value={formData.valor_venda.toString()}
                         fullWidth
                         borderRadius={10}
-                        marginBottom
+                        marginBottom={false}
                         onChangeText={(text) => handleInputChange("valor_venda", text)}
                     />
                     <InputApp
@@ -268,8 +268,8 @@ export const Perfil = () => {
                         fnConfirm={handleDelete}
                     />
                 </View>
-            </ScrollView>
-        </View>
+            </ScrollView >
+        </View >
     );
 };
 

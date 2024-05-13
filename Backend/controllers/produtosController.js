@@ -1,4 +1,4 @@
-const db = require('../db');
+const { db, chaveSecreta } = require('../db');
 
 const produtosController = {
   async listar(req, res) {
@@ -43,10 +43,8 @@ const produtosController = {
   async deletar(req, res) {
     try {
       const { id } = req.params;
-      console.log(id + 'back')
 
       const query = `DELETE FROM itens WHERE id=? AND tipo = "Produto"`;
-
       await db.query(query, [id]);
 
       res.status(200).json({ success: true, message: 'Produto editado com sucesso!' });

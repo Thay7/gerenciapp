@@ -28,7 +28,6 @@ export const Vendas = () => {
     const buscarVendas = async () => {
         setLoading(true);
         let json = await useApi.listarVendas();
-        console.log(json)
         setVendasList(json);
         setLoading(false);
     }

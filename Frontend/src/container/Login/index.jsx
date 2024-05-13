@@ -2,22 +2,65 @@ import React, { useState } from "react";
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, Image } from 'react-native'
 import * as Animatable from 'react-native-animatable';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 //Componentes
 import { InputApp } from "../../components/InputApp";
 import { ButtonApp } from '../../components/Buttons/ButtonApp'
 import logoGerenciApp from '../../icons/logoGerenciApp.png'
+import { useApi } from "../../Api/useApi";
+import { ModalErrors, modalErrors } from "../../components/ModalErrors/index"
 
 export const Login = () => {
-    const [login, setLogin] = useState('')
-    const [password, setPassword] = useState('')
     const [showLoginForm, setShowLoginForm] = useState(false);
+    const [modalErrors, setModalErrors] = useState(false);
+    const [titleModal, setTitleModal] = useState('');
+    const [menssagemModal, setMenssagemModal] = useState('');
 
     const navigation = useNavigation();
+    const [formData, setFormData] = useState({
+        login: '',
+        senha: ''
+    });
+
+    const handleInputChange = (name, value) => {
+        setFormData({ ...formData, [name]: value })
+    }
+
+    const fnLogin = async () => {
+        // setLoading(true)
+        try {
+            const response = await useApi.login(formData);
+            if (response.status === 200) {
+                const token = response.data.token;
+                await AsyncStorage.setItem('token', token);
+                navigation.navigate('Home');
+            } else {
+                setTitleModal('Erro')
+                setMenssagemModal('Credenciais inválidas.');
+                setModalErrors(true);
+            }
+        } catch (error) {
+            setTitleModal('Erro')
+            setMenssagemModal('Ocorreu um erro ao fazer login.');
+            setModalErrors(true);
+        }
+        // setLoading(false);
+        setFormData({
+            login: '',
+            senha: ''
+        })
+    };
 
     const handleLogin = () => {
-        navigation.navigate('Home')
-    }
+        if (formData.login == "" || formData.senha == "") {
+            setTitleModal('Erro');
+            setMenssagemModal('Preencha todos os campos.');
+            setModalErrors(true);
+        } else {
+            fnLogin();
+        };
+    };
 
     const handleLogoAnimationEnd = () => {
         setShowLoginForm(true);
@@ -46,17 +89,18 @@ export const Login = () => {
                         <InputApp
                             title="Usuário"
                             placeholder="Informe seu usuário"
-                            value={login}
-                            onChangeText={setLogin}
+                            value={formData.login}
+                            onChangeText={(text) => handleInputChange("login", text)}
                             marginBottom={true}
                             borderRadius={10}
+
                         />
                         <InputApp
                             title="Senha"
                             placeholder="Informe sua senha"
                             secureTextEntry={true}
-                            value={password}
-                            onChangeText={setPassword}
+                            value={formData.senha}
+                            onChangeText={(text) => handleInputChange("senha", text)}
                             marginBottom={true}
                             borderRadius={10}
                         />
@@ -69,6 +113,12 @@ export const Login = () => {
                             width={300}
                         />
                     </View>
+                    <ModalErrors
+                        title={titleModal}
+                        message={menssagemModal}
+                        openModal={modalErrors}
+                        fnCloseModal={() => setModalErrors(!modalErrors)}
+                    />
                 </Animatable.View>
             )}
         </View>

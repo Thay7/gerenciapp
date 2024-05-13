@@ -17,7 +17,6 @@ export const Produtos = () => {
     const navigation = useNavigation()
     const route = useRoute();
 
-    const [tipoItem, setTipoItem] = useState(false);
     const [loading, setLoading] = useState(false);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [noResults, setNoResults] = useState(false);

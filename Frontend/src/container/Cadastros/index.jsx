@@ -14,29 +14,10 @@ export const Cadastros = () => {
     }, []);
 
     const listaCadastros = async () => {
-        setLoading(true)
-        //let json = await useApi.listarEstoque()
-        //setEstoqueList(json)
-        setCadastrosList([
-            {
-                nome: 'Fornecedores',
-                dados: [
-                    { id: 1, nomeFantasia: 'AutoPeças Master', razaoSocial: 'Master Autopeças Ltda', cnpj: '12.345.678/0001-90', contato: '(84) 9 9999-9991' },
-                    { id: 2, nomeFantasia: 'MecânicaParts', razaoSocial: 'Mecânica Parts Distribuidora de Peças Automotivas EIRELI', cnpj: '98.765.432/0001-21', contato: '(84) 9 9999-9992' },
-                ]
-            },
-            {
-                nome: 'Usuários',
-                dados: [
-                    { id: 1, nome: 'Maria Ozanilda', usuario: 'nilda', email: 'mariaozanilda@gmail.com' },
-                    { id: 2, nome: 'Valdir', usuario: 'valdir', email: 'valdir@gmail.com' },
-                    { id: 3, nome: 'Guilherme Rodrigues', usuario: 'guilherme', email: 'guilhermerodrigues@gmail.com' },
-                    { id: 4, nome: 'Thaylynne', usuario: 'thay', email: 'thaylynne@gmail.com' },
-
-                ]
-            }
-        ])
-        setLoading(false)
+        setLoading(true);
+        let json = await useApi.listarCadastros();
+        setCadastrosList(json);
+        setLoading(false);
     }
     const navigation = useNavigation()
 

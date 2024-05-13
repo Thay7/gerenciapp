@@ -416,7 +416,6 @@ export const NovoPedidoCompra = () => {
     const fnListarPedidosCompras = async () => {
         let json = await useApi.listarPedidosCompras()
         setPedidosCompraList(json)
-        console.log(json)
     }
 
     const [openModalPedidoCompra, setOpenModalPedidoCompra] = useState(false);

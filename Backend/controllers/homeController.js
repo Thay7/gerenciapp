@@ -1,22 +1,22 @@
-const db = require('../db');
+const { db, chaveSecreta } = require('../db');
 const formatterdate = require('../utils/formatterdate');
 const formatterbrl = require('../utils/formatterbrl');
 
 const homeController = {
     async listarResumoDia(req, res) {
-        try {
+        try { 
             const dataAtual = formatterdate(new Date());
             const listResumoDia = [
                 { label: 'Vendas do dia', value: 0 },
                 { label: 'Entrada Caixa', value: 0 },
                 { label: 'Saída Caixa', value: 0 },
-                { label: 'Produto Mais Vendido', value: 0 },
-                { label: 'Serviço Mais Vendido', value: 0 }
+                { label: 'Produto Mais Vendido', value: "" },
+                { label: 'Serviço Mais Vendido', value: "" }
             ];
 
             //Vendas do dia
             const [rowsVendas] = await db.query(`SELECT COUNT(*) as qtdVendasDia FROM vendas WHERE data_hora like '%${dataAtual}%'`);
-            listResumoDia[0].value = rowsVendas[0].qtdVendasDia;
+            listResumoDia[0].value = rowsVendas[0].qtdVendasDia > 0 ? rowsVendas[0].qtdVendasDia : 0;
 
             //Entrada caixa (valor total de vendas do dia)
             const [rowsEntradaCaixa] = await db.query(`SELECT SUM(valor_total) as valorEntradaCaixa FROM vendas WHERE data_hora like '%${dataAtual}%'`);
@@ -37,7 +37,7 @@ const homeController = {
                 ORDER BY produtoMaisVendido DESC
             LIMIT 1;
             `);
-            listResumoDia[3].value = rowsProdutoMaisVendido[0].nome;
+            listResumoDia[3].value = rowsProdutoMaisVendido.length > 0 ? rowsProdutoMaisVendido[0].nome : "";
 
             //servico mais vendido
             const [rowsServicoMaisVendido] = await db.query(`
@@ -50,7 +50,8 @@ const homeController = {
                 ORDER BY servicoMaisVendido DESC
             LIMIT 1;
             `);
-            listResumoDia[4].value = rowsServicoMaisVendido[0].nome;
+            listResumoDia[4].value = rowsServicoMaisVendido.length > 0 ? rowsServicoMaisVendido[0].nome : "";
+            console.log(listResumoDia)
             res.status(200).send(listResumoDia);
         } catch (error) {
             res.status(500).send('Erro ao listar itens');

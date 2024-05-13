@@ -34,6 +34,7 @@ export const Home = () => {
     const buscarResumoDia = async () => {
         setRefreshing(true);
         let data = await useApi.listarResumoDia();
+        console.log('37 ' + data)
         setResumoData(data);
         setRefreshing(false);
     };
@@ -48,8 +49,8 @@ export const Home = () => {
                 <RefreshControl
                     refreshing={refreshing}
                     onRefresh={onRefresh}
-                    colors={['#3F51B5']} // Cores do indicador de carregamento
-                    progressBackgroundColor="#fff" // Cor de fundo do indicador de carregamento
+                    colors={['#3F51B5']}
+                    progressBackgroundColor="#fff"
                 />
             }
         >
@@ -57,9 +58,11 @@ export const Home = () => {
                 <Text style={styles.headerText}>GerenciApp</Text>
                 <Text style={styles.subHeaderText}>Borracharia do Valdir</Text>
             </View>
-            <View style={styles.contentBox}>
-                <ResumoDia data={resumoData} />
-            </View>
+            {resumoData.length > 0 &&
+                <View style={styles.contentBox}>
+                    <ResumoDia data={resumoData} />
+                </View>
+            }
             <HomeItem menus={menus} />
         </ScrollView>
     );

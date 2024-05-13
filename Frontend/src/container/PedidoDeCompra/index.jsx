@@ -27,7 +27,6 @@ export const PedidoDeCompra = () => {
         setLoading(true)
         let json = await useApi.listarPedidosCompras()
         setPedidosCompraList(json)
-        console.log(json)
         setLoading(false)
     }
 

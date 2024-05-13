@@ -35,7 +35,7 @@ export const CadastroDeProdutos = () => {
             }
         }
         setFormData({ ...formData, [name]: value })
-    }
+    };
 
     const cadastraNovoProduto = async () => {
         setLoading(true)
@@ -57,7 +57,6 @@ export const CadastroDeProdutos = () => {
 
     const handleSubmit = async () => {
         if (formData.nome != '' && formData.cod_produto != 0 && formData.marca != '' && formData.valor_compra > 0 && formData.valor_venda > 0) {
-            console.log(formData)
             cadastraNovoProduto()
         }
         else {
