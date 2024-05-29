@@ -15,6 +15,7 @@ import { ModalSucces } from '../../../components/ModalSucces';
 import { ModalConfirm } from '../../../components/ModalConfirm';
 import { Loading } from '../../../components/Loading';
 import { ButtonDelete } from '../../../components/Buttons/ButtonDelete';
+import { InputSelectSimples } from '../../../components/InputSelectSimples';
 
 export const DetalhesCadastro = () => {
     const navigation = useNavigation()
@@ -47,6 +48,13 @@ export const DetalhesCadastro = () => {
         email: ''
     });
 
+    const [formDataMovCaixa, setFormDataMovCaixa] = useState({
+        id: null,
+        tipo: '',
+        descricao: '',
+        valor: ''
+    });
+
     useEffect(() => {
         if (item.cnpj) {
             setNamePage('Detalhes Fornecedor');
@@ -68,109 +76,211 @@ export const DetalhesCadastro = () => {
                 email: item.email
             });
         };
+
+        if (item.tipo) {
+            setNamePage('Detalhes Mov Caixa');
+            setFormDataMovCaixa({
+                id: item.id,
+                tipo: item.tipo,
+                descricao: item.descricao,
+                valor: item.valor
+            });
+        };
     }, []);
 
     const handleInputChange = (name, value, tipo) => {
-        if (tipo === "Fornecedor")
-            setFormDataFornecedor({ ...formDataFornecedor, [name]: value });
-        else
-            setFormDataUsuario({ ...formDataUsuario, [name]: value });
+        switch (tipo) {
+            case 'Fornecedor':
+                setFormDataFornecedor({ ...formDataFornecedor, [name]: value });
+                break;
+            case 'Usuario':
+                setFormDataUsuario({ ...formDataUsuario, [name]: value });
+                break;
+            case 'Movimento Caixa':
+                setFormDataMovCaixa({ ...formDataMovCaixa, [name]: value });
+                break;
+        }
+    };
+
+    //Opcoes select Tipo 
+    const optionsTipo = ['Saída'];
+    const [selectedOptionTipo, setSelectedOptionTipo] = useState('Saída');
+
+    //Opcoes select Descricao 
+    const optionsDescEntrada = ['Abertura caixa', 'Entrada valor'];
+    const optionsDescSaida = ['Mantimentos', 'Mercado', 'Contas'];
+    const [selectedOptionDesc, setSelectedOptionDesc] = useState('');
+
+    const handleOptionsDesc = () => {
+        switch (selectedOptionTipo) {
+            case 'Entrada':
+                return optionsDescEntrada;
+            case 'Saída':
+                return optionsDescSaida;
+            default:
+                return [];
+        };
+    };
+
+    const handleOnValueChange = (value, tipo) => {
+        if (optionsTipo != '') {
+            switch (tipo) {
+                case 'tipo':
+                    setSelectedOptionTipo(value);
+                    setFormDataMovCaixa({ ...formDataMovCaixa, [tipo]: value });
+                    break;
+                case 'descricao':
+                    setSelectedOptionDesc(value);
+                    setFormDataMovCaixa({ ...formDataMovCaixa, [tipo]: value });
+                    break;
+            }
+        }
     };
 
     const fnEditar = async (tipoCadastro) => {
         setLoading(true)
-        if (tipoCadastro == "Usuario") {
-            if (await useApi.editarUsuario(formDataUsuario) == 200) {
-                setMessageSucess('Usuário editado com sucesso.');
-                setModalSucess(true);
-                setEnable(false);
-                setTimeout(() => {
-                    navigation.navigate('ListaCadastros', { usuarioAtualizado: formDataUsuario });
-                }, 3000);
-            } else {
-                setTitleModalErrors('Erro')
-                setMensagemModalErrors(`Erro ao editar ${tipoCadastro}.`);
-                setModalErrors(true);
-                setTimeout(() => {
-                    navigation.navigate('ListaCadastros');
-                }, 3000);
-            }
-        } else {
-            if (await useApi.editarFornecedor(formDataFornecedor) == 200) {
-                setMessageSucess('Fornecedor editado com sucesso.');
-                setModalSucess(true);
-                setEnable(false);
-                setTimeout(() => {
-                    navigation.navigate('ListaCadastros', { fornecedorAtualizado: formDataFornecedor });
-                }, 3000);
-            } else {
-                setTitleModalErrors('Erro')
-                setMensagemModalErrors(`Erro ao editar ${tipoCadastro}.`);
-                setModalErrors(true);
-                setTimeout(() => {
-                    navigation.navigate('ListaCadastros');
-                }, 3000);
-            }
-        };
+        switch (tipoCadastro) {
+            case 'Usuario':
+                if (await useApi.editarUsuario(formDataUsuario) == 200) {
+                    setMessageSucess('Usuário editado com sucesso.');
+                    setModalSucess(true);
+                    setEnable(false);
+                    setTimeout(() => {
+                        navigation.navigate('ListaCadastros', { usuarioAtualizado: formDataUsuario });
+                    }, 3000);
+                } else {
+                    setTitleModalErrors('Erro')
+                    setMensagemModalErrors(`Erro ao editar ${tipoCadastro}.`);
+                    setModalErrors(true);
+                    setTimeout(() => {
+                        navigation.navigate('ListaCadastros');
+                    }, 3000);
+                }
+                break;
+            case 'Fornecedor':
+                if (await useApi.editarFornecedor(formDataFornecedor) == 200) {
+                    setMessageSucess('Fornecedor editado com sucesso.');
+                    setModalSucess(true);
+                    setEnable(false);
+                    setTimeout(() => {
+                        navigation.navigate('ListaCadastros', { fornecedorAtualizado: formDataFornecedor });
+                    }, 3000);
+                } else {
+                    setTitleModalErrors('Erro')
+                    setMensagemModalErrors(`Erro ao editar ${tipoCadastro}.`);
+                    setModalErrors(true);
+                    setTimeout(() => {
+                        navigation.navigate('ListaCadastros');
+                    }, 3000);
+                }
+                break;
+            case 'Mov Caixa':
+                if (await useApi.editarMovCaixa(formDataMovCaixa) == 200) {
+                    setMessageSucess('Mov Caixa editado com sucesso.');
+                    setModalSucess(true);
+                    setEnable(false);
+                    setTimeout(() => {
+                        navigation.navigate('ListaCadastros', { movimentoCaixaAtualizado: formDataMovCaixa });
+                    }, 3000);
+                } else {
+                    setTitleModalErrors('Erro')
+                    setMensagemModalErrors(`Erro ao editar ${tipoCadastro}.`);
+                    setModalErrors(true);
+                    setTimeout(() => {
+                        navigation.navigate('ListaCadastros');
+                    }, 3000);
+                }
+                break;
+        }
         setLoading(false);
     };
 
     const handleDelete = async () => {
         setModalConfirm(false);
         setLoading(true)
-        if (namePage == "Detalhes Fornecedor") {
-            const id = formDataFornecedor.id;
-            if (await useApi.deletarFornecedor(id) == 200) {
-                setMessageSucess(`Fornecedor deletado com sucesso.`);
-                setModalSucess(true);
-                setTimeout(() => {
-                    navigation.navigate('ListaCadastros', { fornecedorDeletado: formDataFornecedor });
-                }, 3000);
-            } else {
-                setTitleModal('Erro')
-                setMensagemModal(`Erro ao deletar fornecedor.`);
-                setModalErrors(true);
-            }
-            setLoading(false);
+        switch (namePage) {
+            case 'Detalhes Fornecedor':
+                const idFornecedor = formDataFornecedor.id;
+                if (await useApi.deletarFornecedor(idFornecedor) == 200) {
+                    setMessageSucess(`Fornecedor deletado com sucesso.`);
+                    setModalSucess(true);
+                    setTimeout(() => {
+                        navigation.navigate('ListaCadastros', { fornecedorDeletado: formDataFornecedor });
+                    }, 3000);
+                } else {
+                    setTitleModal('Erro')
+                    setMensagemModal(`Erro ao deletar fornecedor.`);
+                    setModalErrors(true);
+                }
+                setLoading(false);
+                break;
+            case 'Detalhes Usuário':
+                const idUsuario = formDataUsuario.id;
+                if (await useApi.deletarUsuario(idUsuario) == 200) {
+                    setMessageSucess(`Usuário deletado com sucesso.`);
+                    setModalSucess(true);
+                    setTimeout(() => {
+                        navigation.navigate('ListaCadastros', { usuarioDeletado: formDataUsuario });
+                    }, 3000);
+                } else {
+                    setTitleModal('Erro')
+                    setMensagemModal(`Erro ao deletar usuário.`);
+                    setModalErrors(true);
+                }
+                break;
+            case 'Detalhes Mov Caixa':
+                const idMovCaixa = formDataMovCaixa.id;
+                if (await useApi.deletarMovCaixa(idMovCaixa) == 200) {
+                    setMessageSucess(`Mov caixa deletado com sucesso.`);
+                    setModalSucess(true);
+                    setTimeout(() => {
+                        navigation.navigate('ListaCadastros', { movimentoCaixaDeletado: formDataMovCaixa });
+                    }, 3000);
+                } else {
+                    setTitleModal('Erro')
+                    setMensagemModal(`Erro ao deletar mov caixa.`);
+                    setModalErrors(true);
+                }
+                break;
         }
-        else if (namePage == "Detalhes Usuário") {
-            const id = formDataUsuario.id;
-            if (await useApi.deletarUsuario(id) == 200) {
-                setMessageSucess(`Usuário deletado com sucesso.`);
-                setModalSucess(true);
-                setTimeout(() => {
-                    navigation.navigate('ListaCadastros', { usuarioDeletado: formDataUsuario });
-                }, 3000);
-            } else {
-                setTitleModal('Erro')
-                setMensagemModal(`Erro ao deletar usuário.`);
-                setModalErrors(true);
-            }
-            setLoading(false);
-        };
+
+        setLoading(false);
     };
 
     const handleSubmit = async () => {
-        if (namePage == "Detalhes Fornecedor") {
-            if (formDataFornecedor.nome_fantasia != "" && formDataFornecedor.razao_social != "" &&
-                formDataFornecedor.cnpj != null && formDataFornecedor.contato != null) {
-                fnEditar('Fornecedor');
-            }
-            else {
-                setModalErrors(true);
-                setTitleModalErrors('Aviso');
-                setMensagemModalErrors('Preencha todos os campos obrigatórios.');
-            }
-        } else {
-            if (formDataUsuario.nome != '' && formDataUsuario.usuario != 0 && formDataUsuario.email != '') {
-                fnEditar('Usuario');
-            }
-            else {
-                setModalErrors(true);
-                setTitleModalErrors('Aviso');
-                setMensagemModalErrors('Preencha todos os campos obrigatórios.');
-            }
-        };
+        switch (namePage) {
+            case 'Detalhes Fornecedor':
+                if (formDataFornecedor.nome_fantasia != "" && formDataFornecedor.razao_social != "" &&
+                    formDataFornecedor.cnpj != null && formDataFornecedor.contato != null) {
+                    fnEditar('Fornecedor');
+                }
+                else {
+                    setModalErrors(true);
+                    setTitleModalErrors('Aviso');
+                    setMensagemModalErrors('Preencha todos os campos obrigatórios.');
+                }
+                break;
+            case 'Detalhes Usuário':
+                if (formDataUsuario.nome != '' && formDataUsuario.usuario != 0 && formDataUsuario.email != '') {
+                    fnEditar('Usuario');
+                }
+                else {
+                    setModalErrors(true);
+                    setTitleModalErrors('Aviso');
+                    setMensagemModalErrors('Preencha todos os campos obrigatórios.');
+                }
+                break;
+            case 'Detalhes Mov Caixa':
+                if (formDataMovCaixa.tipo != '' && formDataMovCaixa.descricao != 0 && formDataMovCaixa.valor != 0) {
+                    fnEditar('Mov Caixa');
+                }
+                else {
+                    setModalErrors(true);
+                    setTitleModalErrors('Aviso');
+                    setMensagemModalErrors('Preencha todos os campos obrigatórios.');
+                }
+                break;
+        }
     };
 
     return (
@@ -192,7 +302,7 @@ export const DetalhesCadastro = () => {
             <ScrollView >
                 {loading && <Loading />}
                 <View>
-                    {item.cnpj ? (
+                    {item.cnpj &&
                         <>
                             <InputApp
                                 title="Nome fantasia"
@@ -233,40 +343,68 @@ export const DetalhesCadastro = () => {
                                 editable={enable}
                             />
                         </>
-                    )
-                        :
-                        (
-                            <>
-                                <InputApp
-                                    title="Nome"
-                                    fullWidth
-                                    value={formDataUsuario.nome}
-                                    onChangeText={(text) => handleInputChange("nome", text, 'Usuario')}
-                                    marginBottom={true}
-                                    borderRadius={10}
-                                    editable={enable}
-                                />
-                                <InputApp
-                                    title="Usuário"
-                                    fullWidth
-                                    multiline={true}
-                                    value={formDataUsuario.usuario}
-                                    onChangeText={(text) => handleInputChange("usuario", text, 'Usuario')}
-                                    marginBottom={true}
-                                    borderRadius={10}
-                                    editable={enable}
-                                />
-                                <InputApp
-                                    title="Email"
-                                    fullWidth
-                                    value={formDataUsuario.email}
-                                    onChangeText={(text) => handleInputChange("email", text, 'Usuario')}
-                                    marginBottom={true}
-                                    borderRadius={10}
-                                    editable={enable}
-                                />
-                            </>
-                        )
+                    }
+                    {item.usuario &&
+                        <>
+                            <InputApp
+                                title="Nome"
+                                fullWidth
+                                value={formDataUsuario.nome}
+                                onChangeText={(text) => handleInputChange("nome", text, 'Usuario')}
+                                marginBottom={true}
+                                borderRadius={10}
+                                editable={enable}
+                            />
+                            <InputApp
+                                title="Usuário"
+                                fullWidth
+                                multiline={true}
+                                value={formDataUsuario.usuario}
+                                onChangeText={(text) => handleInputChange("usuario", text, 'Usuario')}
+                                marginBottom={true}
+                                borderRadius={10}
+                                editable={enable}
+                            />
+                            <InputApp
+                                title="Email"
+                                fullWidth
+                                value={formDataUsuario.email}
+                                onChangeText={(text) => handleInputChange("email", text, 'Usuario')}
+                                marginBottom={true}
+                                borderRadius={10}
+                                editable={enable}
+                            />
+                        </>
+
+                    }
+                    {item.tipo &&
+                        <>
+                            <InputSelectSimples
+                                title="Tipo *"
+                                options={optionsTipo}
+                                selectedValue={formDataMovCaixa.tipo}
+                                onValueChange={(value) => handleOnValueChange(value, 'tipo')}
+                                editable={enable}
+                            />
+                            <InputSelectSimples
+                                title="Descrição *"
+                                options={handleOptionsDesc()}
+                                selectedValue={formDataMovCaixa.descricao}
+                                onValueChange={(value) => handleOnValueChange(value, 'descricao')}
+                                editable={enable}
+                            />
+                            <InputApp
+                                title="Valor *"
+                                fullWidth
+                                value={formDataMovCaixa.valor.toString()}
+                                onChangeText={(text) => handleInputChange("valor", text, 'Movimento Caixa')}
+                                keyboardType="numeric"
+                                marginBottom={true}
+                                borderRadius={10}
+                                editable={enable}
+                            />
+                        </>
+
                     }
                     {enable &&
                         <>
@@ -321,7 +459,7 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     titulo: {
-        fontSize: 25,
+        fontSize: 20,
         fontWeight: 'bold',
         marginLeft: 10
     },

@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: `http://192.168.0.7:5000/api/`,
+    // baseURL: process.env.API_URL,
+    baseURL: 'http://192.168.0.8:5000/api/',
     timeout: 5000
 })
 
@@ -314,6 +315,16 @@ export const useApi = {
             return 500;
         }
     },
+    editarMovCaixa: async (formData) => {
+        try {
+            const id = formData.id;
+            const response = await api.put(`cadastros/editarMovCaixa/${id}`, formData);
+            if (response.status == 200)
+                return 200;
+        } catch (error) {
+            return 500;
+        }
+    },
     cadastrarUsuario: async (formData) => {
         try {
             const response = await api.post(`cadastros/cadastrarUsuario`, formData);
@@ -327,6 +338,16 @@ export const useApi = {
     cadastrarFornecedor: async (formData) => {
         try {
             const response = await api.post(`cadastros/cadastrarFornecedor`, formData);
+            if (response.status == 200)
+                return 200;
+            return 400;
+        } catch (error) {
+            return 500;
+        }
+    },
+    cadastrarMovimentoCaixa: async (formData) => {
+        try {
+            const response = await api.post(`cadastros/cadastrarMovimentoCaixa`, formData);
             if (response.status == 200)
                 return 200;
             return 400;
@@ -348,6 +369,17 @@ export const useApi = {
     deletarFornecedor: async (id) => {
         try {
             const response = await api.delete(`cadastros/deletarFornecedor/${id}`);
+            if (response.status == 200) {
+                return 200;
+            }
+            return 400;
+        } catch (error) {
+            return 500;
+        }
+    },
+    deletarMovCaixa: async (id) => {
+        try {
+            const response = await api.delete(`cadastros/deletarMovCaixa/${id}`);
             if (response.status == 200) {
                 return 200;
             }

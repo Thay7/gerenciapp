@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     itemNome: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
     },
     itemSub: {

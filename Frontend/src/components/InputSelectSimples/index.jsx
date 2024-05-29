@@ -2,7 +2,7 @@ import { Picker } from '@react-native-picker/picker';
 import { View, Text, StyleSheet } from 'react-native';
 import { formatterbrl } from '../../utils/formatterbrl';
 
-export const InputSelectSimples = ({ title, selectedValue, onValueChange, options }) => {
+export const InputSelectSimples = ({ title, selectedValue, onValueChange, options, editable }) => {
     return (
         <View style={styles.container}>
             <View>
@@ -14,6 +14,7 @@ export const InputSelectSimples = ({ title, selectedValue, onValueChange, option
                 <Picker
                     selectedValue={selectedValue}
                     onValueChange={onValueChange}
+                    enabled={editable}
                 >
                     <Picker.Item
                         label="Selecione"
@@ -35,6 +36,7 @@ export const InputSelectSimples = ({ title, selectedValue, onValueChange, option
                                     key={index}
                                     label={item.nome_fantasia != null ? item.nome_fantasia : item}
                                     value={item}
+                                    style={!editable ? {color: 'gray'} : {}}
                                 />
                             ))
                         )

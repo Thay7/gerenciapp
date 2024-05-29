@@ -44,7 +44,6 @@ const fornecedoresController = {
      async deletar(req, res) {
        try {
          const { id } = req.params;
-         console.log(id + 'back')
    
          const query = `DELETE FROM itens WHERE id=? AND tipo = "Produto"`;
    

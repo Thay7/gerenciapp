@@ -34,7 +34,6 @@ export const Home = () => {
     const buscarResumoDia = async () => {
         setRefreshing(true);
         let data = await useApi.listarResumoDia();
-        console.log('37 ' + data)
         setResumoData(data);
         setRefreshing(false);
     };

@@ -79,7 +79,27 @@ export const ListaCadastros = () => {
             const updatedData = dados.filter(item => item.id !== usuarioDeletado.id);
             setDados(updatedData);
         }
-    }, [route.params?.novoFornecedor, route.params?.fornecedorAtualizado, route.params?.fornecedorDeletado, route.params?.novoUsuario, route.params?.usuarioAtualizado, route.params?.usuarioDeletado]);
+
+        //Movimento caixa
+        if (route.params?.novoMovimentoCaixa) {
+            const novoMovimentoCaixa = route.params.novoMovimentoCaixa;
+            setDados([...dados, novoMovimentoCaixa]);
+        }
+
+        if (route.params?.movimentoCaixaAtualizado) {
+            const movimentoCaixaAtualizado = route.params?.movimentoCaixaAtualizado;
+            setDados(dados.map(movCaixa => (movCaixa.id === movimentoCaixaAtualizado.id ? movimentoCaixaAtualizado : movCaixa)));
+            setNome('Movimento Caixa');
+        }
+
+        if (route.params?.movimentoCaixaDeletado) {
+            const movimentoCaixaDeletado = route.params.movimentoCaixaDeletado;
+            const updatedData = dados.filter(item => item.id !== movimentoCaixaDeletado.id);
+            setDados(updatedData);
+        }
+    }, [route.params?.novoFornecedor, route.params?.fornecedorAtualizado, route.params?.fornecedorDeletado,
+    route.params?.novoUsuario, route.params?.usuarioAtualizado, route.params?.usuarioDeletado,
+    route.params?.novoMovimentoCaixa, route.params?.movimentoCaixaAtualizado, route.params?.movimentoCaixaDeletado,]);
 
     const handleClearFilter = () => {
         setSearch([]);
@@ -91,7 +111,7 @@ export const ListaCadastros = () => {
             <View style={styles.header}>
                 <View style={styles.header}>
                     <ButtonBack navigate="Cadastros" />
-                    <Text style={styles.titulo}>Lista {nome}</Text>
+                    <Text style={styles.titulo}>{nome}</Text>
                 </View>
                 <View style={styles.header}>
                     <View style={{ marginRight: 5 }}>
@@ -127,15 +147,27 @@ export const ListaCadastros = () => {
                                 </View>
                             )
                             :
-                            nome == 'Fornecedores' ?
-                                (
-                                    search.length > 0 ? (
-                                        search.map((item, index) => (
+                            <View>
+                                 {nome === 'Fornecedores' && (
+                                search.length > 0 ? (
+                                    search.map((item, index) => (
+                                        <TouchableOpacity
+                                            style={styles.itemContainer}
+                                            onPress={() => navigation.navigate('DetalhesCadastro', { item })}
+                                            key={index}
+                                        >
+                                            <Text style={styles.itemNome}>{item.nome_fantasia}</Text>
+                                            <Text style={styles.itemNome}>{item.razao_social}</Text>
+                                            <Text style={styles.itemSub}>CNPJ: {item.cnpj}</Text>
+                                            <Text style={styles.itemSub}>Contato: {item.contato}</Text>
+                                        </TouchableOpacity>
+                                    ))
+                                ) : (
+                                    <View style={{ marginBottom: 16 }}>
+                                        {dados.map((item, index) => (
                                             <TouchableOpacity
                                                 style={styles.itemContainer}
-                                                onPress={() => {
-                                                    navigation.navigate('DetalhesCadastro', { item: item });
-                                                }}
+                                                onPress={() => navigation.navigate('DetalhesCadastro', { item })}
                                                 key={index}
                                             >
                                                 <Text style={styles.itemNome}>{item.nome_fantasia}</Text>
@@ -143,65 +175,69 @@ export const ListaCadastros = () => {
                                                 <Text style={styles.itemSub}>CNPJ: {item.cnpj}</Text>
                                                 <Text style={styles.itemSub}>Contato: {item.contato}</Text>
                                             </TouchableOpacity>
-                                        ))
-                                    )
-                                        :
-                                        (
-                                            <View style={{ marginBottom: 16 }}>
-                                                {dados.map((item, index) => (
-                                                    <TouchableOpacity
-                                                        style={styles.itemContainer}
-                                                        onPress={() => {
-                                                            navigation.navigate('DetalhesCadastro', { item: item });
-                                                        }}
-                                                        key={index}
-                                                    >
-                                                        <Text style={styles.itemNome}>{item.nome_fantasia}</Text>
-                                                        <Text style={styles.itemNome}>{item.razao_social}</Text>
-                                                        <Text style={styles.itemSub}>CNPJ: {item.cnpj}</Text>
-                                                        <Text style={styles.itemSub}>Contato: {item.contato}</Text>
-                                                    </TouchableOpacity>
-                                                ))}
-
-                                            </View>
-                                        )
-                                ) :
-                                (
-                                    search.length > 0 ? (
-                                        search.map((item, index) => (
+                                        ))}
+                                    </View>
+                                )
+                            )}
+                            {nome === 'Usuários' && (
+                                search.length > 0 ? (
+                                    search.map((item, index) => (
+                                        <TouchableOpacity
+                                            style={styles.itemContainer}
+                                            onPress={() => navigation.navigate('DetalhesCadastro', { item })}
+                                            key={index}
+                                        >
+                                            <Text style={styles.itemNome}>{item.nome}</Text>
+                                            <Text style={styles.itemSub}>Usuário: {item.usuario}</Text>
+                                            <Text style={styles.itemSub}>Email: {item.email}</Text>
+                                        </TouchableOpacity>
+                                    ))
+                                ) : (
+                                    <View style={{ marginBottom: 16 }}>
+                                        {dados.map((item, index) => (
                                             <TouchableOpacity
                                                 style={styles.itemContainer}
-                                                onPress={() => {
-                                                    navigation.navigate('DetalhesCadastro', { item: item });
-                                                }}
+                                                onPress={() => navigation.navigate('DetalhesCadastro', { item })}
                                                 key={index}
                                             >
                                                 <Text style={styles.itemNome}>{item.nome}</Text>
                                                 <Text style={styles.itemSub}>Usuário: {item.usuario}</Text>
                                                 <Text style={styles.itemSub}>Email: {item.email}</Text>
                                             </TouchableOpacity>
-                                        ))
-                                    )
-                                        :
-                                        (
-                                            <View style={{ marginBottom: 16 }}>
-                                                {dados.map((item, index) => (
-                                                    <TouchableOpacity
-                                                        style={styles.itemContainer}
-                                                        onPress={() => {
-                                                            navigation.navigate('DetalhesCadastro', { item: item });
-                                                        }}
-                                                        key={index}
-                                                    >
-                                                        <Text style={styles.itemNome}>{item.nome}</Text>
-                                                        <Text style={styles.itemSub}>Usuário: {item.usuario}</Text>
-                                                        <Text style={styles.itemSub}>Email: {item.email}</Text>
-                                                    </TouchableOpacity>
-                                                ))}
-
-                                            </View>
-                                        )
+                                        ))}
+                                    </View>
                                 )
+                            )}
+                            {nome === 'Movimento Caixa' && (
+                                search.length > 0 ? (
+                                    search.map((item, index) => (
+                                        <TouchableOpacity
+                                            style={styles.itemContainer}
+                                            onPress={() => navigation.navigate('DetalhesCadastro', { item })}
+                                            key={index}
+                                        >
+                                            <Text style={styles.itemNome}>{item.tipo}</Text>
+                                            <Text style={styles.itemSub}>Descrição: {item.descricao}</Text>
+                                            <Text style={styles.itemSub}>Valor: {item.valor}</Text>
+                                        </TouchableOpacity>
+                                    ))
+                                ) : (
+                                    <View style={{ marginBottom: 16 }}>
+                                        {dados.map((item, index) => (
+                                            <TouchableOpacity
+                                                style={styles.itemContainer}
+                                                onPress={() => navigation.navigate('DetalhesCadastro', { item })}
+                                                key={index}
+                                            >
+                                                <Text style={styles.itemNome}>{item.tipo}</Text>
+                                                <Text style={styles.itemSub}>Descrição: {item.descricao}</Text>
+                                                <Text style={styles.itemSub}>Valor: {item.valor}</Text>
+                                            </TouchableOpacity>
+                                        ))}
+                                    </View>
+                                )
+                            )}
+                            </View>
                     )
                 }
                 <ModalSearch
@@ -213,9 +249,7 @@ export const ListaCadastros = () => {
                     produtos
                 />
             </ScrollView >
-
         </View >
-
     );
 };
 
@@ -223,16 +257,16 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 20,
-        marginTop: 50,
+        marginTop: 50
     },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 8,
+        marginBottom: 8
     },
     titulo: {
-        fontSize: 25,
+        fontSize: 20,
         fontWeight: 'bold',
         marginLeft: 15
     },
@@ -242,15 +276,15 @@ const styles = StyleSheet.create({
         borderBottomColor: '#ccc',
         backgroundColor: '#fff',
         borderRadius: 8,
-        marginVertical: 4,
+        marginVertical: 4
     },
     itemNome: {
         fontSize: 18,
-        fontWeight: 'bold',
+        fontWeight: 'bold'
     },
     itemSub: {
         fontSize: 16,
-        color: '#666',
+        color: '#666'
     },
     cleanFilterText: {
         color: 'red',

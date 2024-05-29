@@ -45,6 +45,7 @@ export const InputSelectPagamento = ({ title, selectedValue, onValueChange, opti
                                     key={index}
                                     label={item}
                                     value={item}
+                                    style={!enable ? {color: 'gray'} : {}}
                                 />
                             ))
                         )

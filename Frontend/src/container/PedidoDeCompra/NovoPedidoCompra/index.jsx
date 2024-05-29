@@ -264,6 +264,7 @@ export const NovoPedidoCompra = () => {
 
             Linking.openURL(linkWhatsApp).catch(err => console.error('Erro ao redirecionar:', err));
 
+            objPedidoCompra.recebido = 0;
             setModalSucess(true);
             setTimeout(() => {
                 navigation.navigate('PedidoDeCompra', {

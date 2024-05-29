@@ -51,7 +51,6 @@ const homeController = {
             LIMIT 1;
             `);
             listResumoDia[4].value = rowsServicoMaisVendido.length > 0 ? rowsServicoMaisVendido[0].nome : "";
-            console.log(listResumoDia)
             res.status(200).send(listResumoDia);
         } catch (error) {
             res.status(500).send('Erro ao listar itens');

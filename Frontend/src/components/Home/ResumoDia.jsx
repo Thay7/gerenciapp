@@ -29,11 +29,9 @@ const styles = StyleSheet.create({
         padding: 2
     },
     label: {
-        fontSize: 18,
         fontWeight: 'bold',
     },
     value: {
-        fontSize: 18,
         color: '#4040ff'
     }
 })

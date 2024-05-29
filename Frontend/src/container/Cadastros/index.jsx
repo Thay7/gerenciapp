@@ -18,7 +18,8 @@ export const Cadastros = () => {
         let json = await useApi.listarCadastros();
         setCadastrosList(json);
         setLoading(false);
-    }
+    };
+    
     const navigation = useNavigation()
 
     return (
