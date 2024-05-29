@@ -83,7 +83,8 @@ export const DetalhesCadastro = () => {
                 id: item.id,
                 tipo: item.tipo,
                 descricao: item.descricao,
-                valor: item.valor
+                valor: item.valor,
+                data_hora: item.data_hora
             });
         };
     }, []);
@@ -402,6 +403,15 @@ export const DetalhesCadastro = () => {
                                 marginBottom={true}
                                 borderRadius={10}
                                 editable={enable}
+                            />
+                            <InputApp
+                                title="Data/Hora *"
+                                fullWidth
+                                value={formDataMovCaixa.data_hora}
+                                // onChangeText={(text) => handleInputChange("valor", text, 'Movimento Caixa')}
+                                marginBottom={true}
+                                borderRadius={10}
+                                editable={false}
                             />
                         </>
 

@@ -219,6 +219,7 @@ export const ListaCadastros = () => {
                                             <Text style={styles.itemNome}>{item.tipo}</Text>
                                             <Text style={styles.itemSub}>Descrição: {item.descricao}</Text>
                                             <Text style={styles.itemSub}>Valor: {item.valor}</Text>
+                                            <Text style={styles.itemSub}>Data/Hora: {item.data_hora}</Text>
                                         </TouchableOpacity>
                                     ))
                                 ) : (
@@ -232,6 +233,7 @@ export const ListaCadastros = () => {
                                                 <Text style={styles.itemNome}>{item.tipo}</Text>
                                                 <Text style={styles.itemSub}>Descrição: {item.descricao}</Text>
                                                 <Text style={styles.itemSub}>Valor: {item.valor}</Text>
+                                                <Text style={styles.itemSub}>Data/Hora: {item.data_hora}</Text>
                                             </TouchableOpacity>
                                         ))}
                                     </View>

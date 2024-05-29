@@ -100,7 +100,6 @@ export const NovoCadastro = () => {
                 if (formDataUsuario.nome != '' && formDataUsuario.usuario != '' &&
                     formDataUsuario.email != '' && formDataUsuario.senha != '' &&
                     formDataUsuario.confirmarSenha != '') {
-
                     if (formDataUsuario.senha != formDataUsuario.confirmarSenha) {
                         setModalErrors(true);
                         setMessageModalErrors('Senhas não coincidem.');
@@ -285,12 +284,14 @@ export const NovoCadastro = () => {
                                 options={optionsTipo}
                                 selectedValue={selectedOptionTipo}
                                 onValueChange={(value) => handleOnValueChange(value, 'tipo')}
+                                editable={true}
                             />
                             <InputSelectSimples
                                 title="Descrição *"
                                 options={handleOptionsDesc()}
                                 selectedValue={selectedOptionDesc}
                                 onValueChange={(value) => handleOnValueChange(value, 'desc')}
+                                editable={true}
                             />
                             <InputApp
                                 title="Valor *"
@@ -300,6 +301,7 @@ export const NovoCadastro = () => {
                                 keyboardType="numeric"
                                 marginBottom={true}
                                 borderRadius={10}
+                                editable={true}
                             />
                         </>
                     }
@@ -323,7 +325,6 @@ export const NovoCadastro = () => {
                     fnCloseModal={() => setModalSucess(!modalSucess)}
                 />
             </ScrollView>
-
         </View>
     );
 };
