@@ -50,6 +50,7 @@ import { VendasPorMesAno } from './src/container/Relatorios/Vendas/VendasPorMesA
 import { ItensMaisVendidos } from './src/container/Relatorios/Vendas/ItensMaisVendidos';
 import { HistoricoPedidosCompra } from './src/container/Relatorios/PedidosCompra/HistoricoPedidosCompra';
 import { ComprasPorFornecedor } from './src/container/Relatorios/PedidosCompra/ComprasPorFornecedor';
+import { RelatorioConsolidado } from './src/container/Relatorios/Consolidado/RelatorioConsolidado'
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -224,6 +225,11 @@ export default function App() {
         <Stack.Screen
           name="ComprasPorFornecedor"
           component={ComprasPorFornecedor}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="RelatorioConsolidado"
+          component={RelatorioConsolidado}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

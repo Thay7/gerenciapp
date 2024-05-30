@@ -256,7 +256,6 @@ export const useApi = {
         const response = await api.get('fornecedores/listar')
         return response.data;
     },
-    //Relatorios - Vendas
     listarAnosDisponiveisVenda: async () => {
         const response = await api.get('relatorios/listarAnosDisponiveisVenda')
         return response.data;
@@ -273,7 +272,6 @@ export const useApi = {
         const response = await api.post('relatorios/listarDadosRelatorioItensMaisVendidos', formData)
         return response.data;
     },
-    //Relatorios - Pedidos compra
     listarAnosDisponiveisPedidosCompra: async () => {
         const response = await api.get('relatorios/listarAnosDisponiveisPedidosCompra')
         return response.data;
@@ -288,6 +286,10 @@ export const useApi = {
     },
     listarDadosRelatorioComprasFornecedor: async (formData) => {
         const response = await api.post('relatorios/listarDadosRelatorioComprasFornecedor', formData)
+        return response.data;
+    },
+    listarDadosRelatorioConsolidado: async (formData) => {
+        const response = await api.post('relatorios/listarDadosRelatorioConsolidado', formData)
         return response.data;
     },
     //Cadastros
