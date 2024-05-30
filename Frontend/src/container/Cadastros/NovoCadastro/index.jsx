@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
@@ -109,7 +109,7 @@ export const NovoCadastro = () => {
                             setModalSucess(true);
                             setMessageModalSucess('Usuário cadastrado com sucesso!');
                             setTimeout(() => {
-                                navigation.navigate('ListaCadastros', {
+                                navigation.navigate('Home', {
                                     novoUsuario: formDataUsuario
                                 });
                             }, 3000);
@@ -117,7 +117,7 @@ export const NovoCadastro = () => {
                             setMessageModalErrors('Erro ao realizar cadastro. Entre em contato com o suporte.');
                             setModalErrors(true);
                             setTimeout(() => {
-                                navigation.navigate('ListaCadastros');
+                                navigation.navigate('Home');
                             }, 3000);
                         }
                     }
@@ -135,7 +135,7 @@ export const NovoCadastro = () => {
                         setModalSucess(true);
                         setMessageModalSucess('Fornecedor cadastrado com sucesso!');
                         setTimeout(() => {
-                            navigation.navigate('ListaCadastros', {
+                            navigation.navigate('Home', {
                                 novoFornecedor: formDataFornecedor
                             });
                         }, 3000);
@@ -143,7 +143,7 @@ export const NovoCadastro = () => {
                         setMessageModalErrors('Erro ao realizar cadastro. Entre em contato com o suporte.');
                         setModalErrors(true);
                         setTimeout(() => {
-                            navigation.navigate('ListaCadastros');
+                            navigation.navigate('Home');
                         }, 3000);
                     }
                 }
@@ -162,7 +162,7 @@ export const NovoCadastro = () => {
                         setModalSucess(true);
                         setMessageModalSucess('Movimento de caixa cadastrado com sucesso!');
                         setTimeout(() => {
-                            navigation.navigate('ListaCadastros', {
+                            navigation.navigate('Home', {
                                 novoMovimentoCaixa: formDataMovCaixa
                             });
                         }, 3000);
@@ -170,7 +170,7 @@ export const NovoCadastro = () => {
                         setMessageModalErrors('Erro ao realizar cadastro. Entre em contato com o suporte.');
                         setModalErrors(true);
                         setTimeout(() => {
-                            navigation.navigate('ListaCadastros');
+                            navigation.navigate('Home');
                         }, 3000);
                     }
                 }

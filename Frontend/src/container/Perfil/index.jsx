@@ -3,6 +3,8 @@ import { View, Text, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from '@react-navigation/native';
+import { jwtDecode } from "jwt-decode";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useApi } from '../../Api/useApi';
 import { InputApp } from '../../components/InputApp';
@@ -13,100 +15,69 @@ import { ButtonDelete } from '../../components/Buttons/ButtonDelete';
 import { ModalErrors } from '../../components/ModalErrors';
 import { ModalSucces } from '../../components/ModalSucces';
 import { ModalConfirm } from '../../components/ModalConfirm'
+import { ButtonLogOut } from '../../components/Buttons/ButtonLogOut';
 
 export const Perfil = () => {
     const navigation = useNavigation()
-    const [enable, setEnable] = useState(false);
     const [loading, setLoading] = useState(false);
 
     //Modais
     const [modalErrors, setModalErrors] = useState(false);
-    const [modalSucess, setModalSucess] = useState(false);
-    const [modalConfirm, setModalConfirm] = useState(false);
     const [titleModal, setTitleModal] = useState('Aviso');
-    const [mensagemModal, setMensagemModal] = useState('Preencha todos os campos obrigatórios.');
-    const [messageSucess, setMessageSucess] = useState('');
+    const [mensagemModal, setMensagemModal] = useState('');
 
-    const route = useRoute();
-    // const { produto } = route.params;
-    // const [formData, setFormData] = useState({
-    //     id: produto.id,
-    //     nome: produto.nome,
-    //     cod_produto: produto.cod_produto,
-    //     descricao: produto.descricao,
-    //     marca: produto.marca,
-    //     valor_compra: produto.valor_compra,
-    //     valor_venda: produto.valor_venda
-    // });
+    const [formData, setFormData] = useState({
+        nome: '',
+        usuario: '',
+        email: ''
+    });
 
-    // const handleInputChange = (name, value) => {
-    //     if (name === "valor_compra" || name === "valor_venda") {
-    //         if (value.includes(',') || value.includes('.')) {
-    //             value = value.replace(",", ".");
-    //         }
-    //     }
-    //     setFormData({ ...formData, [name]: value })
-    // }
+    const fetchUserInfo = async () => {
+        setLoading(true);
+        const token = await AsyncStorage.getItem('token');
+        if (token) {
+            try {
+                const decodedToken = jwtDecode(token);
+                const userId = decodedToken.id;
 
-    const fnEditarProduto = async () => {
-        // setLoading(true)
-        // if (await useApi.editarProduto(formData) == 200) {
-        //     setMessageSucess('Produto editado com sucesso.');
-        //     setModalSucess(true);
-        //     setEnable(false);
-        //     setTimeout(() => {
-        //         navigation.navigate('Produtos', { produtoAtualizado: formData });
-        //     }, 3000);
-        // } else {
-        //     setTitleModal('Erro')
-        //     setMensagemModal('Erro ao editar produto.');
-        //     setModalErrors(true);
-        //     setTimeout(() => {
-        //         navigation.navigate('Produtos', { produtoAtualizado: formData });
-        //     }, 3000);
-        // }
-        // setLoading(false);
-    }
+                const response = await useApi.dadosPerfil(userId);
+                setFormData({
+                    nome: response.usuario.nome,
+                    usuario: response.usuario.usuario,
+                    email: response.usuario.email,
 
-    const handleSubmit = async () => {
-        // if (formData.nome != '' && formData.cod_produto != 0 && formData.marca != '' && formData.valor_compra > 0 && formData.valor_venda > 0) {
-        //     fnEditarProduto()
-        // }
-        // else {
-        //     setModalErrors(true);
-        // }
-    }
+                });
+            } catch (err) {
+                setMensagemModal('Erro ao obter informações do usuário:', err);
+                setModalErrors(true);
+            }
+        } else {
+            setMensagemModal('Usuário não autenticado.');
+            setModalErrors(true);
+        }
+        setLoading(false);
+    };
 
-    const handleDelete = async () => {
-        // setModalConfirm(false);
-        // setLoading(true)
-        // const id = formData.id;
-        // if (await useApi.deletarProduto(id) == 200) {
-        //     setMessageSucess('Produto deletado com sucesso.');
-        //     setModalSucess(true);
-        //     setTimeout(() => {
-        //         navigation.navigate('Produtos', { produtoDeletado: formData });
-        //     }, 3000);
-        // } else {
-        //     setTitleModal('Erro')
-        //     setMensagemModal('Erro ao deletar produto.');
-        //     setModalErrors(true);
-        // }
-        // setLoading(false);
+    useEffect(() => {
+        fetchUserInfo();
+    }, [])
 
+    const logout = async (navigation) => {
+        try {
+            await AsyncStorage.removeItem('token');
+            navigation.navigate('Login');
+        } catch (error) {
+            console.error('Erro ao fazer logout:', error);
+        }
     };
 
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.titulo}>Perfil</Text>
-                {!enable &&
-                    <View style={styles.headerIcons}>
-                        <View style={{ marginRight: 5 }}>
-                            <ButtonEdit onPress={() => setEnable(true)} />
-                        </View>
-                    </View>
-                }
+                <View style={styles.headerIcons}>
+                    <ButtonLogOut onPress={() => logout(navigation)} />
+                </View>
             </View>
             <ScrollView
                 showsVerticalScrollIndicator={false}
@@ -116,156 +87,36 @@ export const Perfil = () => {
                     <Text style={styles.itemNome}>Dados pessoais</Text>
                     <InputApp
                         title="Nome"
-                        editable={enable}
-                        // value={formData.nome}
+                        editable={false}
+                        value={formData.nome}
                         fullWidth
                         borderRadius={10}
-                        marginBottom={false}
+                        marginBottom
                         onChangeText={(text) => handleInputChange("nome", text)}
                     />
                     <InputApp
                         title="Usuário"
-                        editable={enable}
-                        // value={formData.nome}
+                        editable={false}
+                        value={formData.usuario}
                         fullWidth
                         borderRadius={10}
-                        marginBottom={false}
+                        marginBottom
                         onChangeText={(text) => handleInputChange("nome", text)}
                     />
                     <InputApp
                         title="Email"
-                        editable={enable}
-                        // value={formData.cod_produto.toString()}
-                        fullWidth
-                        borderRadius={10}
-                        marginBottom={false}
-                        onChangeText={(text) => handleInputChange("cod_produto", text)}
-                    />
-                    <InputApp
-                        title="Senha"
-                        editable={enable}
-                        secureTextEntry
-                        // value={formData.cod_produto.toString()}
-                        fullWidth
-                        borderRadius={10}
-                        marginBottom={false}
-                        onChangeText={(text) => handleInputChange("cod_produto", text)}
-                    />
-                    <Text style={[styles.itemNome, { marginTop: 10 }]}>Dados empresa</Text>
-                    <InputApp
-                        title="CNPJ"
-                        editable={enable}
-                        //value={formData.descricao}
-                        fullWidth
-                        borderRadius={10}
-                        marginBottom={false}
-                        onChangeText={(text) => handleInputChange("descricao", text)}
-                    />
-                    <InputApp
-                        title="Nome Fantasia"
-                        editable={enable}
-                        // value={formData.marca}
-                        fullWidth
-                        borderRadius={10}
-                        marginBottom={false}
-                        onChangeText={(text) => handleInputChange("marca", text)}
-                    />
-                    <InputApp
-                        title="Razão Social"
-                        editable={enable}
-                        // value={formData.valor_compra.toString()}
-                        fullWidth
-                        borderRadius={10}
-                        marginBottom={false}
-                        onChangeText={(text) => handleInputChange("valor_compra", text)}
-                    />
-                    <InputApp
-                        title="CEP"
-                        editable={enable}
-                        //  value={formData.valor_venda.toString()}
-                        fullWidth
-                        borderRadius={10}
-                        marginBottom={false}
-                        onChangeText={(text) => handleInputChange("valor_venda", text)}
-                    />
-                    <InputApp
-                        title="Cidade"
-                        editable={enable}
-                        //  value={formData.valor_venda.toString()}
-                        fullWidth
-                        borderRadius={10}
-                        marginBottom={false}
-                        onChangeText={(text) => handleInputChange("valor_venda", text)}
-                    />
-                    <InputApp
-                        title="Estado"
-                        editable={enable}
-                        //  value={formData.valor_venda.toString()}
-                        fullWidth
-                        borderRadius={10}
-                        marginBottom={false}
-                        onChangeText={(text) => handleInputChange("valor_venda", text)}
-                    />
-                    <InputApp
-                        title="Rua"
-                        editable={enable}
-                        //  value={formData.valor_venda.toString()}
-                        fullWidth
-                        borderRadius={10}
-                        marginBottom={false}
-                        onChangeText={(text) => handleInputChange("valor_venda", text)}
-                    />
-                    <InputApp
-                        title="Nº"
-                        editable={enable}
-                        //  value={formData.valor_venda.toString()}
-                        fullWidth
-                        borderRadius={10}
-                        marginBottom={false}
-                        onChangeText={(text) => handleInputChange("valor_venda", text)}
-                    />
-                    <InputApp
-                        title="Bairro"
-                        editable={enable}
-                        //  value={formData.valor_venda.toString()}
+                        editable={false}
+                        value={formData.email}
                         fullWidth
                         borderRadius={10}
                         marginBottom
-                        onChangeText={(text) => handleInputChange("valor_venda", text)}
+                        onChangeText={(text) => handleInputChange("cod_produto", text)}
                     />
-                    {enable &&
-                        <>
-                            <ButtonApp
-                                title="Salvar"
-                                color="#fff"
-                                backgroundColor="#4040ff"
-                                onPress={handleSubmit}
-                            />
-                            <ButtonApp
-                                title="Cancelar"
-                                color="#ff0000"
-                                onPress={() => setEnable(false)}
-                            />
-                        </>
-                    }
                     <ModalErrors
                         title={titleModal}
                         message={mensagemModal}
                         openModal={modalErrors}
                         fnCloseModal={() => setModalErrors(!modalErrors)}
-                    />
-                    <ModalSucces
-                        title="Sucesso"
-                        message={messageSucess}
-                        openModal={modalSucess}
-                        fnCloseModal={() => setModalSucess(!modalSucess)}
-                    />
-                    <ModalConfirm
-                        title="Atenção"
-                        message="Tem certeza que deseja excluir?"
-                        openModal={modalConfirm}
-                        fnCloseModal={() => setModalConfirm(!modalConfirm)}
-                        fnConfirm={handleDelete}
                     />
                 </View>
             </ScrollView >

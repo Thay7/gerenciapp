@@ -312,11 +312,6 @@ const relatoriosController = {
 
       let valorTotalLucro = 0;
       valorTotalLucro = valorTotalVendas - valorTotalDespesas;
-      console.log(valorTotalVendas);
-      console.log(valorTotalSaidasCaixa);
-      console.log(valorTotalPedidosCompra);
-      console.log(valorTotalDespesas);
-      console.log(valorTotalLucro);
 
       res.json({ valorTotalVendas, valorTotalSaidasCaixa, valorTotalPedidosCompra, valorTotalDespesas, valorTotalLucro });
     } catch (error) {

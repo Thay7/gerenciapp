@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, Image } from 'react-native'
 import * as Animatable from 'react-native-animatable';
@@ -65,6 +65,19 @@ export const Login = () => {
     const handleLogoAnimationEnd = () => {
         setShowLoginForm(true);
     };
+
+    const checkToken = async () => {
+        const token = await AsyncStorage.getItem('token');
+        if (token) {
+            navigation.navigate('Home');
+        } else {
+            navigation.navigate('Login');
+        }
+    };
+
+    useEffect(() => {
+        checkToken();
+    }, [])
 
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

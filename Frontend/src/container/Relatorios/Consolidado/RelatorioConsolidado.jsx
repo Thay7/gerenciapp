@@ -37,7 +37,7 @@ export const RelatorioConsolidado = () => {
     };
 
     const handleClickFilter = () => {
-        setDadosRelatorio([]);
+        setDadosRelatorio(null);
         setAnoSelecionado('');
         setMesSelecionado('');
     };

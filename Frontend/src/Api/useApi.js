@@ -21,6 +21,15 @@ export const useApi = {
             return 500;
         }
     },
+    //Perfil
+    dadosPerfil: async (id) => {
+        const response = await api.get(`perfil/dadosPerfil/${id}`)
+        if (response.status == 200) {
+            return response.data
+        } else {
+            return 500;
+        }
+    },
     //Produtos
     listarProdutos: async () => {
         const response = await api.get('produtos/listar')

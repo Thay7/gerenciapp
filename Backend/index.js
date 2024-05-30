@@ -6,6 +6,7 @@ app.use(express.json());
 // Rotas
 app.use('/api/login', require('./routes/loginRoutes'));
 app.use('/api/home', require('./routes/homeRoutes'));
+app.use('/api/perfil', require('./routes/perfilRoutes'));
 app.use('/api/vendas', require('./routes/vendasRoutes'));
 app.use('/api/produtos', require('./routes/produtosRoutes'));
 app.use('/api/servicos', require('./routes/servicosRoutes'));

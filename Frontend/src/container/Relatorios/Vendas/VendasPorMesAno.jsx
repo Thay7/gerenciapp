@@ -184,7 +184,6 @@ const styles = StyleSheet.create({
         marginLeft: 15
     },
     subTitulo: {
-        // fontSize: 17,
         fontWeight: 'bold',
         color: '#4040ff'
     },
@@ -194,7 +193,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     itemNome: {
-        // fontSize: 17,
         fontWeight: 'bold',
         marginBottom: 5
     },
