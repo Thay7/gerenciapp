@@ -9,7 +9,7 @@
         minute: '2-digit',
         second: '2-digit',
     });
-    return dataFormatada;
+    return dataFormatada.replace(',', '');
 };
 
 module.exports = formatterdateandtime;

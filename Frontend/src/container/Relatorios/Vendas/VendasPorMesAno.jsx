@@ -69,7 +69,7 @@ export const VendasPorMesAno = () => {
             <View style={styles.header}>
                 <View style={styles.header}>
                     <ButtonBack navigate="Relatorios" />
-                    <Text style={styles.titulo}>Relatório</Text>
+                    <Text style={styles.titulo}>Vendas por mês/ano</Text>
                 </View>
                 {dadosRelatorio.length > 0 &&
                     <View style={styles.header}>
@@ -77,7 +77,6 @@ export const VendasPorMesAno = () => {
                     </View>
                 }
             </View>
-            <Text style={styles.relatorioNome}>Vendas por mês/ano</Text>
             {dadosRelatorio.length > 0 &&
                 <View style={{ marginTop: 10 }}>
                     <View style={styles.rowBetween}>
@@ -180,12 +179,12 @@ const styles = StyleSheet.create({
         marginBottom: 15
     },
     titulo: {
-        fontSize: 30,
+        fontSize: 23,
         fontWeight: 'bold',
         marginLeft: 15
     },
     subTitulo: {
-        fontSize: 17,
+        // fontSize: 17,
         fontWeight: 'bold',
         color: '#4040ff'
     },
@@ -195,7 +194,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     itemNome: {
-        fontSize: 17,
+        // fontSize: 17,
         fontWeight: 'bold',
         marginBottom: 5
     },

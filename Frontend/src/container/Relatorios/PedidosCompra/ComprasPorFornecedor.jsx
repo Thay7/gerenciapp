@@ -64,7 +64,7 @@ export const ComprasPorFornecedor = () => {
             <View style={styles.header}>
                 <View style={styles.header}>
                     <ButtonBack navigate="Relatorios" />
-                    <Text style={styles.titulo}>Relatório</Text>
+                    <Text style={styles.titulo}>Compras pro Fornecedor</Text>
                 </View>
                 {dadosRelatorio.length > 0 &&
                     <View style={styles.header}>
@@ -72,7 +72,6 @@ export const ComprasPorFornecedor = () => {
                     </View>
                 }
             </View>
-            <Text style={styles.relatorioNome}>Compras pro Fornecedor</Text>
             {dadosRelatorio.length > 0 &&
                 <>
                     <View style={[styles.rowBetween, { marginTop: 10 }]}>
@@ -169,12 +168,11 @@ const styles = StyleSheet.create({
         marginBottom: 15
     },
     titulo: {
-        fontSize: 30,
+        fontSize: 21,
         fontWeight: 'bold',
         marginLeft: 15
     },
     subTitulo: {
-        fontSize: 17,
         fontWeight: 'bold',
         color: '#4040ff'
     },
@@ -184,7 +182,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     itemNome: {
-        fontSize: 17,
         fontWeight: 'bold',
         marginBottom: 5
     },

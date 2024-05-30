@@ -9,27 +9,25 @@ import { ButtonBack } from '../../../components/Buttons/ButtonBack';
 import { useApi } from '../../../Api/useApi';
 import { Loading } from '../../../components/Loading';
 
-export const HistoricoPedidosCompra = () => {
+export const RelatorioConsolidado = () => {
     const [anoSelecionado, setAnoSelecionado] = useState('');
     const [mesSelecionado, setMesSelecionado] = useState('');
 
     const [formData, setFormData] = useState();
+
     const [meses, setMeses] = useState('');
     const [anos, setAnos] = useState('');
 
-    const [dadosRelatorio, setDadosRelatorio] = useState([]);
-    const [itemMaisVendido, setItemMaisVendido] = useState('');
+    const [dadosRelatorio, setDadosRelatorio] = useState(null);
     const [modalErrors, setModalErrors] = useState(false);
     const [msgError, setMsgError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [valorTotal, setValorTotal] = useState(0);
 
     const handlePesquisar = async () => {
         if (anoSelecionado != '') {
             setLoading(true)
-            let jsonDadosRelatorio = await useApi.listarDadosRelatorioHistoricoPedidosCompra(formData)
-            setDadosRelatorio(jsonDadosRelatorio.dados);
-            setValorTotal(jsonDadosRelatorio.valor)
+            let jsonDadosRelatorio = await useApi.listarDadosRelatorioConsolidado(formData)
+            setDadosRelatorio(jsonDadosRelatorio);
             setLoading(false)
         }
         else {
@@ -39,7 +37,6 @@ export const HistoricoPedidosCompra = () => {
     };
 
     const handleClickFilter = () => {
-        populaSelectsMesAno();
         setDadosRelatorio([]);
         setAnoSelecionado('');
         setMesSelecionado('');
@@ -50,11 +47,12 @@ export const HistoricoPedidosCompra = () => {
     }, [])
 
     const populaSelectsMesAno = async () => {
-        let jsonAnos = await useApi.listarAnosDisponiveisPedidosCompra()
-        setAnos(jsonAnos)
+        let jsonAnos = await useApi.listarAnosDisponiveisVenda();
+        setAnos(jsonAnos);
 
-        let jsonMeses = await useApi.listarMesesDisponiveisPedidosCompra()
-        setMeses(jsonMeses)
+        let jsonMeses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        setMeses(jsonMeses);
     };
 
     useEffect(() => {
@@ -69,30 +67,25 @@ export const HistoricoPedidosCompra = () => {
             <View style={styles.header}>
                 <View style={styles.header}>
                     <ButtonBack navigate="Relatorios" />
-                    <Text style={styles.titulo}>Hist Pedidos Compra</Text>
+                    <Text style={styles.titulo}>Relatorio Consolidado</Text>
                 </View>
-                {dadosRelatorio.length > 0 &&
+                {dadosRelatorio != null &&
                     <View style={styles.header}>
                         <ButtonFilter onPress={handleClickFilter} />
                     </View>
                 }
             </View>
-            {dadosRelatorio.length > 0 &&
-                <>
-                    <View style={[styles.rowBetween, { marginTop: 10 }]}>
+            {dadosRelatorio != null &&
+                <View style={{ marginTop: 10 }}>
+                    <View style={styles.rowBetween}>
                         <Text style={styles.itemNome}>Mês/Ano</Text>
                         <Text style={styles.subTitulo}>{mesSelecionado} {anoSelecionado}</Text>
                     </View>
-                    <View style={styles.rowBetween}>
-                        <Text style={styles.itemNome}>Valor Total</Text>
-                        <Text style={styles.subTitulo}>{valorTotal}</Text>
-                    </View>
                     <View style={styles.line}></View>
-                </>
+                </View>
             }
             <ScrollView showsVerticalScrollIndicator={false}>
-
-                {dadosRelatorio.length == 0 ? (
+                {dadosRelatorio == null ? (
                     <View style={{ marginTop: 20 }}>
                         <InputSelectRelatorios
                             title="Ano"
@@ -114,7 +107,6 @@ export const HistoricoPedidosCompra = () => {
                 )
                     :
                     (
-
                         loading == true ?
                             (
                                 <View >
@@ -123,38 +115,51 @@ export const HistoricoPedidosCompra = () => {
                             )
                             :
                             (
-                                <View >
-                                    {dadosRelatorio.map((item, index) => (
-                                        <View style={styles.itemContainer} key={index}>
-                                            <View style={styles.rowBetween}>
-                                                <Text style={styles.itemNome}>Número pedido:</Text>
-                                                <Text style={styles.subTitulo}>{item.numero_pedido_compra}</Text>
-                                            </View>
-                                            <View style={styles.rowBetween}>
-                                                <Text style={styles.itemNome}>Forma de pagamento:</Text>
-                                                <Text style={styles.subTitulo}>{item.forma_pagamento}</Text>
-                                            </View>
-                                            <View style={styles.rowBetween}>
-                                                <Text style={styles.itemNome}>Valor:</Text>
-                                                <Text style={styles.subTitulo}>{formatterbrl(item.valor_total)}</Text>
-                                            </View>
-                                            <View style={styles.rowBetween}>
-                                                <Text style={styles.itemNome}>Data/Hora:</Text>
-                                                <Text style={styles.subTitulo}>{item.data_hora}</Text>
-                                            </View>
+                                <View>
+                                    <Text style={[styles.itemNome]}>Entradas</Text>
+                                    <View style={styles.itemContainer} >
+                                        <View style={styles.rowBetween}>
+                                            <Text style={styles.itemNome}>Faturamento vendas</Text>
+                                            <Text style={styles.subTitulo}>{formatterbrl(dadosRelatorio.valorTotalVendas)}</Text>
                                         </View>
-                                    ))}
+                                    </View>
+                                    <Text style={[styles.itemNome, { marginTop: 10 }]}>Saídas</Text>
+                                    <View style={styles.itemContainer} >
+                                        <View style={styles.rowBetween}>
+                                            <Text style={styles.itemNome}>Saída de caixa:</Text>
+                                            <Text style={styles.subTitulo}>{formatterbrl(dadosRelatorio.valorTotalSaidasCaixa)}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={styles.itemContainer} >
+                                        <View style={styles.rowBetween}>
+                                            <Text style={styles.itemNome}>Saída Pedido Compra:</Text>
+                                            <Text style={styles.subTitulo}>{formatterbrl(dadosRelatorio.valorTotalPedidosCompra)}</Text>
+                                        </View>
+                                    </View>
+                                    <Text style={[styles.itemNome, { marginTop: 10 }]}>Totalizadores</Text>
+                                    <View style={styles.itemContainer} >
+                                        <View style={styles.rowBetween}>
+                                            <Text style={styles.itemNome}>Total despesas:</Text>
+                                            <Text style={styles.subTitulo}>{formatterbrl(dadosRelatorio.valorTotalDespesas)}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={styles.itemContainer} >
+                                        <View style={styles.rowBetween}>
+                                            <Text style={styles.itemNome}>Total lucro:</Text>
+                                            <Text style={styles.subTitulo}>{formatterbrl(dadosRelatorio.valorTotalLucro)}</Text>
+                                        </View>
+                                    </View>
                                 </View>
                             )
                     )}
-            </ScrollView>
-            <ModalErrors
-                title="Aviso"
-                message={msgError}
-                openModal={modalErrors}
-                fnCloseModal={() => setModalErrors(!modalErrors)}
-            />
-        </View>
+                <ModalErrors
+                    title="Aviso"
+                    message={msgError}
+                    openModal={modalErrors}
+                    fnCloseModal={() => setModalErrors(!modalErrors)}
+                />
+            </ScrollView >
+        </View >
     );
 };
 
@@ -162,8 +167,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 20,
-        marginTop: 50,
-
+        marginTop: 50
     },
     header: {
         flexDirection: 'row',
@@ -172,7 +176,7 @@ const styles = StyleSheet.create({
         marginBottom: 2
     },
     relatorioNome: {
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: 'bold'
     },
     line: {
@@ -182,12 +186,11 @@ const styles = StyleSheet.create({
         marginBottom: 15
     },
     titulo: {
-        fontSize: 23,
+        fontSize: 22,
         fontWeight: 'bold',
         marginLeft: 15
     },
     subTitulo: {
-        fontSize: 17,
         fontWeight: 'bold',
         color: '#4040ff'
     },
@@ -197,7 +200,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     itemNome: {
-        fontSize: 17,
         fontWeight: 'bold',
         marginBottom: 5
     },
@@ -217,4 +219,4 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginVertical: 4
     }
-});
+})

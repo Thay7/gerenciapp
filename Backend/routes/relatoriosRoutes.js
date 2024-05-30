@@ -15,4 +15,7 @@ router.get('/listarMesesDisponiveisPedidosCompra', relatoriosController.listarMe
 router.post('/listarDadosRelatorioHistoricoPedidosCompra', relatoriosController.listarDadosRelatorioHistoricoPedidosCompra);
 router.post('/listarDadosRelatorioComprasFornecedor', relatoriosController.listarDadosRelatorioComprasFornecedor);
 
+//Consolidado
+router.post('/listarDadosRelatorioConsolidado', relatoriosController.listarDadosRelatorioConsolidado);
+
 module.exports = router;

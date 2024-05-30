@@ -212,7 +212,12 @@ const relatoriosController = {
 
       const [rows, fields] = await db.query(query, [ano, numeroMes]);
 
-      res.json(rows);
+      let valorTotal = 0;
+      rows.forEach(row => {
+        valorTotal += row.valor_total;
+      });
+
+      res.json({ valor: valorTotal, dados: rows });
     } catch (error) {
       res.status(500).send('Erro ao listar dados');
     }
@@ -228,6 +233,92 @@ const relatoriosController = {
         ORDER BY data_hora DESC`, [idFornecedor]);
 
       res.json(rows);
+    } catch (error) {
+      res.status(500).send('Erro ao listar dados');
+    }
+  },
+  async listarDadosRelatorioConsolidado(req, res) {
+    try {
+      const { ano, mes } = req.body;
+      const mesesNumeros = {
+        Janeiro: 1, Fevereiro: 2, Março: 3, Abril: 4, Maio: 5, Junho: 6,
+        Julho: 7, Agosto: 8, Setembro: 9, Outubro: 10, Novembro: 11, Dezembro: 12
+      };
+
+      const numeroMes = mesesNumeros[mes];
+
+      if (mes != null) {
+        queryVendas = `SELECT * FROM vendas 
+        WHERE YEAR(STR_TO_DATE(data_hora, '%d/%m/%Y %H:%i:%s')) = ? 
+        AND MONTH(STR_TO_DATE(data_hora, '%d/%m/%Y %H:%i:%s')) = ?
+        ORDER BY data_hora ASC`
+      }
+      else {
+        queryVendas = `SELECT * FROM vendas 
+        WHERE YEAR(STR_TO_DATE(data_hora, '%d/%m/%Y %H:%i:%s')) = ? 
+        ORDER BY data_hora ASC`
+      }
+
+      const [rowsVendas] = await db.query(queryVendas, [ano, numeroMes]);
+
+      let querySaidasCaixa;
+
+      if (mes != null) {
+        querySaidasCaixa = `SELECT * FROM movimento_caixa 
+        WHERE YEAR(STR_TO_DATE(data_hora, '%d/%m/%Y %H:%i:%s')) = ? 
+        AND MONTH(STR_TO_DATE(data_hora, '%d/%m/%Y %H:%i:%s')) = ?
+        ORDER BY data_hora ASC`
+      }
+      else {
+        querySaidasCaixa = `SELECT * FROM movimento_caixa 
+        WHERE YEAR(STR_TO_DATE(data_hora, '%d/%m/%Y %H:%i:%s')) = ? 
+        ORDER BY data_hora ASC`
+      }
+      const [rowsSaidasCaixa] = await db.query(querySaidasCaixa, [ano, numeroMes]);
+
+
+      let queryPedidosCompra;
+
+      if (mes != null) {
+        queryPedidosCompra = `SELECT * FROM pedidos_compra 
+        WHERE YEAR(STR_TO_DATE(data_hora, '%d/%m/%Y %H:%i:%s')) = ? 
+        AND MONTH(STR_TO_DATE(data_hora, '%d/%m/%Y %H:%i:%s')) = ?
+        ORDER BY data_hora ASC`
+      }
+      else {
+        queryPedidosCompra = `SELECT * FROM pedidos_compra 
+        WHERE YEAR(STR_TO_DATE(data_hora, '%d/%m/%Y %H:%i:%s')) = ? 
+        ORDER BY data_hora ASC`
+      }
+
+      const [rowsPedidosCompra] = await db.query(queryPedidosCompra, [ano, numeroMes]);
+      let valorTotalVendas = 0;
+      rowsVendas.forEach(row => {
+        valorTotalVendas += row.valor_total;
+      });
+
+      let valorTotalSaidasCaixa = 0;
+      rowsSaidasCaixa.forEach(row => {
+        valorTotalSaidasCaixa += row.valor;
+      });
+
+      let valorTotalPedidosCompra = 0;
+      rowsPedidosCompra.forEach(row => {
+        valorTotalPedidosCompra += row.valor_total;
+      });
+
+      let valorTotalDespesas = 0;
+      valorTotalDespesas = valorTotalSaidasCaixa + valorTotalPedidosCompra;
+
+      let valorTotalLucro = 0;
+      valorTotalLucro = valorTotalVendas - valorTotalDespesas;
+      console.log(valorTotalVendas);
+      console.log(valorTotalSaidasCaixa);
+      console.log(valorTotalPedidosCompra);
+      console.log(valorTotalDespesas);
+      console.log(valorTotalLucro);
+
+      res.json({ valorTotalVendas, valorTotalSaidasCaixa, valorTotalPedidosCompra, valorTotalDespesas, valorTotalLucro });
     } catch (error) {
       res.status(500).send('Erro ao listar dados');
     }

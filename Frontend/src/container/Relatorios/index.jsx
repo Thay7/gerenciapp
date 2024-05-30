@@ -8,6 +8,7 @@ import { ButtonBack } from '../../components/Buttons/ButtonBack';
 export const Relatorios = () => {
     const [vendasList, setVendasList] = useState([]);
     const [pedidoComprasList, setPedidosCompraList] = useState([]);
+    const [consolidadosList, setConsolidadosList] = useState([]);
 
     useEffect(() => {
         listaCadastros()
@@ -35,6 +36,13 @@ export const Relatorios = () => {
                 pagina: 'ComprasPorFornecedor'
             }
         ]);
+
+        setConsolidadosList([
+            {
+                nome: 'Relatório consolidado',
+                pagina: 'RelatorioConsolidado'
+            },
+        ]);
     };
 
     const navigation = useNavigation()
@@ -47,7 +55,7 @@ export const Relatorios = () => {
                     <Text style={styles.titulo}>Relatórios</Text>
                 </View>
                 <View style={styles.containerBox}>
-                    <Text style={styles.itemNome}>Vendas</Text>
+                    {/* <Text style={styles.itemNome}>Vendas</Text> */}
                     {vendasList.map((item, index) => (
                         <TouchableOpacity style={styles.box} key={index} onPress={() => {
                             navigation.navigate(item.pagina, { item: item })
@@ -59,8 +67,20 @@ export const Relatorios = () => {
                     ))}
                 </View>
                 <View style={styles.containerBox}>
-                    <Text style={styles.itemNome}>Pedidos Compra</Text>
+                    {/* <Text style={styles.itemNome}>Pedidos Compra</Text> */}
                     {pedidoComprasList.map((item, index) => (
+                        <TouchableOpacity style={styles.box} key={index} onPress={() => {
+                            navigation.navigate(item.pagina, { item: item })
+                        }}>
+                            <View style={styles.rowBetween}>
+                                <Text style={styles.itemSub}>{item.nome}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    ))}
+                </View>
+                <View style={styles.containerBox}>
+                    {/* <Text style={styles.itemNome}>Pedidos Compra</Text> */}
+                    {consolidadosList.map((item, index) => (
                         <TouchableOpacity style={styles.box} key={index} onPress={() => {
                             navigation.navigate(item.pagina, { item: item })
                         }}>
