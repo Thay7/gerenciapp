@@ -28,7 +28,6 @@ export const Login = () => {
     }
 
     const fnLogin = async () => {
-        // setLoading(true)
         try {
             const response = await useApi.login(formData);
             if (response.status === 200) {
@@ -45,7 +44,6 @@ export const Login = () => {
             setMenssagemModal('Ocorreu um erro ao fazer login.');
             setModalErrors(true);
         }
-        // setLoading(false);
         setFormData({
             login: '',
             senha: ''

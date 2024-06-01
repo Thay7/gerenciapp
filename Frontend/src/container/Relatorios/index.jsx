@@ -55,7 +55,6 @@ export const Relatorios = () => {
                     <Text style={styles.titulo}>Relatórios</Text>
                 </View>
                 <View style={styles.containerBox}>
-                    {/* <Text style={styles.itemNome}>Vendas</Text> */}
                     {vendasList.map((item, index) => (
                         <TouchableOpacity style={styles.box} key={index} onPress={() => {
                             navigation.navigate(item.pagina, { item: item })
@@ -67,7 +66,6 @@ export const Relatorios = () => {
                     ))}
                 </View>
                 <View style={styles.containerBox}>
-                    {/* <Text style={styles.itemNome}>Pedidos Compra</Text> */}
                     {pedidoComprasList.map((item, index) => (
                         <TouchableOpacity style={styles.box} key={index} onPress={() => {
                             navigation.navigate(item.pagina, { item: item })
@@ -79,7 +77,6 @@ export const Relatorios = () => {
                     ))}
                 </View>
                 <View style={styles.containerBox}>
-                    {/* <Text style={styles.itemNome}>Pedidos Compra</Text> */}
                     {consolidadosList.map((item, index) => (
                         <TouchableOpacity style={styles.box} key={index} onPress={() => {
                             navigation.navigate(item.pagina, { item: item })

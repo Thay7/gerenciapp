@@ -10,6 +10,7 @@ import { ButtonSearch } from '../../components/Buttons/ButtonSearch';
 import { formatterbrl } from '../../utils/formatterbrl';
 import { useRoute } from "@react-navigation/native";
 import { ButtonBack } from '../../components/Buttons/ButtonBack';
+import { Loading } from '../../components/Loading';
 
 export const PedidoDeCompra = () => {
     const [pedidosCompraList, setPedidosCompraList] = useState([]);
@@ -111,9 +112,7 @@ export const PedidoDeCompra = () => {
                 <View style={{ marginBottom: 16 }}>
                     {loading ?
                         (
-                            <View>
-                                <Text>Carregando...</Text>
-                            </View>
+                            <Loading /> 
                         )
                         :
                         (
@@ -203,7 +202,7 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     titulo: {
-        fontSize: 20,
+        fontSize: 22,
         fontWeight: 'bold',
         marginLeft: 10
     },

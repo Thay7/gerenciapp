@@ -90,51 +90,54 @@ export const DetalhesEstoque = () => {
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View >
-                    {loading && <Loading />}
-                    <InputApp
-                        title="Nome *"
-                        editable={false}
-                        value={objProdutoEstoque.nome}
-                        fullWidth
-                        borderRadius={10}
-                        marginBottom
-                        onChangeText={(text) => handleInputChange("nome", text)}
-                    />
-                    <InputApp
-                        title="Referência *"
-                        editable={false}
-                        value={objProdutoEstoque.cod_produto.toString()}
-                        fullWidth
-                        borderRadius={10}
-                        marginBottom
-                        keyboardType="numeric"
-                        onChangeText={(text) => handleInputChange("cod_produto", text)}
-                    />
-                    <InputApp
-                        title="Quantidade *"
-                        editable={false}
-                        value={objProdutoEstoque.quantidade.toString()}
-                        fullWidth
-                        borderRadius={10}
-                        marginBottom
-                        keyboardType="numeric"
-                        onChangeText={(text) => handleInputChange("quantidade", text)}
-                    />
-                    {enable &&
+                    {loading ? <Loading /> : (
                         <>
-                            <ButtonApp
-                                title="Salvar"
-                                color="#fff"
-                                backgroundColor="#4040ff"
-                                onPress={() => handleSalve()}
+                            <InputApp
+                                title="Nome *"
+                                editable={false}
+                                value={objProdutoEstoque.nome}
+                                fullWidth
+                                borderRadius={10}
+                                marginBottom
+                                onChangeText={(text) => handleInputChange("nome", text)}
                             />
-                            <ButtonApp
-                                title="Cancelar"
-                                color="#FF0000"
-                                onPress={() => setEnable(false)}
+                            <InputApp
+                                title="Referência *"
+                                editable={false}
+                                value={objProdutoEstoque.cod_produto.toString()}
+                                fullWidth
+                                borderRadius={10}
+                                marginBottom
+                                keyboardType="numeric"
+                                onChangeText={(text) => handleInputChange("cod_produto", text)}
                             />
+                            <InputApp
+                                title="Quantidade *"
+                                editable={false}
+                                value={objProdutoEstoque.quantidade.toString()}
+                                fullWidth
+                                borderRadius={10}
+                                marginBottom
+                                keyboardType="numeric"
+                                onChangeText={(text) => handleInputChange("quantidade", text)}
+                            />
+                            {enable &&
+                                <>
+                                    <ButtonApp
+                                        title="Salvar"
+                                        color="#fff"
+                                        backgroundColor="#4040ff"
+                                        onPress={() => handleSalve()}
+                                    />
+                                    <ButtonApp
+                                        title="Cancelar"
+                                        color="#FF0000"
+                                        onPress={() => setEnable(false)}
+                                    />
+                                </>
+                            }
                         </>
-                    }
+                    )}
                 </View>
                 <ModalErrors
                     title="Aviso"
@@ -163,7 +166,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 16,
+        marginBottom: 10,
     },
     titulo: {
         fontSize: 25,

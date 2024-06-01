@@ -5,6 +5,7 @@ import { useRoute } from "@react-navigation/native";
 import { useNavigation } from '@react-navigation/native';
 import { jwtDecode } from "jwt-decode";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useApi } from '../../Api/useApi';
 import { InputApp } from '../../components/InputApp';
@@ -18,6 +19,7 @@ import { ModalConfirm } from '../../components/ModalConfirm'
 import { ButtonLogOut } from '../../components/Buttons/ButtonLogOut';
 
 export const Perfil = () => {
+    const insets = useSafeAreaInsets();
     const navigation = useNavigation()
     const [loading, setLoading] = useState(false);
 
@@ -82,36 +84,38 @@ export const Perfil = () => {
             <ScrollView
                 showsVerticalScrollIndicator={false}
             >
-                {loading && <Loading />}
                 <View>
-                    <Text style={styles.itemNome}>Dados pessoais</Text>
-                    <InputApp
-                        title="Nome"
-                        editable={false}
-                        value={formData.nome}
-                        fullWidth
-                        borderRadius={10}
-                        marginBottom
-                        onChangeText={(text) => handleInputChange("nome", text)}
-                    />
-                    <InputApp
-                        title="Usuário"
-                        editable={false}
-                        value={formData.usuario}
-                        fullWidth
-                        borderRadius={10}
-                        marginBottom
-                        onChangeText={(text) => handleInputChange("nome", text)}
-                    />
-                    <InputApp
-                        title="Email"
-                        editable={false}
-                        value={formData.email}
-                        fullWidth
-                        borderRadius={10}
-                        marginBottom
-                        onChangeText={(text) => handleInputChange("cod_produto", text)}
-                    />
+                    {loading ? <Loading /> : (
+                        <>
+                            <InputApp
+                                title="Nome"
+                                editable={false}
+                                value={formData.nome}
+                                fullWidth
+                                borderRadius={10}
+                                marginBottom
+                                onChangeText={(text) => handleInputChange("nome", text)}
+                            />
+                            <InputApp
+                                title="Usuário"
+                                editable={false}
+                                value={formData.usuario}
+                                fullWidth
+                                borderRadius={10}
+                                marginBottom
+                                onChangeText={(text) => handleInputChange("nome", text)}
+                            />
+                            <InputApp
+                                title="Email"
+                                editable={false}
+                                value={formData.email}
+                                fullWidth
+                                borderRadius={10}
+                                marginBottom
+                                onChangeText={(text) => handleInputChange("cod_produto", text)}
+                            />
+                        </>
+                    )}
                     <ModalErrors
                         title={titleModal}
                         message={mensagemModal}
@@ -134,7 +138,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 16,
+        marginBottom: 20
     },
     titulo: {
         fontSize: 30,

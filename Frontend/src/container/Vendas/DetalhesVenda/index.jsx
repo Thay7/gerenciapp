@@ -171,96 +171,99 @@ export const DetalhesVenda = () => {
                 }
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
-                {loading && <Loading />}
-                <View style={[{ marginTop: 10, marginBottom: 10, marginHorizontal: 5 }, styles.rowBetween]}>
-                    <View >
-                        <Text style={styles.itemNome}>Nº Venda</Text>
-                        <Text style={styles.itemSub}>{venda.numero_venda}</Text>
-                    </View>
-                    <View>
-                        <Text style={styles.itemNome}>Data e Hora</Text>
-                        <Text style={styles.itemSub}>{venda.data_hora}</Text>
-                    </View>
-                </View>
-                <View style={styles.itemContainer}>
-                    {formData.itens.map((item, index) => (
-                        <View key={index}>
-                            <Text style={[styles.itemNome, { marginBottom: 10 }]}>{item.nome}</Text>
-                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                {loading ? <Loading /> : (
+                    <>
+                        <View style={[{ marginTop: 10, marginBottom: 10, marginHorizontal: 5 }, styles.rowBetween]}>
+                            <View >
+                                <Text style={styles.itemNome}>Nº Venda</Text>
+                                <Text style={styles.itemSub}>{venda.numero_venda}</Text>
+                            </View>
+                            <View>
+                                <Text style={styles.itemNome}>Data e Hora</Text>
+                                <Text style={styles.itemSub}>{venda.data_hora}</Text>
+                            </View>
+                        </View>
+                        <View style={styles.itemContainer}>
+                            {formData.itens.map((item, index) => (
+                                <View key={index}>
+                                    <Text style={[styles.itemNome, { marginBottom: 10 }]}>{item.nome}</Text>
+                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                                        <InputApp
+                                            title="Valor"
+                                            editable={enable}
+                                            value={item.valor.toString()}
+                                            width={130}
+                                            fullWidth
+                                            borderRadius={10}
+                                            marginBottom
+                                            keyboardType="numeric"
+                                            onChangeText={(text) => handleInputChange("valor", text, item.id_item)}
+                                        />
+                                        {item.quantidade != null &&
+                                            <InputApp
+                                                title="Quantidade"
+                                                editable={enable}
+                                                value={item.quantidade != null ? item.quantidade.toString() : item.quantidade}
+                                                width={130}
+                                                fullWidth
+                                                borderRadius={10}
+                                                marginBottom
+                                                keyboardType="numeric"
+                                                onChangeText={(text) => handleInputChange("quantidade", text, item.id_item)}
+                                            />
+                                        }
+                                    </View>
+                                </View>
+                            ))}
+                        </View>
+                        <View style={styles.itemContainer}>
+                            <InputSelectPagamento
+                                title="Forma de Pagamento"
+                                options={optionsPagamento}
+                                selectedValue={selectedPagamento}
+                                onValueChange={(value) => handleOnValueChangePagamento(value)}
+                                enable={enable}
+                            />
+                            {formData.forma_pagamento === "Cartão de Crédito" &&
                                 <InputApp
-                                    title="Valor"
+                                    title="Nº Parcelas"
                                     editable={enable}
-                                    value={item.valor.toString()}
-                                    width={130}
+                                    value={formData.numero_parcelas.toString()}
                                     fullWidth
                                     borderRadius={10}
                                     marginBottom
                                     keyboardType="numeric"
-                                    onChangeText={(text) => handleInputChange("valor", text, item.id_item)}
+                                    onChangeText={(text) => handleInputChange("numero_parcelas", text)}
                                 />
-                                {item.quantidade != null &&
-                                    <InputApp
-                                        title="Quantidade"
-                                        editable={enable}
-                                        value={item.quantidade != null ? item.quantidade.toString() : item.quantidade}
-                                        width={130}
-                                        fullWidth
-                                        borderRadius={10}
-                                        marginBottom
-                                        keyboardType="numeric"
-                                        onChangeText={(text) => handleInputChange("quantidade", text, item.id_item)}
-                                    />
-                                }
-                            </View>
+                            }
+                            <InputApp
+                                title="Valor Total"
+                                editable={enable}
+                                value={venda.valor_total.toString()}
+                                fullWidth
+                                borderRadius={10}
+                                marginBottom
+                                keyboardType="numeric"
+                                onChangeText={(text) => handleInputChange("valor_total", text)}
+                            />
                         </View>
-                    ))}
-                </View>
-                <View style={styles.itemContainer}>
-                    <InputSelectPagamento
-                        title="Forma de Pagamento"
-                        options={optionsPagamento}
-                        selectedValue={selectedPagamento}
-                        onValueChange={(value) => handleOnValueChangePagamento(value)}
-                        enable={enable}
-                    />
-                    {formData.forma_pagamento === "Cartão de Crédito" &&
-                        <InputApp
-                            title="Nº Parcelas"
-                            editable={enable}
-                            value={formData.numero_parcelas.toString()}
-                            fullWidth
-                            borderRadius={10}
-                            marginBottom
-                            keyboardType="numeric"
-                            onChangeText={(text) => handleInputChange("numero_parcelas", text)}
-                        />
-                    }
-                    <InputApp
-                        title="Valor Total"
-                        editable={enable}
-                        value={venda.valor_total.toString()}
-                        fullWidth
-                        borderRadius={10}
-                        marginBottom
-                        keyboardType="numeric"
-                        onChangeText={(text) => handleInputChange("valor_total", text)}
-                    />
-                </View>
-                {enable &&
-                    <>
-                        <ButtonApp
-                            title="Salvar"
-                            color="#fff"
-                            backgroundColor="#4040ff"
-                            onPress={handleSubmit}
-                        />
-                        <ButtonApp
-                            title="Cancelar"
-                            color="#FF0000"
-                            onPress={() => setEnable(false)}
-                        />
+                        {enable &&
+                            <>
+                                <ButtonApp
+                                    title="Salvar"
+                                    color="#fff"
+                                    backgroundColor="#4040ff"
+                                    onPress={handleSubmit}
+                                />
+                                <ButtonApp
+                                    title="Cancelar"
+                                    color="#FF0000"
+                                    onPress={() => setEnable(false)}
+                                />
+                            </>
+                        }
                     </>
-                }
+                )}
                 <ModalErrors
                     title={titleModal}
                     message={mensagemModal}

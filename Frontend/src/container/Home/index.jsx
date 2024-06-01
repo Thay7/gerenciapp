@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, ScrollView, RefreshControl } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, StyleSheet, Text, ScrollView, RefreshControl, BackHandler, Alert } from 'react-native';
 import { HomeItem } from '../../components/Home/HomeItem';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 
 //Icons menus
 import ic_vendas from '../../icons/Home/ic_vendas.png';
@@ -15,6 +17,8 @@ import { ResumoDia } from '../../components/Home/ResumoDia';
 import { useApi } from '../../Api/useApi';
 
 export const Home = () => {
+    const insets = useSafeAreaInsets();
+
     const menus = [
         { name: 'Vendas', icon: ic_vendas, page: 'Vendas' },
         { name: 'Estoque', icon: ic_estoque, page: 'Estoque' },
@@ -42,6 +46,22 @@ export const Home = () => {
         buscarResumoDia();
     };
 
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                Alert.alert("Sair", "Deseja sair do aplicativo?", [
+                    { text: "Não", style: "cancel" },
+                    { text: "Sim", onPress: () => BackHandler.exitApp() }
+                ]);
+                return true;
+            };
+
+            BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+            return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+        }, [])
+    );
+
     return (
         <ScrollView style={styles.container}
             refreshControl={
@@ -53,7 +73,7 @@ export const Home = () => {
                 />
             }
         >
-            <View style={styles.header}>
+            <View style={[styles.header, { marginTop: insets.top }]}>
                 <Text style={styles.headerText}>GerenciApp</Text>
                 <Text style={styles.subHeaderText}>Borracharia do Valdir</Text>
             </View>
@@ -70,7 +90,6 @@ export const Home = () => {
 const styles = StyleSheet.create({
     header: {
         height: 80,
-        marginTop: 30,
         paddingHorizontal: 20,
         justifyContent: 'center',
     },

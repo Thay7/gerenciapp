@@ -301,156 +301,157 @@ export const DetalhesCadastro = () => {
                 }
             </View>
             <ScrollView >
-                {loading && <Loading />}
-                <View>
-                    {item.cnpj &&
-                        <>
-                            <InputApp
-                                title="Nome fantasia"
-                                fullWidth
-                                value={formDataFornecedor.nome_fantasia}
-                                onChangeText={(text) => handleInputChange("nome_fantasia", text, 'Fornecedor')}
-                                marginBottom={true}
-                                borderRadius={10}
-                                editable={enable}
-                            />
-                            <InputApp
-                                title="Razão social"
-                                fullWidth
-                                multiline={true}
-                                value={formDataFornecedor.razao_social}
-                                onChangeText={(text) => handleInputChange("razao_social", text, 'Fornecedor')}
-                                marginBottom={true}
-                                borderRadius={10}
-                                editable={enable}
-                            />
-                            <InputApp
-                                title="CNPJ"
-                                fullWidth
-                                value={formDataFornecedor.cnpj}
-                                onChangeText={(text) => handleInputChange("cnpj", text, 'Fornecedor')}
-                                marginBottom={true}
-                                borderRadius={10}
-                                editable={enable}
-                            />
-                            <InputApp
-                                title="Contato"
-                                fullWidth
-                                value={formDataFornecedor.contato}
-                                onChangeText={(text) => handleInputChange("contato", text, 'Fornecedor')}
-                                keyboardType="numeric"
-                                marginBottom={true}
-                                borderRadius={10}
-                                editable={enable}
-                            />
-                        </>
-                    }
-                    {item.usuario &&
-                        <>
-                            <InputApp
-                                title="Nome"
-                                fullWidth
-                                value={formDataUsuario.nome}
-                                onChangeText={(text) => handleInputChange("nome", text, 'Usuario')}
-                                marginBottom={true}
-                                borderRadius={10}
-                                editable={enable}
-                            />
-                            <InputApp
-                                title="Usuário"
-                                fullWidth
-                                multiline={true}
-                                value={formDataUsuario.usuario}
-                                onChangeText={(text) => handleInputChange("usuario", text, 'Usuario')}
-                                marginBottom={true}
-                                borderRadius={10}
-                                editable={enable}
-                            />
-                            <InputApp
-                                title="Email"
-                                fullWidth
-                                value={formDataUsuario.email}
-                                onChangeText={(text) => handleInputChange("email", text, 'Usuario')}
-                                marginBottom={true}
-                                borderRadius={10}
-                                editable={enable}
-                            />
-                        </>
+                {loading ? <Loading /> : (
+                    <View>
+                        {item.cnpj &&
+                            <>
+                                <InputApp
+                                    title="Nome fantasia"
+                                    fullWidth
+                                    value={formDataFornecedor.nome_fantasia}
+                                    onChangeText={(text) => handleInputChange("nome_fantasia", text, 'Fornecedor')}
+                                    marginBottom={true}
+                                    borderRadius={10}
+                                    editable={enable}
+                                />
+                                <InputApp
+                                    title="Razão social"
+                                    fullWidth
+                                    multiline={true}
+                                    value={formDataFornecedor.razao_social}
+                                    onChangeText={(text) => handleInputChange("razao_social", text, 'Fornecedor')}
+                                    marginBottom={true}
+                                    borderRadius={10}
+                                    editable={enable}
+                                />
+                                <InputApp
+                                    title="CNPJ"
+                                    fullWidth
+                                    value={formDataFornecedor.cnpj}
+                                    onChangeText={(text) => handleInputChange("cnpj", text, 'Fornecedor')}
+                                    marginBottom={true}
+                                    borderRadius={10}
+                                    editable={enable}
+                                />
+                                <InputApp
+                                    title="Contato"
+                                    fullWidth
+                                    value={formDataFornecedor.contato}
+                                    onChangeText={(text) => handleInputChange("contato", text, 'Fornecedor')}
+                                    keyboardType="numeric"
+                                    marginBottom={true}
+                                    borderRadius={10}
+                                    editable={enable}
+                                />
+                            </>
+                        }
+                        {item.usuario &&
+                            <>
+                                <InputApp
+                                    title="Nome"
+                                    fullWidth
+                                    value={formDataUsuario.nome}
+                                    onChangeText={(text) => handleInputChange("nome", text, 'Usuario')}
+                                    marginBottom={true}
+                                    borderRadius={10}
+                                    editable={enable}
+                                />
+                                <InputApp
+                                    title="Usuário"
+                                    fullWidth
+                                    multiline={true}
+                                    value={formDataUsuario.usuario}
+                                    onChangeText={(text) => handleInputChange("usuario", text, 'Usuario')}
+                                    marginBottom={true}
+                                    borderRadius={10}
+                                    editable={enable}
+                                />
+                                <InputApp
+                                    title="Email"
+                                    fullWidth
+                                    value={formDataUsuario.email}
+                                    onChangeText={(text) => handleInputChange("email", text, 'Usuario')}
+                                    marginBottom={true}
+                                    borderRadius={10}
+                                    editable={enable}
+                                />
+                            </>
 
-                    }
-                    {item.tipo &&
-                        <>
-                            <InputSelectSimples
-                                title="Tipo *"
-                                options={optionsTipo}
-                                selectedValue={formDataMovCaixa.tipo}
-                                onValueChange={(value) => handleOnValueChange(value, 'tipo')}
-                                editable={enable}
-                            />
-                            <InputSelectSimples
-                                title="Descrição *"
-                                options={handleOptionsDesc()}
-                                selectedValue={formDataMovCaixa.descricao}
-                                onValueChange={(value) => handleOnValueChange(value, 'descricao')}
-                                editable={enable}
-                            />
-                            <InputApp
-                                title="Valor *"
-                                fullWidth
-                                value={formDataMovCaixa.valor.toString()}
-                                onChangeText={(text) => handleInputChange("valor", text, 'Movimento Caixa')}
-                                keyboardType="numeric"
-                                marginBottom={true}
-                                borderRadius={10}
-                                editable={enable}
-                            />
-                            <InputApp
-                                title="Data/Hora *"
-                                fullWidth
-                                value={formDataMovCaixa.data_hora}
-                                // onChangeText={(text) => handleInputChange("valor", text, 'Movimento Caixa')}
-                                marginBottom={true}
-                                borderRadius={10}
-                                editable={false}
-                            />
-                        </>
+                        }
+                        {item.tipo &&
+                            <>
+                                <InputSelectSimples
+                                    title="Tipo *"
+                                    options={optionsTipo}
+                                    selectedValue={formDataMovCaixa.tipo}
+                                    onValueChange={(value) => handleOnValueChange(value, 'tipo')}
+                                    editable={enable}
+                                />
+                                <InputSelectSimples
+                                    title="Descrição *"
+                                    options={handleOptionsDesc()}
+                                    selectedValue={formDataMovCaixa.descricao}
+                                    onValueChange={(value) => handleOnValueChange(value, 'descricao')}
+                                    editable={enable}
+                                />
+                                <InputApp
+                                    title="Valor *"
+                                    fullWidth
+                                    value={formDataMovCaixa.valor.toString()}
+                                    onChangeText={(text) => handleInputChange("valor", text, 'Movimento Caixa')}
+                                    keyboardType="numeric"
+                                    marginBottom={true}
+                                    borderRadius={10}
+                                    editable={enable}
+                                />
+                                <InputApp
+                                    title="Data/Hora *"
+                                    fullWidth
+                                    value={formDataMovCaixa.data_hora}
+                                    // onChangeText={(text) => handleInputChange("valor", text, 'Movimento Caixa')}
+                                    marginBottom={true}
+                                    borderRadius={10}
+                                    editable={false}
+                                />
+                            </>
 
-                    }
-                    {enable &&
-                        <>
-                            <ButtonApp
-                                title="Salvar"
-                                color="#fff"
-                                backgroundColor="#4040ff"
-                                onPress={handleSubmit}
-                            />
-                            <ButtonApp
-                                title="Cancelar"
-                                color="#FF0000"
-                                onPress={() => setEnable(false)}
-                            />
-                        </>
-                    }
-                    <ModalErrors
-                        title={titleModalErrors}
-                        message={mensagemModalErrors}
-                        openModal={modalErrors}
-                        fnCloseModal={() => setModalErrors(!modalErrors)}
-                    />
-                    <ModalSucces
-                        title="Sucesso"
-                        message={mensagemSucess}
-                        openModal={modalSucess}
-                        fnCloseModal={() => setModalSucess(!modalSucess)}
-                    />
-                    <ModalConfirm
-                        title="Atenção"
-                        message="Tem certeza que deseja excluir?"
-                        openModal={modalConfirm}
-                        fnCloseModal={() => setModalConfirm(!modalConfirm)}
-                        fnConfirm={handleDelete}
-                    />
-                </View>
+                        }
+                        {enable &&
+                            <>
+                                <ButtonApp
+                                    title="Salvar"
+                                    color="#fff"
+                                    backgroundColor="#4040ff"
+                                    onPress={handleSubmit}
+                                />
+                                <ButtonApp
+                                    title="Cancelar"
+                                    color="#FF0000"
+                                    onPress={() => setEnable(false)}
+                                />
+                            </>
+                        }
+                        <ModalErrors
+                            title={titleModalErrors}
+                            message={mensagemModalErrors}
+                            openModal={modalErrors}
+                            fnCloseModal={() => setModalErrors(!modalErrors)}
+                        />
+                        <ModalSucces
+                            title="Sucesso"
+                            message={mensagemSucess}
+                            openModal={modalSucess}
+                            fnCloseModal={() => setModalSucess(!modalSucess)}
+                        />
+                        <ModalConfirm
+                            title="Atenção"
+                            message="Tem certeza que deseja excluir?"
+                            openModal={modalConfirm}
+                            fnCloseModal={() => setModalConfirm(!modalConfirm)}
+                            fnConfirm={handleDelete}
+                        />
+                    </View>
+                )}
             </ScrollView>
         </View>
     );

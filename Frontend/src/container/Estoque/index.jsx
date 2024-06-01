@@ -9,6 +9,7 @@ import { ButtonAdd } from '../../components/Buttons/ButtonAdd';
 import { ButtonSearch } from '../../components/Buttons/ButtonSearch';
 import { ButtonImport } from '../../components/Buttons/ButtonImport';
 import { ButtonBack } from '../../components/Buttons/ButtonBack';
+import { Loading } from '../../components/Loading';
 
 export const Estoque = () => {
     const [estoqueList, setEstoqueList] = useState([]);
@@ -79,9 +80,7 @@ export const Estoque = () => {
                 <View style={{ marginBottom: 16 }}>
                     {loading ?
                         (
-                            <View>
-                                <Text>Carregando...</Text>
-                            </View>
+                            <Loading />
                         )
                         :
                         (

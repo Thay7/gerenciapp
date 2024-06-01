@@ -1,13 +1,22 @@
 import { Picker } from '@react-native-picker/picker';
 import { View, Text, StyleSheet } from 'react-native';
 import { formatterbrl } from '../../utils/formatterbrl';
+import { useEffect, useState } from 'react';
 
 export const InputSelectSimples = ({ title, selectedValue, onValueChange, options, editable }) => {
+    const [controlIsEditable, setControlIsEditable] = useState(true);
+
+    useEffect(() => {
+        if (editable != null) {
+            setControlIsEditable(editable);
+        }
+    }, []);
+
     return (
         <View style={styles.container}>
             <View>
                 <Text style={styles.text}>
-                    {title} 
+                    {title}
                 </Text>
             </View>
             <View style={styles.input}>
@@ -19,7 +28,7 @@ export const InputSelectSimples = ({ title, selectedValue, onValueChange, option
                     <Picker.Item
                         label="Selecione"
                         enabled={false}
-                        style={{color: 'gray'}}
+                        style={{ color: 'gray' }}
                     />
                     {options.length === 0
                         ? (
@@ -36,7 +45,7 @@ export const InputSelectSimples = ({ title, selectedValue, onValueChange, option
                                     key={index}
                                     label={item.nome_fantasia != null ? item.nome_fantasia : item}
                                     value={item}
-                                    style={!editable ? {color: 'gray'} : {}}
+                                    style={!controlIsEditable ? { color: 'gray' } : {}}
                                 />
                             ))
                         )
