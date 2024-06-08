@@ -157,7 +157,6 @@ export const ListaCadastros = () => {
                                             key={index}
                                         >
                                             <Text style={styles.itemNome}>{item.nome_fantasia}</Text>
-                                            <Text style={styles.itemNome}>{item.razao_social}</Text>
                                             <Text style={styles.itemSub}>CNPJ: {item.cnpj}</Text>
                                             <Text style={styles.itemSub}>Contato: {item.contato}</Text>
                                         </TouchableOpacity>
@@ -171,7 +170,6 @@ export const ListaCadastros = () => {
                                                 key={index}
                                             >
                                                 <Text style={styles.itemNome}>{item.nome_fantasia}</Text>
-                                                <Text style={styles.itemNome}>{item.razao_social}</Text>
                                                 <Text style={styles.itemSub}>CNPJ: {item.cnpj}</Text>
                                                 <Text style={styles.itemSub}>Contato: {item.contato}</Text>
                                             </TouchableOpacity>

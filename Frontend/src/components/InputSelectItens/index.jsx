@@ -55,6 +55,8 @@ export const InputSelectItens = ({ title, selectedValue, onValueChange, options,
                                     label={item.tipo === "Label" ? item.nome : `${item.nome} - ${ venda ? formatterbrl(item.valor_venda) : formatterbrl(item.valor_compra)}`}
                                     value={item}
                                     style={item.tipo === "Label" ? styles.labelSeparator : styles.labelPicker}
+                                    enabled={item.tipo !== "Label"}
+
                                 />
                             ))
                         )
@@ -71,7 +73,6 @@ const styles = StyleSheet.create({
     },
     text: {
         marginBottom: 5,
-        fontSize: 16,
         fontWeight: 'bold',
     },
     input: {
@@ -81,6 +82,10 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     labelSeparator: {
+        fontSize: 14,
         color: '#4040ff'
+    },
+    labelPicker: {
+        fontSize: 14
     }
 })

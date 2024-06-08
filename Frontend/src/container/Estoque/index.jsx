@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { useApi } from '../../Api/useApi';
 import { ModalSearch } from '../../components/ModalSearch/index';
@@ -17,6 +17,8 @@ export const Estoque = () => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [search, setSearch] = useState([]);
     const [noResults, setNoResults] = useState(false);
+    
+    const route = useRoute();
 
     useEffect(() => {
         buscarEstoque()
@@ -51,6 +53,18 @@ export const Estoque = () => {
     }
 
     const navigation = useNavigation()
+
+    useEffect(() => {
+        if (route.params?.novoEstoque) {
+            const novoEstoque = route.params?.novoEstoque;
+            setEstoqueList([...estoqueList, novoEstoque]);
+        }
+
+        if (route.params?.estoqueAtualizado) {
+            const estoqueAtualizado = route.params?.estoqueAtualizado;
+            setEstoqueList(estoqueList.map(estoque => (estoque.id === estoqueAtualizado.id ? estoqueAtualizado : estoque)));
+        }
+    }, [route.params?.novoEstoque, route.params?.estoqueAtualizado]);
 
     return (
         <View style={styles.container}>

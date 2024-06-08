@@ -165,7 +165,7 @@ export const DetalhesProduto = () => {
                     <InputApp
                         title="Valor Venda"
                         editable={enable}
-                        value={formData.valor_venda.toString()}
+                        value={formData.valor_venda != null ? formData.valor_venda.toString() : formData.valor_venda}
                         fullWidth
                         borderRadius={10}
                         marginBottom

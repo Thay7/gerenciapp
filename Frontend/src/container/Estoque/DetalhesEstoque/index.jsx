@@ -94,7 +94,7 @@ export const DetalhesEstoque = () => {
                         <>
                             <InputApp
                                 title="Nome *"
-                                editable={false}
+                                editable={enable}
                                 value={objProdutoEstoque.nome}
                                 fullWidth
                                 borderRadius={10}
@@ -103,7 +103,7 @@ export const DetalhesEstoque = () => {
                             />
                             <InputApp
                                 title="Referência *"
-                                editable={false}
+                                editable={enable}
                                 value={objProdutoEstoque.cod_produto.toString()}
                                 fullWidth
                                 borderRadius={10}
@@ -113,7 +113,7 @@ export const DetalhesEstoque = () => {
                             />
                             <InputApp
                                 title="Quantidade *"
-                                editable={false}
+                                editable={enable}
                                 value={objProdutoEstoque.quantidade.toString()}
                                 fullWidth
                                 borderRadius={10}

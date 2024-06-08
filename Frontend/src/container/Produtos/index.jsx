@@ -131,10 +131,7 @@ export const Produtos = () => {
                                             key={index}
                                         >
                                             <Text style={styles.itemNome}>{item.nome}</Text>
-                                            <Text style={styles.itemSub}>Referência: {item.cod_produto}</Text>
-                                            {item.descricao &&
-                                                <Text style={styles.itemSub}>Descrição: {item.descricao}</Text>
-                                            }
+                                            <Text style={styles.itemSub}>Marca: {item.marca}</Text>
                                             <Text style={styles.itemSub}>Valor: {formatterbrl(item.valor_venda)}</Text>
                                         </TouchableOpacity>
                                     ))
@@ -152,10 +149,7 @@ export const Produtos = () => {
                                                         key={index}
                                                     >
                                                         <Text style={styles.itemNome}>{item.nome}</Text>
-                                                        <Text style={styles.itemSub}>Referência: {item.cod_produto}</Text>
-                                                        {item.descricao &&
-                                                            <Text style={styles.itemSub}>Descrição: {item.descricao}</Text>
-                                                        }
+                                                        <Text style={styles.itemSub}>Marca: {item.marca}</Text>
                                                         <Text style={styles.itemSub}>Valor: {formatterbrl(item.valor_venda)}</Text>
                                                     </TouchableOpacity>
                                                 ))}

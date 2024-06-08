@@ -294,25 +294,27 @@ export const NovaVenda = () => {
                                             <TouchableOpacity style={styles.closeButton} onPress={() => handleRemoveItem(item)}>
                                                 <Image source={ic_remove} style={styles.icon} />
                                             </TouchableOpacity>
-                                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                            <View>
                                                 <View>
                                                     <Text style={styles.itemNome}>{item.tipo == "Produto" ? "Produto" : "Serviço"}</Text>
                                                     <Text >{item.nome}</Text>
                                                 </View>
-                                                <View>
-                                                    <Text style={styles.itemNome}>Valor</Text>
-                                                    <Text>{formatterbrl(item.valor_venda)}</Text>
-                                                </View>
-                                                <View>
-                                                    <Text style={styles.itemNome}>Quantidade</Text>
-                                                    <InputApp
-                                                        value={item.quantidade}
-                                                        onChangeText={(value) => handleChangeQtde(item, value)}
-                                                        keyboardType="numeric"
-                                                        marginBottom={false}
-                                                        height={25}
-                                                        borderRadius={5}
-                                                    />
+                                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                                                    <View>
+                                                        <Text style={styles.itemNome}>Valor</Text>
+                                                        <Text>{formatterbrl(item.valor_venda)}</Text>
+                                                    </View>
+                                                    <View>
+                                                        <Text style={styles.itemNome}>Quantidade</Text>
+                                                        <InputApp
+                                                            value={item.quantidade}
+                                                            onChangeText={(value) => handleChangeQtde(item, value)}
+                                                            keyboardType="numeric"
+                                                            marginBottom={false}
+                                                            height={25}
+                                                            borderRadius={5}
+                                                        />
+                                                    </View>
                                                 </View>
                                             </View>
                                         </View>
@@ -366,17 +368,18 @@ export const NovaVenda = () => {
                             options={optionsPagamento}
                             selectedValue={selectedPagamento}
                             onValueChange={(value) => handleOnValueChangePagamento(value)}
+                            enable
                         />
                         {selectedPagamento != null && <Text style={styles.itemNome}>Itens Venda</Text>}
                         {(selectedPagamento == "Dinheiro" || selectedPagamento == "Pix" || selectedPagamento == "Cartão de Debito") &&
                             itensVenda.map((item, i) => (
                                 <View style={[styles.itemContainer, { marginBottom: 1 }]} key={i}>
-                                    <View style={{ display: 'flex', flexDirection: 'row' }}>
+                                    <View>
                                         <View>
                                             <Text style={styles.itemNome}>{item.tipo == "Produto" ? "Produto" : "Serviço"}</Text>
                                             <Text >{item.nome}</Text>
                                         </View>
-                                        <View style={{ marginLeft: 58 }}>
+                                        <View style={{ marginTop: 10 }}>
                                             <Text style={styles.itemNome}>Valor</Text>
                                             <Text>{formatterbrl(item.valor_venda)}</Text>
                                         </View>
@@ -387,12 +390,12 @@ export const NovaVenda = () => {
                         {selectedPagamento == "Cartão de Crédito" &&
                             itensVenda.map((item, i) => (
                                 <View style={[styles.itemContainer, { marginBottom: 1 }]} key={i}>
-                                    <View style={{ display: 'flex', flexDirection: 'row' }}>
+                                    <View >
                                         <View>
                                             <Text style={styles.itemNome}>{item.tipo == "Produto" ? "Produto" : "Serviço"}</Text>
                                             <Text>{item.nome}</Text>
                                         </View>
-                                        <View style={{ marginLeft: 58 }}>
+                                        <View style={{ marginTop: 10 }}>
                                             <Text style={styles.itemNome}>Valor</Text>
                                             <Text>{formatterbrl(item.valor_venda)}</Text>
                                         </View>
@@ -422,7 +425,6 @@ export const NovaVenda = () => {
                                                 <Text style={styles.itemNome}>Valor Total</Text>
                                             </View>
                                             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                                {/* <Text style={{ fontSize: 16, marginRight: 3 }}>R$</Text> */}
                                                 <InputApp
                                                     value={totalCompra.toString()}
                                                     onChangeText={(value) => handleChangeValorTotal(value)}
@@ -469,18 +471,20 @@ export const NovaVenda = () => {
                                 item.tipo == "Produto" ?
                                     (
                                         <View style={[styles.itemContainer, { marginBottom: 1 }]} key={i}>
-                                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                            <View >
                                                 <View>
                                                     <Text style={styles.itemNome}>{item.tipo == "Produto" ? "Produto" : "Serviço"}</Text>
                                                     <Text >{item.nome}</Text>
                                                 </View>
-                                                <View>
-                                                    <Text style={styles.itemNome}>Valor</Text>
-                                                    <Text>{formatterbrl(item.valor_venda)}</Text>
-                                                </View>
-                                                <View>
-                                                    <Text style={styles.itemNome}>Quantidade</Text>
-                                                    <Text>{item.quantidade}</Text>
+                                                <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}> 
+                                                    <View style={{ marginTop: 5 }}>
+                                                        <Text style={styles.itemNome}>Valor</Text>
+                                                        <Text>{formatterbrl(item.valor_venda)}</Text>
+                                                    </View>
+                                                    <View style={{ marginTop: 5 }}>
+                                                        <Text style={styles.itemNome}>Quantidade</Text>
+                                                        <Text>{item.quantidade}</Text>
+                                                    </View>
                                                 </View>
                                             </View>
                                         </View>
@@ -488,12 +492,12 @@ export const NovaVenda = () => {
                                     :
                                     (
                                         <View style={[styles.itemContainer, { marginBottom: 1 }]} key={i}>
-                                            <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 1 }}>
+                                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                                 <View>
                                                     <Text style={styles.itemNome}>{item.tipo == "Produto" ? "Produto" : "Serviço"}</Text>
                                                     <Text>{item.nome}</Text>
                                                 </View>
-                                                <View style={{ marginLeft: 58 }}>
+                                                <View>
                                                     <Text style={styles.itemNome}>Valor</Text>
                                                     <Text>{formatterbrl(item.valor_venda)}</Text>
                                                 </View>
@@ -543,7 +547,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 20,
-        marginTop: 50,
+        marginTop: 50
     },
     header: {
         flexDirection: 'row',
@@ -582,29 +586,26 @@ const styles = StyleSheet.create({
         height: 25,
         borderRadius: 15,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
     icon: {
         width: 10,
         height: 10
     },
     itemNome: {
-        fontSize: 17,
         fontWeight: 'bold',
         marginBottom: 5
     },
     valor: {
-        fontSize: 15,
-        fontWeight: 'bold',
+        // fontSize: 15,
+        fontWeight: 'bold'
     },
     title: {
         marginBottom: 5,
-        fontSize: 22,
-        fontWeight: 'bold',
+        fontWeight: 'bold'
     },
     value: {
         alignSelf: 'flex-end',
-        fontSize: 18,
         fontWeight: 'bold',
         marginTop: 10,
         marginRight: 10
