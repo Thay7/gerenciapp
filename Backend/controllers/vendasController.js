@@ -50,7 +50,7 @@ const vendasController = {
   async cadastrar(req, res) {
     try {
       const { forma_pagamento, numero_parcelas, valor_total, data_hora, itens } = req.body;
-
+      console.log(data_hora);
       //Adicionado a venda ao banco
       const insertVenda = `INSERT INTO vendas (forma_pagamento, numero_parcelas, valor_total, data_hora)
                      VALUES (?, ?, ?, ?)`

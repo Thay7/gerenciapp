@@ -218,6 +218,7 @@ export const NovaVenda = () => {
     const navigation = useNavigation()
 
     const handleNovaVenda = async () => {
+        console.log(objVenda.data_hora);
         setLoading(true)
         if (await useApi.cadastrarVenda(objVenda) == 200) {
             setModalSucess(true);

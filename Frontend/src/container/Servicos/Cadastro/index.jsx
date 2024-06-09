@@ -53,7 +53,7 @@ export const CadastroDeServicos = () => {
     }
 
     const handleSubmit = async () => {
-        if (formData.nome != '' && formData.valor_venda > 0) {
+        if (formData.nome != '') {
             cadastraNovoServico()
         }
         else {

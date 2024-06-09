@@ -5,7 +5,7 @@ const api = axios.create({
     // baseURL: (typeof (Constants.expoConfig.extra.API_URL) == "object" && Object.keys(Constants.expoConfig.extra.API_URL).length > 0)
     //     || (typeof (Constants.expoConfig.extra.API_URL) != "object" && !!Constants.expoConfig.extra.API_URL)
     //     ? Constants.expoConfig.extra.API_URL
-    //     : "http://192.168.0.8:5000/api",
+    //     : "http://192.168.0.6:5000/api",
     baseURL: "http://213.199.49.233:5000/api/", 
     timeout: 5000
 })

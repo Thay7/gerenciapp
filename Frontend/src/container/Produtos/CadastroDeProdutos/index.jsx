@@ -56,7 +56,7 @@ export const CadastroDeProdutos = () => {
     }
 
     const handleSubmit = async () => {
-        if (formData.nome != '' && formData.cod_produto != 0 && formData.marca != '' && formData.valor_compra > 0 && formData.valor_venda > 0) {
+        if (formData.nome != '' && formData.marca != '' && formData.valor_compra > 0 && formData.valor_venda > 0) {
             cadastraNovoProduto()
         }
         else {

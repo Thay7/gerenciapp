@@ -23,8 +23,27 @@ const homeController = {
             listResumoDia[1].value = rowsEntradaCaixa[0].valorEntradaCaixa > 0 ? formatterbrl(rowsEntradaCaixa[0].valorEntradaCaixa) : formatterbrl(0);
 
             //Saída caixa (valor total pago em pedidos compra do dia)
-            const [rowsSaidaCaixa] = await db.query(`SELECT SUM(valor_total) as valorSaidaCaixa FROM pedidos_compra WHERE data_hora like '%${dataAtual}%'`);
-            listResumoDia[2].value = rowsSaidaCaixa[0].valorSaidaCaixa > 0 ? formatterbrl(rowsSaidaCaixa[0].valorSaidaCaixa) : formatterbrl(0);
+            const [rowsSaidaCaixa] = await db.query(`SELECT
+            SUM(valorSaidaCaixa) AS valorTotalSaidaCaixa
+            FROM
+                (
+                SELECT
+                    SUM(valor_total) as valorSaidaCaixa
+                FROM
+                    pedidos_compra
+                WHERE
+                    data_hora like '%${dataAtual}%'
+            UNION ALL
+                SELECT
+                    SUM(valor) as valorSaidaCaixa
+                FROM
+                    movimento_caixa
+                WHERE
+                    data_hora like '%${dataAtual}%'
+                    AND tipo = 'Saída'
+                            ) 
+                        AS subquery`);
+            listResumoDia[2].value = rowsSaidaCaixa[0].valorTotalSaidaCaixa > 0 ? formatterbrl(rowsSaidaCaixa[0].valorTotalSaidaCaixa) : formatterbrl(0);
 
             //Produto mais vendido
             const [rowsProdutoMaisVendido] = await db.query(`
