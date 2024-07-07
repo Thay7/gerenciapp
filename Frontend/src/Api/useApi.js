@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Constants from 'expo-constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';  // Importe AsyncStorage do pacote @react-native-async-storage/async-storage
 
 const api = axios.create({
     baseURL: (typeof (Constants.expoConfig.extra.API_URL) == "object" && Object.keys(Constants.expoConfig.extra.API_URL).length > 0)
@@ -8,13 +9,45 @@ const api = axios.create({
         : "http://192.168.0.8:5000/api",
     // baseURL: "http://213.199.49.233:5000/api/", 
     timeout: 5000
-})
+});
+
+// Função para obter o token JWT armazenado localmente
+const getToken = async () => {
+    try {
+        return await AsyncStorage.getItem('token');
+    } catch (error) {
+        console.error('Erro ao obter token do AsyncStorage:', error);
+        return null;
+    }
+};
+
+// Adicione um interceptador para adicionar o token JWT ao cabeçalho Authorization
+api.interceptors.request.use(
+    async function (config) {
+        const token = await getToken();
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    function (error) {
+        return Promise.reject(error);
+    }
+);
 
 export const useApi = {
     //Login
     login: async (formData) => {
-        const response = await api.post(`login/login`, formData)
-        return response;
+        try {
+            const response = await api.post('login/login', formData);
+            if (response.status === 200 && response.data.token) {
+                await AsyncStorage.setItem('token', response.data.token);
+            }
+            return response;
+        } catch (error) {
+            console.error('Erro ao fazer login:', error);
+            throw error; // Lança o erro para ser tratado onde a função login for chamada
+        }
     },
     //Home
     listarResumoDia: async () => {

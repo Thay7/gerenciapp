@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const authMiddleware = require('../middleware/authMiddleware');
 const vendasController = require('../controllers/vendasController');
 
-router.get('/listar', vendasController.listar);
-router.post('/cadastrar', vendasController.cadastrar);
-router.put('/editar/:id', vendasController.editar);
-router.delete('/deletar/:id', vendasController.deletar);
-router.get('/listarItensParaVenda', vendasController.listarItensParaVenda);
+router.get('/listar', authMiddleware, vendasController.listar);
+router.post('/cadastrar', authMiddleware, vendasController.cadastrar);
+router.put('/editar/:id', authMiddleware, vendasController.editar);
+router.delete('/deletar/:id', authMiddleware, vendasController.deletar);
+router.get('/listarItensParaVenda', authMiddleware, vendasController.listarItensParaVenda);
 
 module.exports = router;
