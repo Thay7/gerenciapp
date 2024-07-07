@@ -53,7 +53,7 @@ export const ListaCadastros = () => {
         if (route.params?.fornecedorAtualizado) {
             const fornecedorAtualizado = route.params?.fornecedorAtualizado;
             setDados(dados.map(fornecedor => (fornecedor.id === fornecedorAtualizado.id ? fornecedorAtualizado : fornecedor)));
-            setNome('Usuários');
+            setNome('Fornecedores');
         }
 
         if (route.params?.fornecedorDeletado) {
@@ -71,7 +71,7 @@ export const ListaCadastros = () => {
         if (route.params?.usuarioAtualizado) {
             const usuarioAtualizado = route.params?.usuarioAtualizado;
             setDados(dados.map(usuario => (usuario.id === usuarioAtualizado.id ? usuarioAtualizado : usuario)));
-            setNome('Fornecedores');
+            setNome('Usuários');
         }
 
         if (route.params?.usuarioDeletado) {

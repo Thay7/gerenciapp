@@ -23,18 +23,18 @@ export const ModalConfirm = ({ title, message, openModal, fnCloseModal, fnConfir
                     <Text style={styles.message}>{message}</Text>
                     <View style={styles.rowBetween}>
                         <ButtonApp
-                            title="Sim"
+                            title="Não"
                             color="#fff"
                             backgroundColor="#4040ff"
                             width={100}
-                            onPress={fnConfirm}
+                            onPress={fnCloseModal}
                         />
                         <ButtonApp
-                            title="Não"
+                            title="Sim"
                             color="#fff"
                             backgroundColor="red"
                             width={100}
-                            onPress={fnCloseModal}
+                            onPress={fnConfirm}
                         />
                     </View>
                 </View>
@@ -52,15 +52,16 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         backgroundColor: '#fff',
-        padding: 20,
+        padding: 15,
         borderRadius: 8,
+        padding: 19
     },
     headerContent: {
         display: 'flex',
         flexDirection: 'row',
         alignSelf: 'center',
         justifyContent: 'space-between',
-        marginBottom: 20,
+        marginBottom: 15
     },
     title: {
         fontSize: 30,

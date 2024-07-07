@@ -321,6 +321,8 @@ const styles = StyleSheet.create({
         elevation: 1,
         borderRadius: 8,
         marginVertical: 4,
+        position: 'relative',
+
         marginBottom: 10
     },
     itemNome: {

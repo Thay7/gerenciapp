@@ -28,8 +28,6 @@ export const RelatorioConsolidado = () => {
             setLoading(true)
             let jsonDadosRelatorio = await useApi.listarDadosRelatorioConsolidado(formData)
             setDadosRelatorio(jsonDadosRelatorio);
-            console.log(jsonDadosRelatorio)
-            console.log(dadosRelatorio)
             setLoading(false)
         }
         else {

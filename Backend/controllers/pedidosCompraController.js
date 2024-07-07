@@ -1,4 +1,4 @@
-const { db, chaveSecreta } = require('../db'); // Importe a conexão
+const { db } = require('../db');
 const formatterdateandtime = require('../utils/formatterdateandtime');
 
 const pedidosCompraController = {
@@ -36,6 +36,7 @@ const pedidosCompraController = {
           });
         } else {
           const formattedSale = {
+            id: row.id,
             numero_pedido_compra: row.numero_pedido_compra,
             itens: [
               {
@@ -171,8 +172,8 @@ const pedidosCompraController = {
   },
   async deletar(req, res) {
     try {
-      const { numero_pedido_compra } = req.params;
-      const [rows, fields] = await db.query(`SELECT * FROM itens_pedidos_compra WHERE id_pedido_compra=?`, [numero_pedido_compra]);
+      const { id } = req.params;
+      const [rows, fields] = await db.query(`SELECT * FROM itens_pedidos_compra WHERE id_pedido_compra=?`, [id]);
 
       for (const item of rows) {
         const { id } = item;
@@ -182,7 +183,7 @@ const pedidosCompraController = {
       }
 
       const deletePedidoQuery = `DELETE FROM pedidos_compra WHERE id=?`;
-      await db.query(deletePedidoQuery, [numero_pedido_compra]);
+      await db.query(deletePedidoQuery, [id]);
 
       res.status(200).json({ success: true, message: 'Pedido deletadoo com sucesso!' });
     } catch (error) {

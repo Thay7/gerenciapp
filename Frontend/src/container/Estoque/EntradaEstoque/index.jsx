@@ -56,15 +56,13 @@ export const EntradaEstoque = () => {
         if (await useApi.entradaEstoque(objEstoque) == 200) {
             setModalSucess(true);
             setTimeout(() => {
-                navigation.navigate('Estoque', {
-                    novoEstoque: objEstoque
-                });
+                navigation.navigate('Home');
             }, 3000);
         } else {
             setMessageError('Erro ao dar entrada no estoque. Entre em contato com o suporte.');
             setModalErrors(true);
             setTimeout(() => {
-                navigation.navigate('Estoque');
+                navigation.navigate('Home');
             }, 3000);
         }
         setLoading(false);

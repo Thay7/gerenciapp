@@ -25,6 +25,7 @@ export const DetalhesPedidoCompra = () => {
     const { pedidocompra } = route.params;
 
     const [objPedidocompra, setObjPedidocompra] = useState({
+        id: pedidocompra.id,
         numero_pedido_compra: pedidocompra.numero_pedido_compra,
         forma_pagamento: pedidocompra.forma_pagamento,
         numero_parcelas: pedidocompra.numero_parcelas,

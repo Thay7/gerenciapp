@@ -70,16 +70,16 @@ export const PedidoDeCompra = () => {
         };
 
         if (route.params?.pedidoAtualizado) {
-            const pedidoAtualizado = route.params.produtoAtualizado;
-            setProdutos(produtos.map(pedido => (pedido.numero_pedido_compra === pedidoAtualizado.numero_pedido_compra ? pedidoAtualizado : pedido)));
+            const pedidoAtualizado = route.params.pedidoAtualizado;
+            setPedidosCompraList(pedidosCompraList.map(pedido => (pedido.numero_pedido_compra === pedidoAtualizado.numero_pedido_compra ? pedidoAtualizado : pedido)));
         };
 
         if (route.params?.pedidoDeletado) {
             const pedidoDeletado = route.params.pedidoDeletado;
-            const updatedOptions = produtos.filter(item => item.numero_pedido_compra !== pedidoDeletado.numero_pedido_compra);
-            setProdutos(updatedOptions);
+            const updatedOptions = pedidosCompraList.filter(item => item.numero_pedido_compra !== pedidoDeletado.numero_pedido_compra);
+            setPedidosCompraList(updatedOptions);
         };
-    }, [route.params?.novoPedidoCompra, route.params?.pedidoRecebido, route.params?.produtoDeletado]);
+    }, [route.params?.novoPedidoCompra, route.params?.pedidoRecebido, route.params?.pedidoAtualizado, route.params?.pedidoDeletado]);
 
     return (
         <View style={styles.container}>

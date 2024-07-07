@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Image, Modal } from 'react-native';
+import {  StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import { useNavigation } from '@react-navigation/native';
-import { Picker } from '@react-native-picker/picker';
 
 //import componentes personalizados 
 import { InputApp } from '../../../components/InputApp';
@@ -218,7 +217,6 @@ export const NovaVenda = () => {
     const navigation = useNavigation()
 
     const handleNovaVenda = async () => {
-        console.log(objVenda.data_hora);
         setLoading(true)
         if (await useApi.cadastrarVenda(objVenda) == 200) {
             setModalSucess(true);
@@ -257,162 +255,178 @@ export const NovaVenda = () => {
     };
 
     return (
-        <ScrollView >
-            <View style={styles.container}>
-                <View style={styles.header}>
-                    <ButtonBack
-                        navigate="Vendas" />
-                    <Text style={styles.titulo}>Nova Venda</Text>
-                </View>
-                <ProgressSteps
-                    {...progressStepsStyle}
+        <View style={styles.container}>
+            <View style={styles.header}>
+                <ButtonBack
+                    navigate="Vendas" />
+                <Text style={styles.titulo}>Nova Venda</Text>
+            </View>
+            <ProgressSteps
+                {...progressStepsStyle}
+            >
+
+                <ProgressStep
+                    label="Itens"
+                    nextBtnTextStyle={buttonTextStyle}
+                    previousBtnTextStyle={buttonTextStyle}
+                    nextBtnText="Próximo"
+                    nextBtnStyle={buttonStyle}
+                    previousBtnText="Voltar"
+                    removeBtnRow={removeBtnStep1}
+                    onNext={handleOnNextStep1}
+                    errors={errorsStep1}
                 >
-                    <ProgressStep
-                        label="Itens"
-                        nextBtnTextStyle={buttonTextStyle}
-                        previousBtnTextStyle={buttonTextStyle}
-                        nextBtnText="Próximo"
-                        nextBtnStyle={buttonStyle}
-                        previousBtnText="Voltar"
-                        removeBtnRow={removeBtnStep1}
-                        onNext={handleOnNextStep1}
-                        errors={errorsStep1}
-                    >
-                        {loading && <Loading />}
-                        <InputSelectItens
-                            title="Selecione os itens"
-                            options={optionsItens}
-                            selectedValue={selectedProduct}
-                            onValueChange={(value) => handleOnValueChange(value)}
-                            venda
-                        />
-                        {itensVenda.length > 0 && <Text style={[styles.itemNome]}>Itens Venda</Text>}
-                        <View>
-                            {itensVenda.map((item, i) => (
-                                item.tipo == "Produto" ?
-                                    (
-                                        <View style={styles.itemContainer} key={i}>
-                                            <TouchableOpacity style={styles.closeButton} onPress={() => handleRemoveItem(item)}>
-                                                <Image source={ic_remove} style={styles.icon} />
-                                            </TouchableOpacity>
+                    {loading && <Loading />}
+                    <InputSelectItens
+                        title="Selecione os itens"
+                        options={optionsItens}
+                        selectedValue={selectedProduct}
+                        onValueChange={(value) => handleOnValueChange(value)}
+                        venda
+                    />
+                    {itensVenda.length > 0 && <Text style={[styles.itemNome]}>Itens Venda</Text>}
+                    <View>
+                        {itensVenda.map((item, i) => (
+                            item.tipo == "Produto" ?
+                                (
+                                    <View style={styles.itemContainer} key={i}>
+                                        <TouchableOpacity style={styles.closeButton} onPress={() => handleRemoveItem(item)}>
+                                            <Image source={ic_remove} style={styles.icon} />
+                                        </TouchableOpacity>
+                                        <View>
                                             <View>
-                                                <View>
-                                                    <Text style={styles.itemNome}>{item.tipo == "Produto" ? "Produto" : "Serviço"}</Text>
-                                                    <Text >{item.nome}</Text>
-                                                </View>
-                                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
-                                                    <View>
-                                                        <Text style={styles.itemNome}>Valor</Text>
-                                                        <Text>{formatterbrl(item.valor_venda)}</Text>
-                                                    </View>
-                                                    <View>
-                                                        <Text style={styles.itemNome}>Quantidade</Text>
-                                                        <InputApp
-                                                            value={item.quantidade}
-                                                            onChangeText={(value) => handleChangeQtde(item, value)}
-                                                            keyboardType="numeric"
-                                                            marginBottom={false}
-                                                            height={25}
-                                                            borderRadius={5}
-                                                        />
-                                                    </View>
-                                                </View>
+                                                <Text style={styles.itemNome}>{item.tipo == "Produto" ? "Produto" : "Serviço"}</Text>
+                                                <Text >{item.nome}</Text>
                                             </View>
-                                        </View>
-                                    )
-                                    :
-                                    (
-                                        <View style={styles.itemContainer} key={i}>
-                                            <TouchableOpacity style={styles.closeButton} onPress={() => handleRemoveItem(item)}>
-                                                <Image source={ic_remove} style={styles.icon} />
-                                            </TouchableOpacity>
-                                            <View style={{ display: 'flex', flexDirection: 'row' }}>
+                                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
                                                 <View>
-                                                    <Text style={styles.itemNome}>{item.tipo == "Produto" ? "Produto" : "Serviço"}</Text>
-                                                    <Text >{item.nome}</Text>
-                                                </View>
-                                                <View style={{ marginLeft: 58 }}>
                                                     <Text style={styles.itemNome}>Valor</Text>
                                                     <Text>{formatterbrl(item.valor_venda)}</Text>
                                                 </View>
+                                                <View>
+                                                    <Text style={styles.itemNome}>Quantidade</Text>
+                                                    <InputApp
+                                                        value={item.quantidade}
+                                                        onChangeText={(value) => handleChangeQtde(item, value)}
+                                                        keyboardType="numeric"
+                                                        marginBottom={false}
+                                                        height={25}
+                                                        borderRadius={5}
+                                                    />
+                                                </View>
                                             </View>
                                         </View>
-                                    )
-                            ))}
-                            {
-                                itensVenda.length > 0 &&
-                                <View >
-                                    <Text style={styles.value}>Valor Total:</Text>
-                                    <Text style={styles.value}>{formatterbrl(totalCompra)}</Text>
-                                </View>
-                            }
-                        </View>
-                        <ModalErrors
-                            title="Erro"
-                            message={messageModalErrorStep1}
-                            openModal={modalErrorsStep1}
-                            fnCloseModal={() => setModalErrorsStep1(!modalErrorsStep1)}
-                        />
-                    </ProgressStep>
-                    <ProgressStep
-                        label="Pagamento"
-                        nextBtnTextStyle={buttonTextStyle}
-                        previousBtnTextStyle={buttonTextStyle}
-                        nextBtnText="Próximo"
-                        previousBtnText="Voltar"
-                        removeBtnRow={removeBtnStep2}
-                        onNext={handleOnNextStep2}
-                        errors={errorsStep2}
-                    >
-                        <InputSelectPagamento
-                            title="Selecione a forma de pagamento"
-                            options={optionsPagamento}
-                            selectedValue={selectedPagamento}
-                            onValueChange={(value) => handleOnValueChangePagamento(value)}
-                            enable
-                        />
-                        {selectedPagamento != null && <Text style={styles.itemNome}>Itens Venda</Text>}
-                        {(selectedPagamento == "Dinheiro" || selectedPagamento == "Pix" || selectedPagamento == "Cartão de Debito") &&
-                            itensVenda.map((item, i) => (
-                                <View style={[styles.itemContainer, { marginBottom: 1 }]} key={i}>
-                                    <View>
-                                        <View>
-                                            <Text style={styles.itemNome}>{item.tipo == "Produto" ? "Produto" : "Serviço"}</Text>
-                                            <Text >{item.nome}</Text>
-                                        </View>
-                                        <View style={{ marginTop: 10 }}>
-                                            <Text style={styles.itemNome}>Valor</Text>
-                                            <Text>{formatterbrl(item.valor_venda)}</Text>
+                                    </View>
+                                )
+                                :
+                                (
+                                    <View style={styles.itemContainer} key={i}>
+                                        <TouchableOpacity style={styles.closeButton} onPress={() => handleRemoveItem(item)}>
+                                            <Image source={ic_remove} style={styles.icon} />
+                                        </TouchableOpacity>
+                                        <View style={{ display: 'flex', flexDirection: 'row' }}>
+                                            <View>
+                                                <Text style={styles.itemNome}>{item.tipo == "Produto" ? "Produto" : "Serviço"}</Text>
+                                                <Text >{item.nome}</Text>
+                                            </View>
+                                            <View style={{ marginLeft: 58 }}>
+                                                <Text style={styles.itemNome}>Valor</Text>
+                                                <Text>{formatterbrl(item.valor_venda)}</Text>
+                                            </View>
                                         </View>
                                     </View>
-                                </View>
-                            ))
+                                )
+                        ))}
+                        {
+                            itensVenda.length > 0 &&
+                            <View >
+                                <Text style={styles.value}>Valor Total:</Text>
+                                <Text style={styles.value}>{formatterbrl(totalCompra)}</Text>
+                            </View>
                         }
-                        {selectedPagamento == "Cartão de Crédito" &&
-                            itensVenda.map((item, i) => (
-                                <View style={[styles.itemContainer, { marginBottom: 1 }]} key={i}>
-                                    <View >
-                                        <View>
-                                            <Text style={styles.itemNome}>{item.tipo == "Produto" ? "Produto" : "Serviço"}</Text>
-                                            <Text>{item.nome}</Text>
-                                        </View>
-                                        <View style={{ marginTop: 10 }}>
-                                            <Text style={styles.itemNome}>Valor</Text>
-                                            <Text>{formatterbrl(item.valor_venda)}</Text>
-                                        </View>
+                    </View>
+                    <ModalErrors
+                        title="Erro"
+                        message={messageModalErrorStep1}
+                        openModal={modalErrorsStep1}
+                        fnCloseModal={() => setModalErrorsStep1(!modalErrorsStep1)}
+                    />
+                </ProgressStep>
+                <ProgressStep
+                    label="Pagamento"
+                    nextBtnTextStyle={buttonTextStyle}
+                    previousBtnTextStyle={buttonTextStyle}
+                    nextBtnText="Próximo"
+                    previousBtnText="Voltar"
+                    removeBtnRow={removeBtnStep2}
+                    onNext={handleOnNextStep2}
+                    errors={errorsStep2}
+                >
+                    <InputSelectPagamento
+                        title="Selecione a forma de pagamento"
+                        options={optionsPagamento}
+                        selectedValue={selectedPagamento}
+                        onValueChange={(value) => handleOnValueChangePagamento(value)}
+                        enable
+                    />
+                    {selectedPagamento != null && <Text style={styles.itemNome}>Itens Venda</Text>}
+                    {(selectedPagamento == "Dinheiro" || selectedPagamento == "Pix" || selectedPagamento == "Cartão de Debito") &&
+                        itensVenda.map((item, i) => (
+                            <View style={[styles.itemContainer, { marginBottom: 1 }]} key={i}>
+                                <View>
+                                    <View>
+                                        <Text style={styles.itemNome}>{item.tipo == "Produto" ? "Produto" : "Serviço"}</Text>
+                                        <Text >{item.nome}</Text>
+                                    </View>
+                                    <View style={{ marginTop: 10 }}>
+                                        <Text style={styles.itemNome}>Valor</Text>
+                                        <Text>{formatterbrl(item.valor_venda)}</Text>
                                     </View>
                                 </View>
-                            ))}
-                        {selectedPagamento == "Cartão de Crédito" ?
-                            (
-                                <>
-                                    <Text style={[styles.itemNome, { marginTop: 10 }]}>Detalhes Parcelamento</Text>
-                                    <View style={[styles.itemContainer, { marginBottom: 1 }]}>
-                                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                                            <Text style={styles.itemNome}>Nº Parcelas</Text>
+                            </View>
+                        ))
+                    }
+                    {selectedPagamento == "Cartão de Crédito" &&
+                        itensVenda.map((item, i) => (
+                            <View style={[styles.itemContainer, { marginBottom: 1 }]} key={i}>
+                                <View >
+                                    <View>
+                                        <Text style={styles.itemNome}>{item.tipo == "Produto" ? "Produto" : "Serviço"}</Text>
+                                        <Text>{item.nome}</Text>
+                                    </View>
+                                    <View style={{ marginTop: 10 }}>
+                                        <Text style={styles.itemNome}>Valor</Text>
+                                        <Text>{formatterbrl(item.valor_venda)}</Text>
+                                    </View>
+                                </View>
+                            </View>
+                        ))}
+                    {selectedPagamento == "Cartão de Crédito" ?
+                        (
+                            <>
+                                <Text style={[styles.itemNome, { marginTop: 10 }]}>Detalhes Parcelamento</Text>
+                                <View style={[styles.itemContainer, { marginBottom: 1 }]}>
+                                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                                        <Text style={styles.itemNome}>Nº Parcelas</Text>
+                                        <InputApp
+                                            value={numeroParcelas.toString()}
+                                            onChangeText={(value) => handleChangeParcelas(value)}
+                                            keyboardType="numeric"
+                                            marginBottom={false}
+                                            height={30}
+                                            width={100}
+                                            borderRadius={5}
+                                            alignSelf="flex-end"
+                                        />
+                                    </View>
+                                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                        <View>
+                                            <Text style={styles.itemNome}>Valor Total</Text>
+                                        </View>
+                                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                                             <InputApp
-                                                value={numeroParcelas.toString()}
-                                                onChangeText={(value) => handleChangeParcelas(value)}
+                                                value={totalCompra.toString()}
+                                                onChangeText={(value) => handleChangeValorTotal(value)}
                                                 keyboardType="numeric"
                                                 marginBottom={false}
                                                 height={30}
@@ -421,126 +435,111 @@ export const NovaVenda = () => {
                                                 alignSelf="flex-end"
                                             />
                                         </View>
-                                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                            <View>
-                                                <Text style={styles.itemNome}>Valor Total</Text>
-                                            </View>
-                                            <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                                <InputApp
-                                                    value={totalCompra.toString()}
-                                                    onChangeText={(value) => handleChangeValorTotal(value)}
-                                                    keyboardType="numeric"
-                                                    marginBottom={false}
-                                                    height={30}
-                                                    width={100}
-                                                    borderRadius={5}
-                                                    alignSelf="flex-end"
-                                                />
-                                            </View>
-                                        </View>
                                     </View>
+                                </View>
+                            </>
+                        ) :
+                        (
+                            selectedPagamento != null && (
+                                <>
+                                    <Text style={styles.value}>Valor Total:</Text>
+                                    <Text style={styles.value}>{formatterbrl(totalCompra)}</Text>
                                 </>
-                            ) :
-                            (
-                                selectedPagamento != null && (
-                                    <>
-                                        <Text style={styles.value}>Valor Total:</Text>
-                                        <Text style={styles.value}>{formatterbrl(totalCompra)}</Text>
-                                    </>
-                                )
                             )
-                        }
-                        <ModalErrors
-                            title="Aviso"
-                            message={messageModalErrorStep2}
-                            openModal={modalErrorsStep2}
-                            fnCloseModal={() => setModalErrorsStep2(!modalErrorsStep2)}
-                        />
-                    </ProgressStep>
-                    <ProgressStep
-                        progressBarColor='#4040ff'
-                        label="Finalizar"
-                        nextBtnTextStyle={buttonTextStyle}
-                        previousBtnTextStyle={buttonTextStyle}
-                        previousBtnText="Voltar"
-                        finishBtnText="Finalizar"
-                        onSubmit={fnOnSubmit}
-                    >
-                        <Text style={styles.itemNome}>Resumo Itens</Text>
-                        <View >
-                            {itensVenda.map((item, i) => (
-                                item.tipo == "Produto" ?
-                                    (
-                                        <View style={[styles.itemContainer, { marginBottom: 1 }]} key={i}>
-                                            <View >
-                                                <View>
-                                                    <Text style={styles.itemNome}>{item.tipo == "Produto" ? "Produto" : "Serviço"}</Text>
-                                                    <Text >{item.nome}</Text>
-                                                </View>
-                                                <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}> 
-                                                    <View style={{ marginTop: 5 }}>
-                                                        <Text style={styles.itemNome}>Valor</Text>
-                                                        <Text>{formatterbrl(item.valor_venda)}</Text>
-                                                    </View>
-                                                    <View style={{ marginTop: 5 }}>
-                                                        <Text style={styles.itemNome}>Quantidade</Text>
-                                                        <Text>{item.quantidade}</Text>
-                                                    </View>
-                                                </View>
+                        )
+                    }
+                    <ModalErrors
+                        title="Aviso"
+                        message={messageModalErrorStep2}
+                        openModal={modalErrorsStep2}
+                        fnCloseModal={() => setModalErrorsStep2(!modalErrorsStep2)}
+                    />
+                </ProgressStep>
+                <ProgressStep
+                    progressBarColor='#4040ff'
+                    label="Finalizar"
+                    nextBtnTextStyle={buttonTextStyle}
+                    previousBtnTextStyle={buttonTextStyle}
+                    previousBtnText="Voltar"
+                    finishBtnText="Finalizar"
+                    onSubmit={fnOnSubmit}
+                >
+                    <Text style={styles.itemNome}>Resumo Itens</Text>
+                    <View >
+                        {itensVenda.map((item, i) => (
+                            item.tipo == "Produto" ?
+                                (
+                                    <View style={[styles.itemContainer, { marginBottom: 1 }]} key={i}>
+                                        <View >
+                                            <View>
+                                                <Text style={styles.itemNome}>{item.tipo == "Produto" ? "Produto" : "Serviço"}</Text>
+                                                <Text >{item.nome}</Text>
                                             </View>
-                                        </View>
-                                    )
-                                    :
-                                    (
-                                        <View style={[styles.itemContainer, { marginBottom: 1 }]} key={i}>
                                             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                                <View>
-                                                    <Text style={styles.itemNome}>{item.tipo == "Produto" ? "Produto" : "Serviço"}</Text>
-                                                    <Text>{item.nome}</Text>
-                                                </View>
-                                                <View>
+                                                <View style={{ marginTop: 5 }}>
                                                     <Text style={styles.itemNome}>Valor</Text>
                                                     <Text>{formatterbrl(item.valor_venda)}</Text>
                                                 </View>
+                                                <View style={{ marginTop: 5 }}>
+                                                    <Text style={styles.itemNome}>Quantidade</Text>
+                                                    <Text>{item.quantidade}</Text>
+                                                </View>
                                             </View>
                                         </View>
-                                    )
-                            ))}
+                                    </View>
+                                )
+                                :
+                                (
+                                    <View style={[styles.itemContainer, { marginBottom: 1 }]} key={i}>
+                                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                            <View>
+                                                <Text style={styles.itemNome}>{item.tipo == "Produto" ? "Produto" : "Serviço"}</Text>
+                                                <Text>{item.nome}</Text>
+                                            </View>
+                                            <View>
+                                                <Text style={styles.itemNome}>Valor</Text>
+                                                <Text>{formatterbrl(item.valor_venda)}</Text>
+                                            </View>
+                                        </View>
+                                    </View>
+                                )
+                        ))}
+                    </View>
+                    <Text style={[styles.itemNome, { marginTop: 15 }]}>Resumo Pagamento</Text>
+                    <View style={styles.itemContainer}>
+                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <Text style={styles.itemNome}>Forma de pagamento</Text>
+                            <Text>{selectedPagamento}</Text>
                         </View>
-                        <Text style={[styles.itemNome, { marginTop: 15 }]}>Resumo Pagamento</Text>
-                        <View style={styles.itemContainer}>
+                        {selectedPagamento == "Cartão de Crédito" &&
                             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <Text style={styles.itemNome}>Forma de pagamento</Text>
-                                <Text>{selectedPagamento}</Text>
+                                <Text style={styles.itemNome}>Nº Parcelas</Text>
+                                <Text>{numeroParcelas}</Text>
                             </View>
-                            {selectedPagamento == "Cartão de Crédito" &&
-                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <Text style={styles.itemNome}>Nº Parcelas</Text>
-                                    <Text>{numeroParcelas}</Text>
-                                </View>
-                            }
-                            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                <Text style={styles.itemNome}>Valor Total</Text>
-                                <Text>{formatterbrl(totalCompra)}</Text>
-                            </View>
+                        }
+                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <Text style={styles.itemNome}>Valor Total</Text>
+                            <Text>{formatterbrl(totalCompra)}</Text>
+                        </View>
 
-                        </View>
-                        <ModalErrors
-                            title="Erro"
-                            message="Erro ao realizar nova venda. Entre em contato com o suporte."
-                            openModal={modalErrors}
-                            fnCloseModal={() => setModalErrors(!modalErrors)}
-                        />
-                        <ModalSucces
-                            title="Sucesso"
-                            message="Venda realizada com sucesso!"
-                            openModal={modalSucess}
-                            fnCloseModal={() => setModalSucess(!modalSucess)}
-                        />
-                    </ProgressStep>
-                </ProgressSteps>
-            </View>
-        </ScrollView>
+                    </View>
+                    <ModalErrors
+                        title="Erro"
+                        message="Erro ao realizar nova venda. Entre em contato com o suporte."
+                        openModal={modalErrors}
+                        fnCloseModal={() => setModalErrors(!modalErrors)}
+                    />
+                    <ModalSucces
+                        title="Sucesso"
+                        message="Venda realizada com sucesso!"
+                        openModal={modalSucess}
+                        fnCloseModal={() => setModalSucess(!modalSucess)}
+                    />
+
+                </ProgressStep>
+
+            </ProgressSteps>
+        </View>
     );
 };
 
@@ -551,6 +550,7 @@ const styles = StyleSheet.create({
         marginTop: 50
     },
     header: {
+        display: 'flex',
         flexDirection: 'row',
         alignItems: 'center'
     },
@@ -574,7 +574,6 @@ const styles = StyleSheet.create({
         elevation: 1,
         borderRadius: 8,
         marginVertical: 4,
-        position: 'relative',
         marginRight: 10,
         marginBottom: 6
     },

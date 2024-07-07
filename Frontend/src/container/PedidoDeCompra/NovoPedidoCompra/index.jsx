@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Image, Linking } from 'react-native';
+import {  StyleSheet, Text, TouchableOpacity, View, Image, Linking } from 'react-native';
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import { useNavigation } from '@react-navigation/native';
 
@@ -439,119 +439,135 @@ export const NovoPedidoCompra = () => {
     };
 
     return (
-        <ScrollView >
-            <View style={styles.container}>
-                <View style={styles.header}>
-                    <ButtonBack navigate="PedidoDeCompra" />
-                    <Text style={styles.titulo}>Novo Pedido Compra</Text>
-                </View>
-                <ModalReaproveitarPedidoCompra
-                    title="Selecionar pedido compra"
-                    openModal={openModalPedidoCompra}
-                    pedidosCompraList={pedidosCompraList}
-                    fnCloseModal={() => setOpenModalPedidoCompra(false)}
-                    handleSelectedItem={fnHandleSelectedItem}
-                />
-                <ProgressSteps
-                    {...progressStepsStyle}
+        <View style={styles.container}>
+            <View style={styles.header}>
+                <ButtonBack navigate="PedidoDeCompra" />
+                <Text style={styles.titulo}>Novo Pedido Compra</Text>
+            </View>
+            <ModalReaproveitarPedidoCompra
+                title="Selecionar pedido compra"
+                openModal={openModalPedidoCompra}
+                pedidosCompraList={pedidosCompraList}
+                fnCloseModal={() => setOpenModalPedidoCompra(false)}
+                handleSelectedItem={fnHandleSelectedItem}
+            />
+            <ProgressSteps
+                {...progressStepsStyle}
+            >
+                <ProgressStep
+                    label="Itens"
+                    nextBtnTextStyle={buttonTextStyle}
+                    previousBtnTextStyle={buttonTextStyle}
+                    nextBtnText="Próximo"
+                    nextBtnStyle={buttonStyle}
+                    previousBtnText="Voltar"
+                    removeBtnRow={removeBtnStep1}
+                    onNext={() => handleOnNextStep1(false)}
+                    errors={errorsStep1}
                 >
-                    <ProgressStep
-                        label="Itens"
-                        nextBtnTextStyle={buttonTextStyle}
-                        previousBtnTextStyle={buttonTextStyle}
-                        nextBtnText="Próximo"
-                        nextBtnStyle={buttonStyle}
-                        previousBtnText="Voltar"
-                        removeBtnRow={removeBtnStep1}
-                        onNext={() => handleOnNextStep1(false)}
-                        errors={errorsStep1}
-                    >
-                        {loading && <Loading />}
-                        <InputSelectItens
-                            title="Selecione os itens"
-                            options={optionsItens}
-                            selectedValue={selectedProduct}
-                            onValueChange={(value) => handleOnValueChange(value)}
-                            pedidoCompra
-                        />
-                        <ButtonApp
-                            title={!reaproveitarPedidoCompra || (reaproveitarPedidoCompra && itensCompra.length <= 0) ? "Reaproveitar pedido de compra" : "Selecionar outro pedido de compra"}
-                            color="#fff"
-                            backgroundColor="#4040ff"
-                            onPress={fnReaproveitarPedido}
-                            marginBottom={10}
-                        />
-                        {itensCompra.length > 0 && <Text style={[styles.itemNome]}>Itens Compra</Text>}
-                        <View>
-                            {itensCompra.map((item, i) => (
-                                <View style={styles.itemContainer} key={i}>
-                                    <TouchableOpacity style={styles.closeButton} onPress={() => handleRemoveItem(item)}>
-                                        <Image source={ic_remove} style={styles.icon} />
-                                    </TouchableOpacity>
-                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                        <View>
-                                            <Text style={styles.itemNome}>{item.tipo != null ? item.tipo : 'Produto'}</Text>
-                                            <Text >{item.nome}</Text>
-                                        </View>
-                                        <View>
-                                            <Text style={styles.itemNome}>Valor</Text>
-                                            <Text>{formatterbrl(item.valor_compra)}</Text>
-                                        </View>
-                                        <View>
-                                            <Text style={styles.itemNome}>Quantidade</Text>
-                                            <InputApp
-                                                value={item.quantidade}
-                                                onChangeText={(value) => handleChangeQtde(item, value)}
-                                                keyboardType="numeric"
-                                                marginBottom={false}
-                                                height={25}
-                                                borderRadius={5}
-                                            />
-                                        </View>
+                    {loading && <Loading />}
+                    <InputSelectItens
+                        title="Selecione os itens"
+                        options={optionsItens}
+                        selectedValue={selectedProduct}
+                        onValueChange={(value) => handleOnValueChange(value)}
+                        pedidoCompra
+                    />
+                    <ButtonApp
+                        title={!reaproveitarPedidoCompra || (reaproveitarPedidoCompra && itensCompra.length <= 0) ? "Reaproveitar pedido de compra" : "Selecionar outro pedido de compra"}
+                        color="#fff"
+                        backgroundColor="#4040ff"
+                        onPress={fnReaproveitarPedido}
+                        marginBottom={10}
+                    />
+                    {itensCompra.length > 0 && <Text style={[styles.itemNome]}>Itens Compra</Text>}
+                    <View>
+                        {itensCompra.map((item, i) => (
+                            <View style={styles.itemContainer} key={i}>
+                                <TouchableOpacity style={styles.closeButton} onPress={() => handleRemoveItem(item)}>
+                                    <Image source={ic_remove} style={styles.icon} />
+                                </TouchableOpacity>
+                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <View>
+                                        <Text style={styles.itemNome}>{item.tipo != null ? item.tipo : 'Produto'}</Text>
+                                        <Text >{item.nome}</Text>
+                                    </View>
+                                    <View>
+                                        <Text style={styles.itemNome}>Valor</Text>
+                                        <Text>{formatterbrl(item.valor_compra)}</Text>
+                                    </View>
+                                    <View>
+                                        <Text style={styles.itemNome}>Quantidade</Text>
+                                        <InputApp
+                                            value={item.quantidade}
+                                            onChangeText={(value) => handleChangeQtde(item, value)}
+                                            keyboardType="numeric"
+                                            marginBottom={false}
+                                            height={25}
+                                            borderRadius={5}
+                                        />
                                     </View>
                                 </View>
-                            ))}
-                            {
-                                itensCompra.length > 0 &&
-                                <View >
-                                    <Text style={styles.value}>Valor Total:</Text>
-                                    <Text style={styles.value}>{formatterbrl(totalCompra)}</Text>
-                                </View>
-                            }
-                        </View>
-                        <ModalErrors
-                            title="Aviso"
-                            message="Quantidade precisa ser maior que 0."
-                            openModal={modalErrorsStep1}
-                            fnCloseModal={() => setModalErrorsStep1(!modalErrorsStep1)}
-                        />
-                    </ProgressStep>
-                    <ProgressStep
-                        label="Pagamento"
-                        nextBtnTextStyle={buttonTextStyle}
-                        previousBtnTextStyle={buttonTextStyle}
-                        nextBtnText="Próximo"
-                        previousBtnText="Voltar"
-                        removeBtnRow={removeBtnStep2}
-                        onNext={handleOnNextStep2}
-                        errors={errorsStep2}
-                    >
-                        <InputSelectPagamento
-                            title="Selecione a forma de pagamento"
-                            options={optionsPagamento}
-                            selectedValue={selectedPagamento}
-                            onValueChange={(value) => handleOnValueChangePagamento(value)}
-                        />
-                        {selectedPagamento != null && (
-                            <>
+                            </View>
+                        ))}
+                        {
+                            itensCompra.length > 0 &&
+                            <View >
+                                <Text style={styles.value}>Valor Total:</Text>
+                                <Text style={styles.value}>{formatterbrl(totalCompra)}</Text>
+                            </View>
+                        }
+                    </View>
+                    <ModalErrors
+                        title="Aviso"
+                        message="Quantidade precisa ser maior que 0."
+                        openModal={modalErrorsStep1}
+                        fnCloseModal={() => setModalErrorsStep1(!modalErrorsStep1)}
+                    />
+                </ProgressStep>
+                <ProgressStep
+                    label="Pagamento"
+                    nextBtnTextStyle={buttonTextStyle}
+                    previousBtnTextStyle={buttonTextStyle}
+                    nextBtnText="Próximo"
+                    previousBtnText="Voltar"
+                    removeBtnRow={removeBtnStep2}
+                    onNext={handleOnNextStep2}
+                    errors={errorsStep2}
+                >
+                    <InputSelectPagamento
+                        title="Selecione a forma de pagamento"
+                        options={optionsPagamento}
+                        selectedValue={selectedPagamento}
+                        onValueChange={(value) => handleOnValueChangePagamento(value)}
+                        enable
+                    />
+                    {selectedPagamento != null && (
+                        <>
 
-                                <Text style={[styles.itemNome, { marginTop: 10 }]}>Detalhes Parcelamento</Text>
-                                <View style={[styles.itemContainer, { marginBottom: 1 }]}>
-                                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                                        <Text style={styles.itemNome}>Nº Parcelas</Text>
+                            <Text style={[styles.itemNome, { marginTop: 10 }]}>Detalhes Parcelamento</Text>
+                            <View style={[styles.itemContainer, { marginBottom: 1 }]}>
+                                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                                    <Text style={styles.itemNome}>Nº Parcelas</Text>
+                                    <InputApp
+                                        value={numeroParcelas.toString()}
+                                        onChangeText={(value) => handleChangeParcelas(value)}
+                                        keyboardType="numeric"
+                                        marginBottom={false}
+                                        height={30}
+                                        width={100}
+                                        borderRadius={5}
+                                        alignSelf="flex-end"
+                                    />
+                                </View>
+                                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <View>
+                                        <Text style={styles.itemNome}>Valor Total</Text>
+                                    </View>
+                                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                                         <InputApp
-                                            value={numeroParcelas.toString()}
-                                            onChangeText={(value) => handleChangeParcelas(value)}
+                                            value={totalCompra.toString()}
+                                            onChangeText={(value) => handleChangeValorTotal(value)}
                                             keyboardType="numeric"
                                             marginBottom={false}
                                             height={30}
@@ -560,166 +576,149 @@ export const NovoPedidoCompra = () => {
                                             alignSelf="flex-end"
                                         />
                                     </View>
-                                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                        <View>
-                                            <Text style={styles.itemNome}>Valor Total</Text>
-                                        </View>
-                                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                            <InputApp
-                                                value={totalCompra.toString()}
-                                                onChangeText={(value) => handleChangeValorTotal(value)}
-                                                keyboardType="numeric"
-                                                marginBottom={false}
-                                                height={30}
-                                                width={100}
-                                                borderRadius={5}
-                                                alignSelf="flex-end"
-                                            />
-                                        </View>
-                                    </View>
                                 </View>
-                                <Text style={styles.value}>Valor Total:</Text>
-                                <Text style={styles.value}>{formatterbrl(totalCompra)}</Text>
-                            </>
-                        )}
-                        < ModalErrors
-                            title="Erro"
-                            message={messageModalErrorStep2}
-                            openModal={modalErrorsStep2}
-                            fnCloseModal={() => setModalErrorsStep2(!modalErrorsStep2)}
-                        />
-                    </ProgressStep>
-                    <ProgressStep
-                        label="Fornecedor"
-                        nextBtnTextStyle={buttonTextStyle}
-                        previousBtnTextStyle={buttonTextStyle}
-                        nextBtnText="Próximo"
-                        previousBtnText="Voltar"
-                        removeBtnRow={removeBtnStep3}
-                    >
-                        <InputSelectSimples
-                            title="Selecione o forecedor"
-                            options={optionsFornecedor}
-                            selectedValue={selectedFornecedor}
-                            onValueChange={(value) => handleOnValueFornecedorChange(value)}
-                        />
-                        {selectedFornecedor != null &&
-                            <>
-                                <Text style={[styles.itemNome, { marginTop: 10 }]}>Detalhes Fornecedor</Text>
-                                <View style={styles.itemContainer}>
-                                    <Text style={styles.itemNome}>Nome Fantasia</Text>
-                                    <InputApp
-                                        value={selectedFornecedor.nome_fantasia}
-                                        keyboardType="numeric"
-                                        marginBottom={true}
-                                        height={30}
-                                        borderRadius={5}
-                                    />
-                                    <Text style={styles.itemNome}>Razão Social</Text>
-                                    <InputApp
-                                        value={selectedFornecedor.razao_social}
-                                        keyboardType="numeric"
-                                        marginBottom={true}
-                                        height={30}
-                                        borderRadius={5}
-                                    />
-                                    <Text style={styles.itemNome}>CNPJ</Text>
-                                    <InputApp
-                                        value={selectedFornecedor.cnpj}
-                                        keyboardType="numeric"
-                                        marginBottom={true}
-                                        height={30}
-                                        borderRadius={5}
-                                    />
-                                    <Text style={styles.itemNome}>Contato</Text>
-                                    <InputApp
-                                        value={selectedFornecedor.contato}
-                                        keyboardType="numeric"
-                                        marginBottom={true}
-                                        height={30}
-                                        borderRadius={5}
-                                    />
-                                </View>
-                            </>
-                        }
-                    </ProgressStep>
-                    <ProgressStep
-                        progressBarColor='#4040ff'
-                        label="Finalizar"
-                        nextBtnTextStyle={buttonTextStyle}
-                        previousBtnTextStyle={buttonTextStyle}
-                        previousBtnText="Voltar"
-                        finishBtnText="Finalizar"
-                        onSubmit={onSubmit}
-                    >
-                        <Text style={styles.itemNome}>Resumo Itens</Text>
-                        <View >
-                            {itensCompra.map((item, i) => (
+                            </View>
+                            <Text style={styles.value}>Valor Total:</Text>
+                            <Text style={styles.value}>{formatterbrl(totalCompra)}</Text>
+                        </>
+                    )}
+                    < ModalErrors
+                        title="Erro"
+                        message={messageModalErrorStep2}
+                        openModal={modalErrorsStep2}
+                        fnCloseModal={() => setModalErrorsStep2(!modalErrorsStep2)}
+                    />
+                </ProgressStep>
+                <ProgressStep
+                    label="Fornecedor"
+                    nextBtnTextStyle={buttonTextStyle}
+                    previousBtnTextStyle={buttonTextStyle}
+                    nextBtnText="Próximo"
+                    previousBtnText="Voltar"
+                    removeBtnRow={removeBtnStep3}
+                >
+                    <InputSelectSimples
+                        title="Selecione o forecedor"
+                        options={optionsFornecedor}
+                        selectedValue={selectedFornecedor}
+                        onValueChange={(value) => handleOnValueFornecedorChange(value)}
+                    />
+                    {selectedFornecedor != null &&
+                        <>
+                            <Text style={[styles.itemNome, { marginTop: 10 }]}>Detalhes Fornecedor</Text>
+                            <View style={styles.itemContainer}>
+                                <Text style={styles.itemNome}>Nome Fantasia</Text>
+                                <InputApp
+                                    value={selectedFornecedor.nome_fantasia}
+                                    keyboardType="numeric"
+                                    marginBottom={true}
+                                    height={30}
+                                    borderRadius={5}
+                                />
+                                <Text style={styles.itemNome}>Razão Social</Text>
+                                <InputApp
+                                    value={selectedFornecedor.razao_social}
+                                    keyboardType="numeric"
+                                    marginBottom={true}
+                                    height={30}
+                                    borderRadius={5}
+                                />
+                                <Text style={styles.itemNome}>CNPJ</Text>
+                                <InputApp
+                                    value={selectedFornecedor.cnpj}
+                                    keyboardType="numeric"
+                                    marginBottom={true}
+                                    height={30}
+                                    borderRadius={5}
+                                />
+                                <Text style={styles.itemNome}>Contato</Text>
+                                <InputApp
+                                    value={selectedFornecedor.contato}
+                                    keyboardType="numeric"
+                                    marginBottom={true}
+                                    height={30}
+                                    borderRadius={5}
+                                />
+                            </View>
+                        </>
+                    }
+                </ProgressStep>
+                <ProgressStep
+                    progressBarColor='#4040ff'
+                    label="Finalizar"
+                    nextBtnTextStyle={buttonTextStyle}
+                    previousBtnTextStyle={buttonTextStyle}
+                    previousBtnText="Voltar"
+                    finishBtnText="Finalizar"
+                    onSubmit={onSubmit}
+                >
+                    <Text style={styles.itemNome}>Resumo Itens</Text>
+                    <View >
+                        {itensCompra.map((item, i) => (
 
-                                <View style={[styles.itemContainer, { marginBottom: 1 }]} key={i}>
-                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                        <View>
-                                            <Text style={styles.itemNome}>{item.tipo != null ? item.tipo : 'Produto'}</Text>
-                                            <Text style={{ fontSize: 15 }}>{item.nome}</Text>
-                                        </View>
-                                        <View>
-                                            <Text style={styles.itemNome}>Valor</Text>
-                                            <Text style={{ fontSize: 15 }}>{formatterbrl(item.valor_compra)}</Text>
-                                        </View>
-                                        <View>
-                                            <Text style={styles.itemNome}>Quantidade</Text>
-                                            <Text style={{ fontSize: 15 }}>{item.quantidade}</Text>
-                                        </View>
+                            <View style={[styles.itemContainer, { marginBottom: 1 }]} key={i}>
+                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <View>
+                                        <Text style={styles.itemNome}>{item.tipo != null ? item.tipo : 'Produto'}</Text>
+                                        <Text style={{ fontSize: 15 }}>{item.nome}</Text>
+                                    </View>
+                                    <View>
+                                        <Text style={styles.itemNome}>Valor</Text>
+                                        <Text style={{ fontSize: 15 }}>{formatterbrl(item.valor_compra)}</Text>
+                                    </View>
+                                    <View>
+                                        <Text style={styles.itemNome}>Quantidade</Text>
+                                        <Text style={{ fontSize: 15 }}>{item.quantidade}</Text>
                                     </View>
                                 </View>
-                            ))}
-                        </View>
-                        {selectedFornecedor != null &&
-                            <>
-                                < Text style={[styles.itemNome, { marginTop: 15 }]}>Resumo Fornecedor</Text>
-                                <View style={styles.itemContainer}>
-                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                        <Text style={styles.itemNome}>Nome Fantasia</Text>
-                                        <Text style={{ fontSize: 15 }}>{selectedFornecedor.nome_fantasia}</Text>
-                                    </View>
-                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                        <Text style={styles.itemNome}>CNPJ</Text>
-                                        <Text style={{ fontSize: 15 }}>{selectedFornecedor.cnpj}</Text>
-                                    </View>
-                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                        <Text style={styles.itemNome}>Contato</Text>
-                                        <Text style={{ fontSize: 15 }}>{selectedFornecedor.contato}</Text>
-                                    </View>
+                            </View>
+                        ))}
+                    </View>
+                    {selectedFornecedor != null &&
+                        <>
+                            < Text style={[styles.itemNome, { marginTop: 15 }]}>Resumo Fornecedor</Text>
+                            <View style={styles.itemContainer}>
+                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <Text style={styles.itemNome}>Nome Fantasia</Text>
+                                    <Text style={{ fontSize: 15 }}>{selectedFornecedor.nome_fantasia}</Text>
                                 </View>
-                                <Text style={[styles.itemNome, { marginTop: 15 }]}>Resumo Pagamento</Text>
-                                <View style={styles.itemContainer}>
-                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                        <Text style={styles.itemNome}>Forma de pagamento</Text>
-                                        <Text style={{ fontSize: 15 }}>{selectedPagamento}</Text>
-                                    </View>
-                                    {selectedPagamento == "Boleto" &&
-                                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                            <Text style={styles.itemNome}>Nº Parcelas</Text>
-                                            <Text style={{ fontSize: 15 }}>{numeroParcelas}</Text>
-                                        </View>
-                                    }
-                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                        <Text style={styles.itemNome}>Valor Total</Text>
-                                        <Text style={{ fontSize: 15 }}>{formatterbrl(totalCompra)}</Text>
-                                    </View>
+                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <Text style={styles.itemNome}>CNPJ</Text>
+                                    <Text style={{ fontSize: 15 }}>{selectedFornecedor.cnpj}</Text>
                                 </View>
-                            </>
-                        }
-                        <ModalSucces
-                            title="Sucesso"
-                            message="Peiddo compra realizado com sucesso!"
-                            openModal={modalSucces}
-                            fnCloseModal={handleModalSucces}
-                        />
-                    </ProgressStep>
-                </ProgressSteps>
-            </View>
-        </ScrollView >
+                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <Text style={styles.itemNome}>Contato</Text>
+                                    <Text style={{ fontSize: 15 }}>{selectedFornecedor.contato}</Text>
+                                </View>
+                            </View>
+                            <Text style={[styles.itemNome, { marginTop: 15 }]}>Resumo Pagamento</Text>
+                            <View style={styles.itemContainer}>
+                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <Text style={styles.itemNome}>Forma de pagamento</Text>
+                                    <Text style={{ fontSize: 15 }}>{selectedPagamento}</Text>
+                                </View>
+                                {selectedPagamento == "Boleto" &&
+                                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                        <Text style={styles.itemNome}>Nº Parcelas</Text>
+                                        <Text style={{ fontSize: 15 }}>{numeroParcelas}</Text>
+                                    </View>
+                                }
+                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <Text style={styles.itemNome}>Valor Total</Text>
+                                    <Text style={{ fontSize: 15 }}>{formatterbrl(totalCompra)}</Text>
+                                </View>
+                            </View>
+                        </>
+                    }
+                    <ModalSucces
+                        title="Sucesso"
+                        message="Peiddo compra realizado com sucesso!"
+                        openModal={modalSucces}
+                        fnCloseModal={handleModalSucces}
+                    />
+                </ProgressStep>
+            </ProgressSteps>
+        </View>
     );
 };
 

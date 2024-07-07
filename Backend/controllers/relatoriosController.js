@@ -239,7 +239,6 @@ const relatoriosController = {
   },
   async listarDadosRelatorioConsolidado(req, res) {
     try {
-      console.log('bateu')
       const { ano, mes } = req.body;
       const mesesNumeros = {
         Janeiro: 1, Fevereiro: 2, Março: 3, Abril: 4, Maio: 5, Junho: 6,
@@ -313,7 +312,6 @@ const relatoriosController = {
       let valorTotalLucro = 0;
       valorTotalLucro = valorTotalVendas - valorTotalDespesas;
 
-      console.log(valorTotalVendas, valorTotalSaidasCaixa, valorTotalPedidosCompra, valorTotalDespesas, valorTotalLucro)
       res.json({ valorTotalVendas, valorTotalSaidasCaixa, valorTotalPedidosCompra, valorTotalDespesas, valorTotalLucro });
     } catch (error) {
       res.status(500).send('Erro ao listar dados');

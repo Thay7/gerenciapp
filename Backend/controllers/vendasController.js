@@ -50,7 +50,7 @@ const vendasController = {
   async cadastrar(req, res) {
     try {
       const { forma_pagamento, numero_parcelas, valor_total, data_hora, itens } = req.body;
-      console.log(data_hora);
+
       //Adicionado a venda ao banco
       const insertVenda = `INSERT INTO vendas (forma_pagamento, numero_parcelas, valor_total, data_hora)
                      VALUES (?, ?, ?, ?)`
@@ -77,17 +77,20 @@ const vendasController = {
                                  VALUES (?, ?, ?, ?, ?)`;
         await db.query(insertItemQuery, [id_venda, nome, valor_venda, quantidade, id]);
 
-        const [rows, fields] = await db.query(`SELECT * FROM estoque WHERE id_produto=?`, [id]);
+        if (quantidade != null) {
+          const [rows, fields] = await db.query(`SELECT * FROM estoque WHERE id_produto=?`, [id]);
 
-        if(quantidade > rows[0].quantidade){
-          throw new Error('Quantidade de item excede o estoque disponível');
-        }
-        else{
-          const novaQuantidade = rows[0].quantidade - quantidade;
-          const updateItemEstoque = `UPDATE estoque 
-                                     SET quantidade=?
-                                     WHERE id_produto=?`;
-          await db.query(updateItemEstoque, [novaQuantidade, id]);
+          if (quantidade > rows[0].quantidade) {
+            throw new Error('Quantidade de item excede o estoque disponível');
+          }
+          else {
+            const novaQuantidade = rows[0].quantidade - quantidade;
+
+            const updateItemEstoque = `UPDATE estoque 
+                                       SET quantidade=?
+                                       WHERE id_produto=?`;
+            await db.query(updateItemEstoque, [novaQuantidade, id]);
+          }
         }
       }
       res.status(200).json({ success: true, message: 'Venda cadastrada com sucesso!' });
@@ -139,22 +142,21 @@ const vendasController = {
 
       res.status(200).json({ success: true, message: 'Venda deletada com sucesso!' });
     } catch (error) {
-      console.error('Erro ao deletar venda:', error);
       res.status(500).json({ success: false, message: 'Erro ao deletar venda' });
     }
   },
   async listarItensParaVenda(req, res) {
     try {
-        const [rows, fields] = await db.query(`
+      const [rows, fields] = await db.query(`
         SELECT * FROM itens 
         WHERE id in ( SELECT id_produto from estoque where quantidade > 0) AND tipo = "Produto"
         UNION
         SELECT * FROM itens WHERE tipo = "Servico"`);
-        res.json(rows);
+      res.json(rows);
     } catch (error) {
-        res.status(500).send('Erro ao listar itens');
+      res.status(500).send('Erro ao listar itens');
     }
-}
+  }
 };
 
 module.exports = vendasController;

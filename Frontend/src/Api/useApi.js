@@ -2,11 +2,11 @@ import axios from 'axios';
 import Constants from 'expo-constants';
 
 const api = axios.create({
-    // baseURL: (typeof (Constants.expoConfig.extra.API_URL) == "object" && Object.keys(Constants.expoConfig.extra.API_URL).length > 0)
-    //     || (typeof (Constants.expoConfig.extra.API_URL) != "object" && !!Constants.expoConfig.extra.API_URL)
-    //     ? Constants.expoConfig.extra.API_URL
-    //     : "http://192.168.0.6:5000/api",
-    baseURL: "http://213.199.49.233:5000/api/", 
+    baseURL: (typeof (Constants.expoConfig.extra.API_URL) == "object" && Object.keys(Constants.expoConfig.extra.API_URL).length > 0)
+        || (typeof (Constants.expoConfig.extra.API_URL) != "object" && !!Constants.expoConfig.extra.API_URL)
+        ? Constants.expoConfig.extra.API_URL
+        : "http://192.168.0.8:5000/api",
+    // baseURL: "http://213.199.49.233:5000/api/", 
     timeout: 5000
 })
 
@@ -120,16 +120,11 @@ export const useApi = {
         return response.data
     },
     cadastrarVenda: async (formData) => {
-        try {
-            const response = await api.post(`vendas/cadastrar`, formData);
-            if (response.status == 200) {
-                return 200;
-            }
-            return 400;
-        } catch (error) {
-            console.error(error);
+        const response = await api.post(`vendas/cadastrar`, formData);
+        if (response.status == 200)
+            return 200;
+        else
             return 500;
-        }
     },
     editarVenda: async (formData) => {
         try {
@@ -202,8 +197,8 @@ export const useApi = {
     },
     deletarPedido: async (formData) => {
         try {
-            const numero_pedido_compra = formData.numero_pedido_compra;
-            const response = await api.delete(`pedidosCompra/deletar/${numero_pedido_compra}`);
+            const id = formData.id;
+            const response = await api.delete(`pedidosCompra/deletar/${id}`);
             if (response.status == 200) {
                 return 200;
             }

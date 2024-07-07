@@ -57,11 +57,13 @@ export const Estoque = () => {
     useEffect(() => {
         if (route.params?.novoEstoque) {
             const novoEstoque = route.params?.novoEstoque;
+            console.log(novoEstoque)
             setEstoqueList([...estoqueList, novoEstoque]);
         }
 
         if (route.params?.estoqueAtualizado) {
             const estoqueAtualizado = route.params?.estoqueAtualizado;
+            console.log(estoqueAtualizado)
             setEstoqueList(estoqueList.map(estoque => (estoque.id === estoqueAtualizado.id ? estoqueAtualizado : estoque)));
         }
     }, [route.params?.novoEstoque, route.params?.estoqueAtualizado]);
@@ -98,7 +100,7 @@ export const Estoque = () => {
                         )
                         :
                         (
-                            noResults ?
+                            noResults || estoqueList.length == 0 ?
                                 (
                                     <View>
                                         <Text>Nenhum resultado para a busca!</Text>
